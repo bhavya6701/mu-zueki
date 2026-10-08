@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2026-10-07",
+    "source": "user",
+    "reference": { "file": "scribble-pixel.mp4", "url": null },
+    "template": "scribble-pixel"
+  },
+  {
+    "date": "2026-10-08",
+    "source": "search",
+    "reference": { "file": "windows.mp4", "url": "https://whatships.com/videos/paper-mono/" },
+    "template": "windows"
+  }
+]

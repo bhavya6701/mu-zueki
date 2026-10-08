@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Mu-Zueki reel</title>
+    <script src="lib/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Archivo Black";
+        src: url("fonts/ArchivoBlack-400.woff2") format("woff2");
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: "Space Grotesk";
+        src: url("fonts/SpaceGrotesk-500.woff2") format("woff2");
+        font-weight: 500;
+      }
+      @font-face {
+        font-family: "Space Grotesk";
+        src: url("fonts/SpaceGrotesk-700.woff2") format("woff2");
+        font-weight: 700;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("fonts/JetBrainsMono-400.woff2") format("woff2");
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("fonts/JetBrainsMono-800.woff2") format("woff2");
+        font-weight: 800;
+      }
+      @font-face {
+        font-family: "Reenie Beanie";
+        src: url("fonts/ReenieBeanie-400.woff2") format("woff2");
+        font-weight: 400;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #0b0b0b;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: "Archivo Black", sans-serif;
+      }
+      /* One shot = one full-screen ground. Only one is visible at a time; the timeline cuts between them. */
+      .shot {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        visibility: hidden;
+      }
+      .cam,
+      .punch,
+      .layer {
+        position: absolute;
+        inset: 0;
+      }
+      /* Rows of type stack in the middle of the band the platform leaves uncovered. */
+      .stage {
+        position: absolute;
+        left: 108px;
+        right: 108px;
+        top: 250px;
+        bottom: 640px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        z-index: 2;
+      }
+      .layer {
+        z-index: 1;
+      }
+      .row {
+        position: relative;
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        line-height: 0.92;
+        text-transform: uppercase;
+      }
+      .row.text {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1.1;
+      }
+      .word {
+        position: relative;
+        display: inline-block;
+      }
+      .tag {
+        padding: 0.14em 0.3em 0.1em;
+        border: 7px solid currentColor;
+      }
+      .pill {
+        padding: 0.22em 0.6em;
+        border-radius: 999px;
+      }
+      .pin {
+        position: absolute;
+        width: 0;
+        height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .pin > * {
+        flex-shrink: 0;
+      }
+      .mark {
+        position: absolute;
+        left: -4%;
+        top: 0;
+        width: 108%;
+        height: 100%;
+        overflow: visible;
+        pointer-events: none;
+      }
+      svg.pix {
+        display: block;
+        shape-rendering: crispEdges;
+      }
+      svg.scribble {
+        display: block;
+        overflow: visible;
+      }
+      .caption {
+        position: absolute;
+        left: 108px;
+        right: 108px;
+        top: 1330px;
+        height: 130px;
+        z-index: 3;
+      }
+      .capline {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        justify-content: center;
+        gap: 0 0.28em;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: 46px;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+      }
+      .capline span {
+        display: inline-block;
+      }
+      /* The windows look (lib/windows.js): hairline windows, monospace type. */
+      .look-windows .capline {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 400;
+        font-size: 40px;
+      }
+      .win {
+        flex-shrink: 0;
+        border: 3px solid #3f74de;
+        background: #f4f3ec;
+        color: #151515;
+        box-shadow: 10px 10px 0 rgba(107, 155, 239, 0.22);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 400;
+        font-size: 26px;
+        line-height: 1.25;
+        text-transform: none;
+        white-space: nowrap;
+      }
+      .win.dark {
+        background: #0c0c0c;
+        color: #f4f3ec;
+      }
+      .win-bar {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        padding: 5px 12px;
+        border-bottom: 3px solid #3f74de;
+        font-size: 20px;
+        color: #2f5fc4;
+      }
+      .win.dark .win-bar {
+        color: #8fb4f5;
+      }
+      .win-glyph {
+        font-weight: 800;
+        line-height: 1;
+        text-align: center;
+        padding: 0 0.12em;
+      }
+      .win-cards {
+        display: flex;
+        gap: 14px;
+      }
+      .win.dark .win-fill {
+        background: #f4f3ec;
+      }
+      .win-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 40px;
+      }
+      .win-track {
+        height: 26px;
+        border: 3px solid currentColor;
+        padding: 3px;
+      }
+      .win-fill {
+        width: 100%;
+        height: 100%;
+        background: #151515;
+        transform-origin: 0 50%;
+      }
+      .win-note {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 8px;
+        font-size: 22px;
+      }
+      .win-meter {
+        display: flex;
+        align-items: flex-end;
+        gap: 6px;
+      }
+      .win-meter > div {
+        flex: 1;
+        height: 100%;
+      }
+      .win-ascii {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0.32;
+      }
+      .win-click {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        margin: -35px 0 0 -35px;
+        border: 4px solid #6b9bef;
+        border-radius: 50%;
+        z-index: 4;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="40.67"
+      data-width="1080"
+      data-height="1920"
+    >
+      <audio
+        id="song"
+        src="audio.mp3"
+        data-start="0"
+        data-duration="40.67"
+        data-track-index="1"
+        data-volume="1"
+      ></audio>
+    </div>
+    <script src="data/timeline.js"></script>
+    <script src="lib/pixel.js"></script>
+    <script src="lib/kit.js"></script>
+    <script src="lib/ink.js"></script>
+    <script src="lib/windows.js"></script>
+    <!-- day:start (written by pipeline/video.py: the scenes of the day being rendered) -->
+    <script src="days/2026-10-08/1-hook.js"></script>
+    <script src="days/2026-10-08/2-verse2.js"></script>
+    <script src="days/2026-10-08/3-verse3.js"></script>
+    <script src="days/2026-10-08/4-verse4.js"></script>
+    <script src="days/2026-10-08/5-outro.js"></script>
+    <!-- day:end -->
+    <script>
+      // Type is measured to fit its row, so the fonts must be in before anything is built.
+      const fonts = ['400 100px "Archivo Black"', '700 100px "Space Grotesk"', '400 100px "Reenie Beanie"', '400 100px "JetBrains Mono"', '800 100px "JetBrains Mono"'];
+      Promise.all(fonts.map((font) => document.fonts.load(font))).then(() => {
+        const tl = gsap.timeline({ paused: true });
+        R.build(tl);
+        window.__timelines["main"] = tl;
+        if (window.__hfForceTimelineRebind) window.__hfForceTimelineRebind();
+      });
+    </script>
+  </body>
+</html>

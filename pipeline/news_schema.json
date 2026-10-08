@@ -1,0 +1,47 @@
+{
+  "type": "object",
+  "required": ["ready", "not_ready_reason", "ranking_basis", "limitations", "stories"],
+  "properties": {
+    "ready": { "type": "boolean" },
+    "not_ready_reason": { "type": "string" },
+    "ranking_basis": { "type": "string" },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "stories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rank", "headline", "category", "event_date", "summary", "key_facts", "entities", "tickers", "fact_check"],
+        "properties": {
+          "rank": { "type": "integer" },
+          "headline": { "type": "string" },
+          "category": { "type": "string" },
+          "event_date": { "type": "string" },
+          "summary": { "type": "string" },
+          "key_facts": { "type": "array", "items": { "type": "string" } },
+          "entities": { "type": "array", "items": { "type": "string" } },
+          "tickers": { "type": "array", "items": { "type": "string" } },
+          "fact_check": {
+            "type": "object",
+            "required": ["status", "notes", "references"],
+            "properties": {
+              "status": { "type": "string", "enum": ["verified", "partially_verified"] },
+              "notes": { "type": "string" },
+              "references": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["source", "title", "url"],
+                  "properties": {
+                    "source": { "type": "string" },
+                    "title": { "type": "string" },
+                    "url": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

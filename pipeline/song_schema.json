@@ -1,0 +1,114 @@
+{
+  "type": "object",
+  "required": [
+    "stories_used", "day_in_one_sentence", "mood", "vocal", "bpm", "hook", "plan", "captions",
+    "fact_map", "beat_notes", "reel_notes", "post_caption", "hit_score"
+  ],
+  "properties": {
+    "stories_used": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Stories the song covers, lead story first",
+      "items": {
+        "type": "object",
+        "required": ["rank", "headline", "status"],
+        "properties": {
+          "rank": {"type": "integer"},
+          "headline": {"type": "string"},
+          "status": {"type": "string", "description": "fact_check.status copied from the news file"}
+        }
+      }
+    },
+    "day_in_one_sentence": {"type": "string"},
+    "mood": {
+      "type": "object",
+      "required": ["name", "reason", "turn"],
+      "properties": {
+        "name": {"type": "string"},
+        "reason": {"type": "string", "description": "Why the news reads this way"},
+        "turn": {"type": "string", "description": "The mid-song mood turn, or an empty string if there is none"}
+      }
+    },
+    "vocal": {"type": "string", "description": "male, female or both"},
+    "bpm": {"type": "integer"},
+    "hook": {"type": "string", "description": "The hook lines in display form, used to avoid repeating hooks on later days"},
+    "plan": {
+      "type": "object",
+      "required": ["chunks"],
+      "description": "The song as an ElevenLabs composition plan, following the formatting guide. This is the only place the lyrics are written.",
+      "properties": {
+        "chunks": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "required": ["text", "duration_ms", "positive_styles", "negative_styles"],
+            "properties": {
+              "text": {"type": "string", "description": "Section label in square brackets, then the lyric lines (one bar per line), with short musical cues in curly braces"},
+              "duration_ms": {"type": "integer", "description": "3000 to 120000. All chunks together must not exceed the reel length."},
+              "positive_styles": {"type": "array", "items": {"type": "string"}, "description": "English descriptors; at least 6 in the first chunk; no artist names"},
+              "negative_styles": {"type": "array", "items": {"type": "string"}},
+              "context_adherence": {"type": "string", "enum": ["low", "medium", "high"]}
+            }
+          }
+        }
+      }
+    },
+    "captions": {
+      "type": "array",
+      "minItems": 1,
+      "description": "On-screen captions in sung order, covering every lyric line of every chunk. No timestamps: they are measured from the audio.",
+      "items": {
+        "type": "object",
+        "required": ["section", "text", "sung"],
+        "properties": {
+          "section": {"type": "integer", "description": "Number of the plan chunk this caption belongs to, starting at 1"},
+          "text": {"type": "string", "description": "Display form: digits for numbers, 'Mu-Zueki' spelling, no cues or ad-libs. At most about 7 words."},
+          "sung": {"type": "string", "description": "The same words exactly as written in the plan: numbers spelled out, 'Mew-Zookie' spelling"}
+        }
+      }
+    },
+    "fact_map": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One row per lyric line that states a number, name or event",
+      "items": {
+        "type": "object",
+        "required": ["line", "claim", "rank", "source_text"],
+        "properties": {
+          "line": {"type": "string", "description": "The lyric line in display form"},
+          "claim": {"type": "string", "description": "The factual claim the line makes"},
+          "rank": {"type": "integer", "description": "Rank of the story it comes from"},
+          "source_text": {"type": "string", "description": "A phrase copied character for character from that story's headline, summary or key_facts"}
+        }
+      }
+    },
+    "beat_notes": {"type": "string"},
+    "reel_notes": {
+      "type": "object",
+      "required": ["opening_grab", "caption_bar", "cut_points", "loop_point"],
+      "properties": {
+        "opening_grab": {"type": "string", "description": "What is heard and seen in the first second"},
+        "caption_bar": {"type": "string", "description": "The lyric line to feature on screen, quoted in display form"},
+        "cut_points": {"type": "string", "description": "Where visuals should cut, described by section and lyric line (not by timestamp)"},
+        "loop_point": {"type": "string"}
+      }
+    },
+    "post_caption": {"type": "string", "description": "Names the date and stories, includes 'Mu-Zueki', ends with 'Not financial advice.'"},
+    "hit_score": {
+      "type": "object",
+      "required": ["bars", "flow", "hook", "production", "reel", "emotion", "structure", "notes"],
+      "properties": {
+        "bars": {"type": "number"},
+        "flow": {"type": "number"},
+        "hook": {"type": "number"},
+        "production": {"type": "number"},
+        "reel": {"type": "number"},
+        "emotion": {"type": "number"},
+        "structure": {"type": "number"},
+        "notes": {"type": "string", "description": "What was revised and what is still weakest"}
+      }
+    }
+  }
+}
