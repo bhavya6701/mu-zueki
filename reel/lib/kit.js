@@ -12,11 +12,17 @@
     // the windows look
     paper: { bg: "#F4F3EC", fg: "#151515" },
     term: { bg: "#0C0C0C", fg: "#F4F3EC" },
+    // nothing painted: the day's footage shows through the shot
+    clear: { bg: "transparent", fg: "#FFFFFF" },
   };
   const FONT = { display: '"Archivo Black"', text: '"Space Grotesk"', hand: '"Reenie Beanie"', mono: '"JetBrains Mono"', monoBold: '"JetBrains Mono"' };
   const WEIGHT = { display: 400, text: 700, hand: 400, mono: 400, monoBold: 800 };
 
-  const R = (window.R = { COLOR, GROUND, FONT, shots: [], fx: {}, duration: T.duration_seconds });
+  const R = (window.R = { COLOR, GROUND, FONT, WEIGHT, shots: [], fx: {}, duration: T.duration_seconds });
+  // Fonts that must be loaded before anything is measured. A look module adds its own (and its own
+  // GROUND, FONT and WEIGHT entries); an entry may be [font, sample text] to pull in a non-Latin face.
+  R.fontFaces = ['400 100px "Archivo Black"', '700 100px "Space Grotesk"', '400 100px "Reenie Beanie"',
+    '400 100px "JetBrains Mono"', '800 100px "JetBrains Mono"'];
   let tl = null;
 
   // Repeatable pseudo-random numbers, so every render of a frame is identical.
@@ -226,7 +232,8 @@
       if (next) tl.set(box, { autoAlpha: 0 }, t1 + (next.options.over || 0));
       // Every shot lands with a small punch and then keeps pushing in slowly, so nothing ever sits still.
       tl.fromTo(cam, { scale: 1 }, { scale: 1.07, duration: t1 - t0, ease: "none" }, t0);
-      tl.fromTo(punch, { scale: 1.09 }, { scale: 1, duration: 0.24, ease: "power3.out" }, t0);
+      // (A quiet look turns the punch off with punch: false.)
+      if (options.punch !== false) tl.fromTo(punch, { scale: 1.09 }, { scale: 1, duration: 0.24, ease: "power3.out" }, t0);
 
       const s = {
         t0,
@@ -267,15 +274,16 @@
         // One row made of separately animated words. Returns the word elements.
         words(list, o) {
           // font: any key of FONT. upper: false keeps the text as written (the default is capitals).
+          // gap: space between words in em, lh: line height; both default by font.
           o = Object.assign({ w: 864, max: 420, font: "display", upper: true }, o);
           const row = el("div", "row" + (o.font === "text" ? " text" : ""), stage);
           if (o.font !== "display" && o.font !== "text") {
             row.style.fontFamily = FONT[o.font];
             row.style.fontWeight = WEIGHT[o.font];
-            row.style.lineHeight = 1.05;
+            row.style.lineHeight = o.lh || 1.05;
           }
           if (!o.upper) row.style.textTransform = "none";
-          const gap = o.font === "display" ? 0.22 : o.font === "text" ? 0.3 : 0.6;
+          const gap = o.gap !== undefined ? o.gap : o.font === "display" ? 0.22 : o.font === "text" ? 0.3 : o.font.startsWith("mono") ? 0.6 : 0.26;
           const shown = (word) => (o.upper ? word.toUpperCase() : word);
           const natural = list.reduce((sum, word) => sum + R.measure(shown(word), o.font), 0) + (list.length - 1) * gap * 100;
           const size = Math.min(o.max, (100 * o.w) / natural);

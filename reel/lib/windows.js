@@ -189,7 +189,7 @@
   W.cursor = function (s, stops) {
     s.later.push(() => drawCursor(s, stops.map((stop) => {
       if (!stop.on) return stop;
-      const box = s.box(stop.on);
+      const box = s.boxOf(stop.on);
       return Object.assign({}, stop, { x: box.x + box.w / 2 + (stop.dx || 0), y: box.y + box.h / 2 + (stop.dy || 0) });
     })));
   };

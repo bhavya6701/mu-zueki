@@ -97,7 +97,7 @@
     s.later = [];
     const queued = (draw) => (...args) => s.later.push(() => draw(...args));
     // The laid-out box of a row or word: { x, y, w, h } in frame pixels. Only valid once the shot is built.
-    s.box = (node) => boxOf(s, node);
+    s.boxOf = (node) => boxOf(s, node);
     const tint = () => (random() < 0.3 && s.bg !== COLOR.red ? COLOR.red : s.fg);
 
     // A stretch of line that races across the frame at any angle and is gone.

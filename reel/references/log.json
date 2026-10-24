@@ -2,13 +2,89 @@
   {
     "date": "2026-10-07",
     "source": "user",
-    "reference": { "file": "scribble-pixel.mp4", "url": null },
+    "reference": {
+      "file": "scribble-pixel.mp4",
+      "url": null
+    },
     "template": "scribble-pixel"
   },
   {
     "date": "2026-10-08",
     "source": "search",
-    "reference": { "file": "windows.mp4", "url": "https://whatships.com/videos/paper-mono/" },
+    "reference": {
+      "file": "windows.mp4",
+      "url": "https://whatships.com/videos/paper-mono/"
+    },
     "template": "windows"
+  },
+  {
+    "date": "2026-10-08",
+    "source": "search",
+    "reference": {
+      "file": "circuit.mp4",
+      "url": "https://whatships.com/videos/kami-circuit/"
+    },
+    "template": "circuit",
+    "note": "second version of this day: new song (idol intro, drop, rap) and new video"
+  },
+  {
+    "date": "2026-10-09",
+    "source": "search",
+    "reference": {
+      "file": "poster.mp4",
+      "url": "https://whatships.com/videos/claude-motion-reel/"
+    },
+    "template": "poster",
+    "note": "first version, rejected by the user (corner labels, content in a middle block, not in the song's theme); its template was removed"
+  },
+  {
+    "date": "2026-10-09",
+    "source": "search",
+    "reference": {
+      "file": "stitch.mp4",
+      "url": "https://youtu.be/CfjReP7SlnA"
+    },
+    "template": "stitch",
+    "note": "second version of this day: rejected by the user, who did not want the song's folk theme in the video"
+  },
+  {
+    "date": "2026-10-09",
+    "source": "search",
+    "reference": {
+      "file": "slap.mp4",
+      "url": "https://youtu.be/abkzFQ86CMY"
+    },
+    "template": "slap",
+    "note": "third version of this day: type only; the user wanted visuals as well, so it was rebuilt with footage (next entry)"
+  },
+  {
+    "date": "2026-10-09",
+    "source": "search",
+    "reference": {
+      "file": "mixed.mp4",
+      "url": "https://youtu.be/PNY0ROl4oIM"
+    },
+    "template": "slap",
+    "note": "fourth version of this day: stock footage from Vecteezy cut to each line, with type and interface elements over it"
+  },
+  {
+    "date": "2026-10-12",
+    "source": "search",
+    "reference": {
+      "file": "film.mp4",
+      "url": "https://whatships.com/videos/achx-studio/"
+    },
+    "template": "film",
+    "note": "slow sung song set at a petrol pump in the rain; ambience added to the song first (AMBIENCE.md, rain space); night footage from Vecteezy under serif type"
+  },
+  {
+    "date": "2026-10-13",
+    "source": "search",
+    "reference": {
+      "file": "collage.mp4",
+      "url": "https://youtu.be/pxnhYIj269k"
+    },
+    "template": "collage",
+    "note": "96 BPM live-band song (faster than 2026-10-12, many instruments) set on bank-tower steps; street ambience; torn-paper collage over Vecteezy footage with meme GIFs from GIPHY as die-cut stickers (user approved meme-original GIFs only)"
   }
 ]

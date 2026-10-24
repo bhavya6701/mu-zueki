@@ -1,6 +1,7 @@
 """ElevenLabs Music API: compose a song from a composition plan, and read the credit balance."""
 from __future__ import annotations
 
+import http.client
 import json
 import math
 import os
@@ -57,7 +58,7 @@ def get_credits(api_key: str, timeout: int = 30) -> tuple[int, int] | None:
         with urllib.request.urlopen(request, timeout=timeout) as response:
             data = json.loads(response.read().decode("utf-8"))
         return int(data["character_count"]), int(data["character_limit"])
-    except (urllib.error.URLError, TimeoutError, ValueError, KeyError, TypeError):
+    except (OSError, http.client.HTTPException, ValueError, KeyError, TypeError):
         return None
 
 

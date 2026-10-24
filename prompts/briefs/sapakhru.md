@@ -1,0 +1,31 @@
+A DIFFERENT SONG FOR THIS RUN: the day's news delivered as a sapakhru, the Charani chhand of Gujarat and Kathiawar, by a sharp-voiced rapper over a beat that is half Gujarati folk and half 2000s hip hop. Where anything below conflicts with the persona or the formatting guide, the instruction below wins; everything it does not mention still applies (facts only from the news file, no artist names in styles or lyrics, the Mew-Zookie signature, the caption and fact-map rules, vocal from 0:00). The lyrics are in English. Set vocal to male.
+
+WHAT A SAPAKHRU IS, AND HOW TO WRITE ONE IN ENGLISH. A sapakhru is heroic praise-poetry recited by a Charan bard at speed, in long breaths, in a hard, proud, rising voice (veer ras). It is not sung to a tune and it has no chorus; it is a chain of lines that gathers force until it breaks on one final word. Carry these features over into English:
+- Long lines cut into short, equal, galloping feet. Write each line as three or four short phrases of the same weight, split by commas, so it rides like a horse: da-da-DUM, da-da-DUM, da-da-DUM, DUM. Triplet-leaning, never lazy.
+- Vayan sagai (the Charani alliteration rule): the first stressed word of a line and its last stressed word begin with the same sound. Hold this on most lines, and on every line where it does not bend a fact. Example of the shape only: "Barrels are burning, the buyers are backing".
+- Inner chime: inside each line, at least two of the short phrases rhyme or chime with each other before the end-rhyme arrives.
+- One end-rhyme held through a whole stanza of four lines, then a new one for the next stanza. The last word of each line is the hit; put the fact or the number just before it or on it.
+- Hard consonants. Prefer words with b, d, g, k, t, dr, kr, gr, and doubled stops (crack, drop, grip, batter, rattle, thunder). The sound of the words should drum.
+- Praise and scorn. A bard praises the brave and shames the coward by name. Treat the day's companies, markets and numbers the way a bard treats warriors and kings: name them, weigh them, crown or shame them. This is where the punchlines live; at least two real ones.
+- The climb. Each stanza is delivered faster and harder than the one before. The last stanza is one long breath that ends on the single hardest word of the day, followed by silence.
+- No repeated hook. No line is repeated. A bard's two-word shout may come back once as a stab.
+- Write to be understood. Dense is good; crammed is not. Plain strongly stressed English words, no tongue-twisters, no Gujarati words (a listening check has to make the words out). Numbers are said the way people say them.
+
+THE SHAPE.
+1. THE CALL (the first 3 to 5 seconds; plan chunk 1). A bard opens by throwing one line at the crowd before the gallop starts. One or two short lines, half-sung and held, in a proud ringing voice, that name the day and its main blow. The band is already playing under it from the first beat: dhol roll, drone, the hip hop kick. Never a cappella, never a quiet lead-in. It is still labelled [Verse 1] and its first line is a lyric line.
+2. THE GALLOP (the body). The beat lands in full on the first bar after the call and the sapakhru runs: stanzas of four lines, each stanza one story or one side of the day's story, each one tighter and faster than the last. Tell the day as one story with a start, a middle and an end.
+3. THE BREAK (the last line). The final line ends on the day's hardest word, the beat cuts dead on it, and the sign-off is spoken into the silence. Hard stop, no fade.
+
+THE VOICE. A male rapper with a sharp, bright, nasal, high tenor voice and razor-clean diction: every consonant spat, every syllable placed, fast and precise, intense and a little unhinged, anger with a smirk in it, stacked multisyllabic rhymes, the voice climbing in pitch and force as the verse goes on, breath-length runs that end on a shouted word. American English. Describe this in the styles in these terms; never name an artist. He recites the sapakhru as rap: rhythmic speech, not melody. Only the call is half-sung.
+
+THE MUSIC. An even mixture, both halves audible in every bar:
+- Gujarati folk, played, not sampled into mush: dhol and nagara war drums carrying the gallop, manjira hand cymbals on the off-beats, a ravanhattha (bowed folk fiddle) riff as the main melodic hook, jodiya pava (double flute) or shehnai answering it, a harmonium or tanpura drone underneath, morchang (jaw harp) twang in the gaps, a crowd of men shouting short responses on the last beat of a stanza.
+- Western hip hop of the early to mid 2000s: punchy boom-bap kick and cracking snare, tight closed hi-hats, minor-key staccato piano stabs, short orchestral string stabs, a deep clean sub bass following the kick, turntable scratches at the stanza breaks, a dry, loud, up-front mix. No trap hi-hat rolls, no autotune, no modern pads.
+- Tempo: 92 to 100 BPM with the vocal riding it in triplets and sixteenths, so the beat nods like 2000s hip hop while the words gallop like a chhand. Minor key.
+- The beat must not loop unchanged for more than 4 bars. Change something at each stanza and name it in that chunk's styles: the hip hop drums drop and only dhol and voice remain; the ravanhattha riff doubles; the strings come in; everything but the kick cuts for a punchline.
+- The styles of the first chunk give the complete palette (genre blend, BPM, key, both drum sets, bass, melodic bed, texture, lead vocal, mood, clarity). Later chunks use context_adherence "high" so the sound and the voice stay the same.
+- Negative styles for every chunk: pop, sung chorus, autotune, female vocals, trap hi-hat rolls, EDM, Bollywood film song, slow tempo, mumbling, intro, build-up, a cappella, fade out.
+
+LENGTH AND BARS. Keep to the reel length in the settings and work out the bar budget from your BPM as usual; the call and the sign-off count toward it. Choose the stories so that the song lands whole inside that length: one main story and at most two that feed it. A story that cannot be finished is left out, not squeezed in.
+
+REEL NOTES. In reel_notes describe the cut points: what is seen during the call, what changes when the gallop starts, where each stanza break and beat change falls, and the final word and the silence after it.

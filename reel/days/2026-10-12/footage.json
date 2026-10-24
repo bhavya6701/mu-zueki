@@ -1,0 +1,23 @@
+[
+  {"id": "f01", "clip": "dusk2", "start": 0, "end": "cap:2", "from": 1.0, "look": "eq=contrast=1.08:saturation=0.9:brightness=-0.02,colorbalance=bs=0.06:bm=0.03"},
+  {"id": "f02", "clip": "dusk", "start": "cap:2", "end": "cap:4", "from": 6.0, "look": "eq=contrast=1.08:saturation=0.9:brightness=-0.04,colorbalance=bs=0.06:bm=0.03"},
+  {"id": "f03", "clip": "drops", "start": "cap:4", "end": "cap:5", "from": 11.0, "look": "eq=contrast=1.15:brightness=0.03"},
+  {"id": "f04", "clip": "phone", "start": "cap:5", "end": "cap:6", "from": 3.0, "x": 0.52, "look": "eq=contrast=1.1:saturation=0.8:brightness=-0.06,colorbalance=bs=0.08:bm=0.04"},
+  {"id": "f05", "clip": "nozzle", "start": "cap:6", "end": "word:6:3", "from": 0.5, "x": 0.58, "look": "eq=contrast=1.25:saturation=0.55:brightness=-0.12,colorbalance=bs=0.2:bm=0.1:rs=-0.06"},
+  {"id": "f06", "clip": "chip", "start": "word:6:3", "end": "cap:7", "from": 5.5, "x": 0.65, "look": "eq=contrast=1.1:saturation=0.85:brightness=-0.08"},
+  {"id": "f07", "clip": "gauge", "start": "cap:7", "end": "cap:8", "from": 1.2, "x": 0.2, "look": "eq=contrast=1.15:saturation=0.9:brightness=-0.12,colorbalance=bs=0.08"},
+  {"id": "f08", "clip": "road", "start": "cap:8", "end": "cap:9", "from": 0.3, "look": "eq=contrast=1.08:saturation=0.9,colorbalance=bs=0.08:bm=0.03"},
+  {"id": "f09", "clip": "walker", "start": "cap:9", "end": "cap:10", "from": 3.5, "x": 0.47, "look": "eq=contrast=1.08:saturation=0.9"},
+  {"id": "f10", "clip": "barrels", "start": "cap:10", "end": "cap:11", "from": 1.0, "look": "eq=contrast=1.12:saturation=0.8:brightness=-0.1,colorbalance=bs=0.08"},
+  {"id": "f11", "clip": "hand", "start": "cap:11", "end": "cap:12", "from": 4.0, "x": 0.42, "look": "eq=contrast=1.25:saturation=0.55:brightness=-0.2,colorbalance=bs=0.2:bm=0.1:rs=-0.06"},
+  {"id": "f12", "clip": "puddle", "start": "cap:12", "end": "cap:13", "from": 3.0, "look": "eq=contrast=1.15:saturation=0.7:brightness=-0.12,colorbalance=bs=0.12:bm=0.05"},
+  {"id": "f13", "clip": "chart", "start": "cap:13", "end": "cap:14", "from": 4.4, "x": 0.45, "look": "eq=contrast=1.1:saturation=0.85:brightness=-0.06"},
+  {"id": "f14", "clip": "ram", "start": "cap:14", "end": "word:14:3", "from": 1.0, "fit": true, "y": 0.42, "look": "eq=contrast=1.1:brightness=-0.03,colorbalance=bs=0.1"},
+  {"id": "f15", "clip": "tail", "start": "word:14:3", "end": "cut:14", "from": 0.4, "x": 0.6, "look": "eq=contrast=1.08:saturation=0.95"},
+  {"id": "f16", "clip": "glass", "start": "cut:14", "end": "cap:16", "from": 1.0, "x": 0.3, "look": "eq=contrast=1.1:saturation=0.8:brightness=-0.05"},
+  {"id": "f17", "clip": "dusk2", "start": "cap:16", "end": "cap:17", "from": 9.0, "look": "eq=contrast=1.08:saturation=0.9:brightness=-0.02,colorbalance=bs=0.06:bm=0.03"},
+  {"id": "f18", "clip": "glass", "start": "cap:17", "end": "cap:18", "from": 6.0, "x": 0.75, "look": "eq=contrast=1.1:saturation=0.8:brightness=-0.05"},
+  {"id": "f19", "clip": "roof", "start": "cap:18", "end": "cap:19", "from": 2.0, "x": 0.35, "look": "eq=contrast=1.15:saturation=0.7:brightness=-0.2,colorbalance=bs=0.12:bm=0.05"},
+  {"id": "f20", "clip": "neon", "start": "cap:19", "end": "cap:20", "from": 0.5, "x": 0.0, "look": "eq=contrast=1.08:saturation=1.0"},
+  {"id": "f21", "clip": "walker", "start": "cap:20", "end": "cap:21", "from": 0.2, "x": 0.47, "look": "eq=contrast=1.08:saturation=0.9"}
+]

@@ -1,0 +1,547 @@
+{
+  "metadata": {
+    "title": "Top US Finance News",
+    "generated_at": "2026-10-13T15:00:53-04:00",
+    "timezone": "America/New_York",
+    "coverage_window": {
+      "from": "2026-10-12T00:00:00-04:00",
+      "to": "2026-10-12T23:59:59-04:00"
+    },
+    "story_count": 10,
+    "ranking_basis": "Ranked by market impact and breadth of coverage on Monday, October 12, 2026. Rank 1 is the index close and its drivers. Next come the two forces that shaped the session (oil up, memory chips down), then the largest single-stock and deal stories, then a drug-trial readout, gold and the dollar, and finally the holiday and week-ahead backdrop.",
+    "fact_check_method": "Researched by web search, then every story was re-checked against its sources in a second pass; facts and stories the re-check could not support were removed.",
+    "verification_status_legend": {
+      "verified": "Key facts confirmed by a primary source or by two or more independent sources",
+      "partially_verified": "Core event confirmed, but one or more specific figures rest on a single source or sources conflict"
+    },
+    "limitations": [
+      "Compiled by the pipeline's news step by web search.",
+      "Monday, October 12, 2026 was Columbus Day: US stock markets were open, but the US bond market was closed and no economic data was released. There is therefore no Treasury-yield or economic-data story, and I found no Federal Reserve news dated that day.",
+      "Several primary news pages (CNBC oil and gold articles, TheStreet, Benzinga, Quartz, USAGold) returned HTTP 403 and could not be opened. Figures attributed to CNBC come from search-result excerpts and were cross-checked against other pages I did open.",
+      "Exact index closes to the cent were cross-checked by arithmetic against the prior-day closes in the Zacks/Yahoo recap of Friday's session and against Tuesday's live quotes on Yahoo Finance. One recap (Investrade) shows the Dow at 51,885.0, which conflicts with the other sources and appears to be a typo. The Motley Fool recap shows the S&P 500 at 7,804.52 (-0.03%) in one version and 7,807 (-0.06%) in its Yahoo-syndicated version.",
+      "Gold figures differ by source and instrument (spot versus futures); see the notes on that story. Use only the rounded direction and size if quoting.",
+      "Excluded as not dated October 12: Amazon's reported talks to buy Decart (about $7 billion, reported October 11), Nvidia's reported Reflection AI talks (reported October 10), the GTCR/Elliott talks for CCC Intelligent Solutions (reported October 9), and Bumble's definitive $1.3 billion agreement with Ithaca (announced October 13).",
+      "Rank 10 is a backdrop and week-ahead story rather than a discrete event; it is included because the day offered no economic data or Fed news.",
+      "'Starbucks said it is \"not buying Chipotle,\" sending Chipotle shares down more than 4%.': removed 1 key fact(s) the re-check could not support."
+    ]
+  },
+  "stories": [
+    {
+      "rank": 1,
+      "headline": "The Dow rose 195.60 points to 51,850.55 while the Nasdaq fell 0.44% as chip stocks slid ahead of bank earnings.",
+      "category": "markets",
+      "event_date": "2026-10-12",
+      "summary": "US stocks closed mixed on Monday, October 12, 2026. The Dow Jones Industrial Average gained 0.38%, the S&P 500 slipped 0.06% and the Nasdaq Composite fell 0.44%. Energy and consumer staples led, while technology and semiconductor shares dragged on the Nasdaq. Investors were waiting for big-bank earnings due Tuesday.",
+      "key_facts": [
+        "The Dow Jones Industrial Average rose 195.60 points, or 0.38%, to close at 51,850.55.",
+        "The S&P 500 fell 4.30 points, or 0.06%, to close at 7,807.24.",
+        "The Nasdaq Composite fell 120.27 points, or 0.44%, to close at 27,245.90.",
+        "The Dow was the only one of the three major indexes to finish higher.",
+        "The energy sector fund XLE rose 1.43% and the consumer staples fund XLP rose 1.17%.",
+        "The technology sector fund XLK fell about 1.2%.",
+        "The Russell 2000 fell about 0.45% to roughly 2,794."
+      ],
+      "entities": [
+        "Dow Jones Industrial Average",
+        "S&P 500",
+        "Nasdaq Composite",
+        "Russell 2000"
+      ],
+      "tickers": [
+        "^DJI",
+        "^GSPC",
+        "^IXIC",
+        "^RUT"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "Closing levels and point moves are consistent across the Econ Currents recap (search excerpt), Investrade (point and percent moves), Strategitz (S&P 7,807.24) and the Motley Fool/Yahoo recap (Dow 51,851, S&P 7,807, Nasdaq 27,246). They also match arithmetic from Friday's closes (51,654.95; 7,811.54; 27,366.17) and from Tuesday's live Yahoo quotes. Discrepancies: Investrade prints the Dow close as 51,885.0 (likely a typo, since its +195.36 change matches the others); one Fool version shows the S&P at 7,804.52 (-0.03%); Investrade gives the Dow change as +195.36 and Fool as +196.38, versus +195.60 elsewhere. XLK is given as -1.22% by Strategitz and -1.25% in another excerpt. The Russell 2000 figure rests on Investrade, supported by Yahoo's next-day implied prior close of about 2,794.48.",
+        "references": [
+          {
+            "source": "Yahoo Finance",
+            "title": "Stock market today: Dow gains, S&P 500 and Nasdaq slip as focus turns to earnings season kickoff",
+            "url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-october-12-dow-sp-500-nasdaq-080321571.html"
+          },
+          {
+            "source": "Motley Fool via Yahoo Finance",
+            "title": "Stock Market Today, Oct. 12: Dow Gains as Memory Stocks Weigh on Nasdaq",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-oct-12-212311190.html"
+          },
+          {
+            "source": "Investrade",
+            "title": "Market Review: October 12, 2026",
+            "url": "https://investrade.com/market-review-october-12-2026/"
+          },
+          {
+            "source": "Strategitz",
+            "title": "Global Markets Close — October 12, 2026",
+            "url": "https://strategitz.substack.com/p/global-markets-close-october-12-2026"
+          },
+          {
+            "source": "Econ Currents",
+            "title": "12 October 2026 Market Close & Major Financial Headlines: Dow Rises as Nasdaq Leads Declines",
+            "url": "https://econcurrents.substack.com/p/12-october-2026-market-close-and"
+          },
+          {
+            "source": "Zacks via Yahoo Finance",
+            "title": "Stock Market News for Oct 12, 2026",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-news-oct-12-122800912.html"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "headline": "Brent crude rose 1.8% to settle at $106.65 a barrel and US crude gained 2% to $93.74 after a weekend attack on Riyadh.",
+      "category": "commodities",
+      "event_date": "2026-10-12",
+      "summary": "Oil prices climbed on Monday as traders reacted to a weekend Houthi attack on the Saudi capital, Riyadh, and its airport. Brent settled at $106.65 a barrel and West Texas Intermediate at $93.74. Brent traded above $106 for the first time since September 29. Energy was the best-performing S&P 500 sector.",
+      "key_facts": [
+        "Brent crude futures rose about 1.8%, or $1.93, to settle at $106.65 a barrel.",
+        "US West Texas Intermediate crude rose about 2%, or $1.89, to settle at $93.74 a barrel.",
+        "Brent traded above $106 a barrel for the first time since September 29, 2026.",
+        "The gains followed a weekend Houthi attack on Riyadh, Saudi Arabia's capital, and its airport.",
+        "The energy sector fund XLE rose 1.43% on the day."
+      ],
+      "entities": [
+        "Brent crude",
+        "West Texas Intermediate",
+        "Saudi Arabia",
+        "Houthis",
+        "King Khalid International Airport"
+      ],
+      "tickers": [
+        "BZ=F",
+        "CL=F",
+        "XLE"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "Settlement prices of $106.65 and $93.74 appear in the CNBC article (read via search excerpt only; the page returned 403) and in the Investrade recap, which also gives the dollar changes. Strategitz gives about $106.60 and $93.70. Investrade's percentages are +1.84% and +2.06%. TASS confirms the first move above $106 since September 29. The cause (Houthi attack on Riyadh airport on Saturday) comes from the CNBC excerpt and other search results; CNBC's casualty figures were not confirmed on an opened page and are omitted.",
+        "references": [
+          {
+            "source": "CNBC",
+            "title": "Oil prices today: Brent, WTI rise",
+            "url": "https://www.cnbc.com/2026/10/12/oil-prics-today-iran-us-saudi-arabia-crude-.html"
+          },
+          {
+            "source": "Investrade",
+            "title": "Market Review: October 12, 2026",
+            "url": "https://investrade.com/market-review-october-12-2026/"
+          },
+          {
+            "source": "TASS",
+            "title": "Price of Brent oil up above $106 per barrel on ICE first since September 29",
+            "url": "https://tass.com/economy/2200855"
+          },
+          {
+            "source": "Strategitz",
+            "title": "Global Markets Close — October 12, 2026",
+            "url": "https://strategitz.substack.com/p/global-markets-close-october-12-2026"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 3,
+      "headline": "Micron fell 3.88% to $989.04 as memory-chip stocks sold off on a reported design advance at China's CXMT.",
+      "category": "technology stocks",
+      "event_date": "2026-10-12",
+      "summary": "Memory-chip makers dropped on Monday after Chinese rival ChangXin Memory Technologies (CXMT) said over the weekend it had made progress on a denser '4F square' DRAM memory-cell design. Micron closed down 3.88% and Sandisk fell roughly 6%. The weakness spread across semiconductors and was the main drag on the Nasdaq.",
+      "key_facts": [
+        "Micron shares fell 3.88% on Monday, from $1,029.00 to $989.04.",
+        "Sandisk fell roughly 6%; sources give 5.7% and 'more than 6%'.",
+        "The trigger was Chinese memory maker CXMT announcing progress on a denser '4F square' DRAM memory-cell design.",
+        "Intel fell 3.20%, AMD fell 2.28%, Broadcom fell 1.88% and Nvidia fell 1.29%.",
+        "Jefferies analysts said it is not clear the CXMT technology is commercial, and that Samsung and SK Hynix have worked on it as well."
+      ],
+      "entities": [
+        "Micron Technology",
+        "Sandisk",
+        "ChangXin Memory Technologies (CXMT)",
+        "SK Hynix",
+        "Intel",
+        "AMD",
+        "Broadcom",
+        "Nvidia",
+        "Jefferies"
+      ],
+      "tickers": [
+        "MU",
+        "SNDK",
+        "INTC",
+        "AMD",
+        "AVGO",
+        "NVDA"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "Micron's 3.88% drop is confirmed by Strategitz and by a stock-move report giving $1,029.00 to $989.04; the Motley Fool's Tuesday quote (down $51.97 to $937.07) also implies a $989.04 Monday close. The CXMT catalyst is confirmed by Motley Fool and Yahoo Finance. Sandisk's move differs by source: 5.7% in a Quartz excerpt (page not opened) versus 'more than 6%' in the Motley Fool recap. The Intel, AMD, Broadcom and Nvidia moves rest on Strategitz alone. Investrade gives the Philadelphia Semiconductor Index at -2.7% while Strategitz gives the SMH fund at -2.05%; neither is included as a key fact.",
+        "references": [
+          {
+            "source": "Motley Fool",
+            "title": "Why Micron Stock Dropped on Monday",
+            "url": "https://www.fool.com/investing/2026/10/12/why-micron-stock-dropped-on-monday/"
+          },
+          {
+            "source": "Yahoo Finance",
+            "title": "Memory Stocks Extend Slide Following News of Design Breakthrough in China",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/memory-stocks-extend-slide-following-163918757.html"
+          },
+          {
+            "source": "Strategitz",
+            "title": "Global Markets Close — October 12, 2026",
+            "url": "https://strategitz.substack.com/p/global-markets-close-october-12-2026"
+          },
+          {
+            "source": "Motley Fool via Yahoo Finance",
+            "title": "Stock Market Today, Oct. 12: Dow Gains as Memory Stocks Weigh on Nasdaq",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-oct-12-212311190.html"
+          },
+          {
+            "source": "The Stock Observer",
+            "title": "Micron Technology (NASDAQ:MU) Stock Falls 3.9%",
+            "url": "https://www.thestockobserver.com/2026/10/12/micron-technology-nasdaqmu-stock-falls-3-9-heres-what-happened.html"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 4,
+      "headline": "Meta shares rose 3.4% to $742.96 after it launched its Muse Wonder AI models and Zuckerberg said it had caught up with rivals.",
+      "category": "company news",
+      "event_date": "2026-10-12",
+      "summary": "Meta Platforms gained 3.4% on Monday, bucking a falling Nasdaq, after launching its Muse Wonder and Muse Wonder Full AI models. CEO Mark Zuckerberg told the Financial Times that Meta has caught up with rivals at the AI frontier and rejected calls to slow spending. Meta plans capital expenditures of $130 billion to $145 billion in 2026.",
+      "key_facts": [
+        "Meta shares rose 3.4% to $742.96 on Monday.",
+        "Meta launched new AI models called Muse Wonder and Muse Wonder Full.",
+        "Mark Zuckerberg told the Financial Times that Meta has caught up with rivals at the AI frontier.",
+        "Meta plans capital expenditures of $130 billion to $145 billion in 2026.",
+        "The gain ended four straight losing sessions for Meta stock."
+      ],
+      "entities": [
+        "Meta Platforms",
+        "Mark Zuckerberg",
+        "Muse Wonder",
+        "Financial Times"
+      ],
+      "tickers": [
+        "META"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "The 3.4% rise to $742.96 and the model launch are from the TradingView news report; Strategitz independently shows Meta +3.38%, and the Yahoo live blog and Motley Fool recap confirm the gain and the Muse Wonder launch. The capex range and the four-session losing streak rest on the TradingView report alone.",
+        "references": [
+          {
+            "source": "TradingView News",
+            "title": "META: Meta Stock Rises 3.4% as Zuckerberg Claims AI Frontier, Flexes New Model",
+            "url": "https://www.tradingview.com/news/tradingview:497a7471a094b:0-meta-meta-stock-rises-3-4-as-zuckerberg-claims-ai-frontier-flexes-new-model/"
+          },
+          {
+            "source": "Yahoo Finance",
+            "title": "Stock market today: Dow gains, S&P 500 and Nasdaq slip as focus turns to earnings season kickoff",
+            "url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-october-12-dow-sp-500-nasdaq-080321571.html"
+          },
+          {
+            "source": "Strategitz",
+            "title": "Global Markets Close — October 12, 2026",
+            "url": "https://strategitz.substack.com/p/global-markets-close-october-12-2026"
+          },
+          {
+            "source": "Motley Fool via Yahoo Finance",
+            "title": "Stock Market Today, Oct. 12: Dow Gains as Memory Stocks Weigh on Nasdaq",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-oct-12-212311190.html"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 5,
+      "headline": "Starbucks said it is \"not buying Chipotle,\" sending Chipotle shares down more than 4%.",
+      "category": "company news / M&A",
+      "event_date": "2026-10-12",
+      "summary": "Starbucks on Monday denied it is pursuing an acquisition of Chipotle Mexican Grill, ending days of speculation. The Financial Times had reported the previous Thursday that Starbucks had explored a takeover. Chipotle shares fell more than 4% while Starbucks edged higher in early trading. Starbucks CEO Brian Niccol previously ran Chipotle.",
+      "key_facts": [
+        "A Starbucks spokesperson said on Monday: \"Starbucks is not buying Chipotle.\"",
+        "Starbucks said its team is \"laser focused\" on executing its Back to Starbucks strategy.",
+        "The Financial Times reported the previous Thursday that Starbucks had explored a takeover of Chipotle.",
+        "Chipotle's market value was roughly $39 billion to $41 billion at the time of the Financial Times report.",
+        "Starbucks CEO Brian Niccol led Chipotle for six years before joining Starbucks in September 2024."
+      ],
+      "entities": [
+        "Starbucks",
+        "Chipotle Mexican Grill",
+        "Brian Niccol",
+        "Financial Times"
+      ],
+      "tickers": [
+        "SBUX",
+        "CMG"
+      ],
+      "fact_check": {
+        "status": "partially_verified",
+        "notes": "The denial and quotes are confirmed by NBC News and Yahoo Finance. Chipotle's decline of more than 4% is from the Yahoo Finance live blog; other reports say about 4%, and the premarket move was over 2%. The exact closing percentage was not confirmed to the decimal. Starbucks' move (up about 1% early) is an early-trading figure, not a close, and is not listed as a key fact. Re-check: The denial, the quotes, the Thursday Financial Times report, the $39-41 billion market value and the Niccol background are confirmed by the Yahoo/Quartz article and NBC News. Chipotle did not finish down more than 4%: the Motley Fool's closing recap gives a close of $30.40, down 3.75%, and other reports say about 3% to 4%. 'Over 4%' was an intraday figure from the Yahoo live blog. The headline carries the same overstatement. Starbucks closed up 1.69% at $92.28.",
+        "references": [
+          {
+            "source": "NBC News",
+            "title": "Starbucks is 'not buying Chipotle' after report it explored a deal",
+            "url": "https://www.nbcnews.com/business/consumer/starbucks-not-buying-chipotle-rcna602968"
+          },
+          {
+            "source": "Yahoo Finance",
+            "title": "Starbucks denies Chipotle acquisition, sending CMG stock lower",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/starbucks-denies-chipotle-acquisition-sending-132658555.html"
+          },
+          {
+            "source": "Yahoo Finance",
+            "title": "Stock market today: Dow gains, S&P 500 and Nasdaq slip as focus turns to earnings season kickoff",
+            "url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-october-12-dow-sp-500-nasdaq-080321571.html"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 6,
+      "headline": "Bumble shares jumped about 50% to $3.80 on reports Ithaca Holdings was in advanced talks to take it private at about $1 billion.",
+      "category": "M&A",
+      "event_date": "2026-10-12",
+      "summary": "Bumble stock surged roughly 50% on Monday after reports that newly formed investment firm Ithaca Holdings was in advanced talks to take the dating-app company private at a valuation of about $1 billion. Ithaca was founded by Ravi Gupta and John Hegeman. Bumble listed on Nasdaq in 2021 at a valuation of about $14 billion.",
+      "key_facts": [
+        "Bumble shares jumped roughly 50% on Monday, closing at $3.80.",
+        "Ithaca Holdings was reported to be in advanced talks to take Bumble private at a valuation of about $1 billion.",
+        "Bumble's market value was about $389 million at Friday's close, before the report.",
+        "Ithaca Holdings was founded by Ravi Gupta and John Hegeman.",
+        "Bumble debuted on Nasdaq in 2021 at a valuation of about $14 billion."
+      ],
+      "entities": [
+        "Bumble",
+        "Ithaca Holdings",
+        "Ravi Gupta",
+        "John Hegeman",
+        "Whitney Wolfe Herd"
+      ],
+      "tickers": [
+        "BMBL"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "The roughly 50% jump and the $1 billion talks are confirmed by The Next Web (citing Reuters) and Finimize (citing The Wall Street Journal); Investrade also lists the talks. The $3.80 close and $389 million prior market value rest on The Next Web alone, but are consistent with Bumble's October 13 press release (SEC filing), which implies an October 9 close of about $2.54. That definitive agreement ($6.05 a share, $1.3 billion) was announced on October 13 and is not part of this day's story.",
+        "references": [
+          {
+            "source": "The Next Web",
+            "title": "Bumble reportedly in talks to go private at a valuation of about $1bn",
+            "url": "https://thenextweb.com/news/bumble-go-private-ithaca-holdings-1bn"
+          },
+          {
+            "source": "Finimize",
+            "title": "Bumble Jumped After Private-Equity Talks Hit The News",
+            "url": "https://finimize.com/content/bumble-jumped-after-private-equity-talks-hit-the-news"
+          },
+          {
+            "source": "Investrade",
+            "title": "Market Review: October 12, 2026",
+            "url": "https://investrade.com/market-review-october-12-2026/"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 7,
+      "headline": "IonQ agreed to buy security firm Elisity in an all-stock deal valued at up to $1.3 billion.",
+      "category": "M&A",
+      "event_date": "2026-10-12",
+      "summary": "Quantum-computing company IonQ announced on October 12, 2026 a definitive agreement to acquire Elisity, a Zero Trust security company, in an all-stock transaction worth up to $1.3 billion. The price includes up to $150 million in earnout payments tied to Elisity's performance. The deal is expected to close in the fourth quarter of 2026.",
+      "key_facts": [
+        "IonQ agreed to acquire Elisity in an all-stock transaction valued at up to $1.3 billion.",
+        "The deal includes up to $150 million in earnout consideration tied to Elisity's performance.",
+        "The closing consideration is IonQ stock valued at $1.15 billion.",
+        "The deal is expected to close in the fourth quarter of 2026, subject to regulatory approval.",
+        "The IonQ share price used for the deal has a cap of $49.61 and a floor of $33.07.",
+        "Elisity has more than 100 global customer deployments."
+      ],
+      "entities": [
+        "IonQ",
+        "Elisity",
+        "Niccolo de Masi",
+        "James Winebrenner"
+      ],
+      "tickers": [
+        "IONQ"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "All terms come from IonQ's press release filed with the SEC as an 8-K exhibit, dated October 12, 2026. The $1.15 billion closing consideration is from the 8-K as shown in the search excerpt. One recap said IonQ shares fell on the news, but no percentage was confirmed, so no share move is given.",
+        "references": [
+          {
+            "source": "SEC (IonQ Form 8-K, Exhibit 99.1)",
+            "title": "IonQ press release announcing agreement to acquire Elisity",
+            "url": "https://www.sec.gov/Archives/edgar/data/0001824920/000119312526419609/ionq-ex99_1.htm"
+          },
+          {
+            "source": "SEC (IonQ Form 8-K)",
+            "title": "IonQ, Inc. - Form 8-K",
+            "url": "https://www.sec.gov/Archives/edgar/data/0001824920/000119312526419609/ionq-20261009.htm"
+          },
+          {
+            "source": "Econ Currents",
+            "title": "12 October 2026 Market Close & Major Financial Headlines: Dow Rises as Nasdaq Leads Declines",
+            "url": "https://econcurrents.substack.com/p/12-october-2026-market-close-and"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 8,
+      "headline": "Bristol Myers Squibb said its lung-fibrosis drug admilparant met its Phase 3 goal at the 60 mg dose but not at 120 mg, and the stock fell 2.6%.",
+      "category": "company news / healthcare",
+      "event_date": "2026-10-12",
+      "summary": "Bristol Myers Squibb announced on October 12, 2026 that the Phase 3 ALOFT-IPF trial of admilparant in idiopathic pulmonary fibrosis met its primary endpoint at the 60 mg dose. The 120 mg dose slowed lung-function decline but did not reach statistical significance. The trial enrolled about 1,255 adults. The mixed result sent the shares down 2.6%.",
+      "key_facts": [
+        "The Phase 3 ALOFT-IPF trial of admilparant met its primary endpoint at the 60 mg dose.",
+        "The 120 mg dose slowed lung-function decline but did not reach statistical significance.",
+        "The trial enrolled approximately 1,255 adults with idiopathic pulmonary fibrosis.",
+        "The primary endpoint measured change in forced vital capacity at Week 52 versus placebo.",
+        "Bristol Myers Squibb shares fell 2.6% on October 12.",
+        "Topline results from the related ALOFT-PPF trial are expected in early 2027."
+      ],
+      "entities": [
+        "Bristol Myers Squibb",
+        "admilparant",
+        "ALOFT-IPF"
+      ],
+      "tickers": [
+        "BMY"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "Trial facts are from the Bristol Myers Squibb press release dated October 12, 2026. The 2.6% share decline rests on a single source (the Zacks article on Yahoo Finance, published October 13). That article also reports a 36% plunge in rival Continuum Therapeutics, which was not independently confirmed and is not listed as a key fact.",
+        "references": [
+          {
+            "source": "Bristol Myers Squibb",
+            "title": "Bristol Myers Squibb Announces Phase 3 ALOFT-IPF Trial Evaluating Admilparant in Adults with Idiopathic Pulmonary Fibrosis Met Primary Endpoint",
+            "url": "https://news.bms.com/news/corporate-financial/2026/Bristol-Myers-Squibb-Announces-Phase-3-ALOFT-IPF-Trial-Evaluating-Admilparant-in-Adults-with-Idiopathic-Pulmonary-Fibrosis-Met-Primary-Endpoint/default.aspx"
+          },
+          {
+            "source": "Zacks via Yahoo Finance",
+            "title": "BMY Reports Mixed Phase III Trial Results, Stock Down",
+            "url": "https://finance.yahoo.com/healthcare/articles/bmy-reports-mixed-phase-iii-164000674.html"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 9,
+      "headline": "Gold fell about 0.6%, slipping below $4,200 an ounce, as the dollar index rose to about 102.58.",
+      "category": "commodities / currencies",
+      "event_date": "2026-10-12",
+      "summary": "Gold gave up early gains on Monday and finished lower as a stronger US dollar and higher oil prices weighed on bullion. Gold futures pulled back below $4,200 an ounce from a two-week high. The dollar index rose about 0.36%.",
+      "key_facts": [
+        "Gold fell about 0.6% on Monday.",
+        "Gold futures pulled back below $4,200 an ounce, giving up a two-week closing high.",
+        "Gold futures fell $25.70, or 0.61%, to $4,190.60 an ounce.",
+        "The US dollar index rose about 0.36% to about 102.58."
+      ],
+      "entities": [
+        "Gold",
+        "US Dollar Index",
+        "CME Group"
+      ],
+      "tickers": [
+        "GC=F",
+        "DXY"
+      ],
+      "fact_check": {
+        "status": "partially_verified",
+        "notes": "The direction and rough size are confirmed by several sources, but exact prices differ by instrument and source. Investrade gives futures at -$25.70 (-0.61%) to $4,190.60, a figure that rests on that one source. The Motley Fool recap gives gold at -0.64% to $4,167.56, and another report gives spot at -$28.91 (-0.69%) to $4,164.96. CME Group confirms futures fell back below $4,200 from a two-week closing high. The dollar index is given as 102.59 (+0.37%) by Investrade, 102.58 (+0.36%) by Strategitz and 102.57 (+0.35%) in another report. The CNBC gold article could not be opened (403).",
+        "references": [
+          {
+            "source": "Investrade",
+            "title": "Market Review: October 12, 2026",
+            "url": "https://investrade.com/market-review-october-12-2026/"
+          },
+          {
+            "source": "CME Group",
+            "title": "Gold futures pull back from two-week highs amid a stronger U.S. dollar",
+            "url": "https://www.cmegroup.com/videos/2026/10/12/gold-futures-pull-back-from-two-week-highs-amid-a-stronger-u-s-.html"
+          },
+          {
+            "source": "Motley Fool",
+            "title": "Stock Market Today, Oct. 12: Dow Gains as Memory Stocks Weigh on Nasdaq",
+            "url": "https://www.fool.com/coverage/stock-market-today/2026/10/12/stock-market-today-oct-12-dow-gains-as-memory-stocks-weigh-on-nasdaq/"
+          },
+          {
+            "source": "Strategitz",
+            "title": "Global Markets Close — October 12, 2026",
+            "url": "https://strategitz.substack.com/p/global-markets-close-october-12-2026"
+          },
+          {
+            "source": "CNBC",
+            "title": "Gold eases on strong dollar, oil prices; U.S. inflation data in focus",
+            "url": "https://www.cnbc.com/2026/10/12/gold-gains-on-weaker-oil-dollar-us-inflation-data-in-focus.html"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 10,
+      "headline": "The bull market turned four years old on a Columbus Day session with bond markets shut, a day before big banks open earnings season.",
+      "category": "markets / week ahead",
+      "event_date": "2026-10-12",
+      "summary": "Monday, October 12, 2026 marked four years since the S&P 500's bear-market low of October 12, 2022, with the index up more than 120% since then. US bond markets were closed for Columbus Day and no economic data was released. Investors were positioned for JPMorgan, Goldman Sachs, Citigroup and Wells Fargo earnings on Tuesday and the consumer price index report on Wednesday.",
+      "key_facts": [
+        "October 12, 2026 was the fourth anniversary of the bull market that began on October 12, 2022.",
+        "The S&P 500 is up more than 120% since October 12, 2022.",
+        "US bond markets were closed on Monday for Columbus Day, and no economic data was released.",
+        "JPMorgan, Goldman Sachs, Citigroup and Wells Fargo were due to report earnings on Tuesday, October 13.",
+        "The consumer price index report was due on Wednesday.",
+        "The Federal Reserve's next rate decision is scheduled for October 28."
+      ],
+      "entities": [
+        "S&P 500",
+        "JPMorgan Chase",
+        "Goldman Sachs",
+        "Citigroup",
+        "Wells Fargo",
+        "Federal Reserve"
+      ],
+      "tickers": [
+        "^GSPC",
+        "JPM",
+        "GS",
+        "C",
+        "WFC"
+      ],
+      "fact_check": {
+        "status": "partially_verified",
+        "notes": "The anniversary and the bank earnings schedule are confirmed by the Yahoo Finance live blog and the Motley Fool recap. The 'more than 120%' gain rests on the Motley Fool recap alone. The bond-market closure is from Strategitz and the lack of economic releases from Econ Currents. The CPI date and October 28 Fed decision date rest on the Motley Fool Breakfast News. Note that the Motley Fool recap quotes a 10-year Treasury yield of 5.24% despite the bond-market holiday; no yield is given here for that reason.",
+        "references": [
+          {
+            "source": "Yahoo Finance",
+            "title": "Stock market today: Dow gains, S&P 500 and Nasdaq slip as focus turns to earnings season kickoff",
+            "url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-october-12-dow-sp-500-nasdaq-080321571.html"
+          },
+          {
+            "source": "Motley Fool via Yahoo Finance",
+            "title": "Stock Market Today, Oct. 12: Dow Gains as Memory Stocks Weigh on Nasdaq",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-oct-12-212311190.html"
+          },
+          {
+            "source": "Motley Fool",
+            "title": "Breakfast News: Amazon Plots a Chip-Switch Coup",
+            "url": "https://www.fool.com/investing/breakfast-news/2026/10/12/breakfast-news-amazon-plots-a-chip-switch-coup/"
+          },
+          {
+            "source": "Strategitz",
+            "title": "Global Markets Close — October 12, 2026",
+            "url": "https://strategitz.substack.com/p/global-markets-close-october-12-2026"
+          },
+          {
+            "source": "Econ Currents",
+            "title": "12 October 2026 Market Close & Major Financial Headlines: Dow Rises as Nasdaq Leads Declines",
+            "url": "https://econcurrents.substack.com/p/12-october-2026-market-close-and"
+          }
+        ]
+      }
+    }
+  ]
+}

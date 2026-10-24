@@ -14,13 +14,16 @@ Setting this up on a new machine: see `SETUP.md`.
 run_daily.cmd            run it by hand (double-click)
 config/settings.json     your settings; reused until you change them
 config/.env              your keys (copy config/.env.example); never committed
-prompts/                 persona.md (the artist), elevenlabs_format.md (how the song is laid out), news_research.md
+prompts/                 persona.md (the artist), elevenlabs_format.md (how the song is laid out), news_research.md,
+                         briefs/ (optional one-run steers for the song, used with --brief)
 raw_data/                us_finance_news_DATE.json: the day's news, gathered by the pipeline or dropped in by hand
 pipeline/                the code
   news.py                gathers and fact-checks a day's news
   stages/song.py         1. Claude writes the song; it is checked and fact-checked
   stages/audio.py        2. ElevenLabs generates it; Whisper listens to every take
   stages/subtitles.py    3. captions are timed from what was actually sung
+  revoice.py             gives a finished song another voice over the same music
+  ambience.py            puts a finished song in a place (room, reverb, room tone); see AMBIENCE.md
   video.py               renders and checks the reel
   instagram.py           posts the reel
 reel/                    the video project (HyperFrames); see "The reel" below
@@ -49,6 +52,33 @@ output/usage.csv         ElevenLabs credits used
    - Different take, same lyrics: `run_daily.cmd --from audio`
    - New lyrics as well: `run_daily.cmd --force`
 4. Ask Claude Code to "run the pipeline" to make the reel, watch it, and tell Claude to post it.
+
+## A different kind of song for one day
+The persona and the formatting guide decide what a normal song is. To steer a single run without
+changing them, give it a brief, a text file of instructions for the song writer:
+
+```
+run_daily.cmd --date 2026-10-08 --from song --brief prompts\briefs\idol-drop.md --vocal both --stop-after song
+```
+
+- `--brief FILE` replaces `extra_instructions` for that run; `--vocal` sets the voice.
+- `--stop-after song` writes and checks the lyrics and stops. Read `output/DATE/song.md`, then run
+  `run_daily.cmd --date DATE` to generate the audio (this is where credits are spent).
+- `prompts/briefs/idol-drop.md` is the structure used for the second version of 2026-10-08: a cute
+  idol-pop intro of about six seconds, a beat drop into a different beat, fast rap with no repeated
+  hook, and the idol voice back for the sign-off.
+- `prompts/briefs/sapakhru.md` is the brief used on 2026-10-09: the news as a sapakhru (the Charani
+  chhand of Gujarat) in English, rapped by a sharp high voice over Gujarati folk drums and 2000s hip hop.
+- To keep a song's music and change only its voice: `python -m pipeline.revoice DATE VOICE_ID`
+  (`--voices` lists the ElevenLabs voices). It replaces the vocal over the same instrumental, so the
+  subtitles and timeline stay as they are.
+- `prompts/briefs/slow-melodic.md` is the brief used on 2026-10-12: a slow, sung-rap song with held
+  words, pauses and a played, many-instrument arrangement, set in one named place. Use it with
+  `--vocal male --length 60` (`--length` sets one run's reel length).
+- To make a song sound recorded in a place: `python -m pipeline.ambience DATE --space rain` (`--spaces`
+  lists the places). It gives the voice the room's reflections and a microphone roll-off and runs a quiet
+  bed of room tone under the song; timings do not change. The guidelines are in `AMBIENCE.md`.
+- Redoing a day overwrites its files in `output/DATE/`; copy the folder first if you want the old one.
 
 ## Where the news comes from
 The song is written only from `raw_data/us_finance_news_DATE.json`. If you run a date that has no file
@@ -105,7 +135,9 @@ in `.claude/skills/run-pipeline/SKILL.md`.
 reel/
   index.html             the page: fonts, layout, and the scripts of the day being rendered
   lib/                   the kit: kit.js (shots, type, captions, moves), pixel.js (pixel-art icons),
-                         ink.js (pen lines), windows.js (the windows look)
+                         ink.js (pen lines), windows.js (the windows look), circuit.js (the circuit look),
+                         slap.js (the slap look: type and interface elements over stock footage), stitch.js (an embroidered cloth),
+                         film.js (the film look: a slow night film with serif lyric, rain and grain)
   days/DATE/             one day's scenes, run in file-name order
   templates/             one file per look, used by the "default" option
   references/            log.json (which reference made which reel); the videos themselves stay local

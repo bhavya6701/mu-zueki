@@ -1,3 +1,9 @@
 All fonts in this folder are free to use, including commercially, under the SIL Open Font License 1.1. The full licence and each font's copyright notice are in OFL.txt. Downloaded from Google Fonts (Latin character set only).
 
 Inter · Space Grotesk · Archivo Black · Instrument Serif · Bricolage Grotesque · JetBrains Mono
+
+Added later, also under the SIL Open Font License 1.1, from Fontsource (the Google Fonts files):
+Reenie Beanie · Mochiy Pop One · Dela Gothic One (Latin and Japanese sets)
+Baloo Bhai 2 (Latin and Gujarati sets, weight 800), from Google Fonts
+Anton (weight 400) and Playfair Display (black italic), from Google Fonts
+Instrument Serif (regular and italic), from Google Fonts

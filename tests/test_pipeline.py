@@ -11,7 +11,7 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pipeline import __main__ as runner  # noqa: E402
-from pipeline import checks, elevenlabs, instagram, listen, news, settings, text, video  # noqa: E402
+from pipeline import ambience, checks, elevenlabs, instagram, listen, news, settings, text, video  # noqa: E402
 from pipeline.day import DONE, FAILED, REVIEW, Day, StageResult  # noqa: E402
 from pipeline.stages import audio as audio_stage  # noqa: E402
 from pipeline.stages import song as song_stage  # noqa: E402
@@ -327,6 +327,11 @@ class BeatTests(unittest.TestCase):
 
 
 class ElevenLabsTests(unittest.TestCase):
+    def test_a_dropped_connection_while_reading_the_balance_is_not_an_error(self):
+        import http.client
+        with mock.patch("urllib.request.urlopen", side_effect=http.client.RemoteDisconnected("closed")):
+            self.assertIsNone(elevenlabs.get_credits("key"))
+
     PLAN = good_song()["plan"]
 
     def test_api_key_from_env_file_or_environment(self):
@@ -848,7 +853,9 @@ class ReelCheckTests(unittest.TestCase):
 
 class ReelPrepareTests(unittest.TestCase):
     INDEX = (
-        '<div id="root" data-duration="1">\n<audio id="song" data-duration="1"></audio>\n</div>\n'
+        '<div id="root" data-duration="1">\n'
+        '      <!-- footage:start (clips) -->\n      <video id="old" data-duration="3"></video>\n      <!-- footage:end -->\n'
+        '<audio id="song" data-duration="1"></audio>\n</div>\n'
         '    <!-- day:start (scenes) -->\n    <script src="days/2026-01-01/old.js"></script>\n    <!-- day:end -->\n'
     )
 
@@ -881,6 +888,124 @@ class ReelPrepareTests(unittest.TestCase):
         self.assertIn("<!-- day:end -->", html)
         self.assertEqual((self.reel / "audio.mp3").read_bytes(), b"song")
         self.assertTrue((self.reel / "data" / "timeline.js").read_text(encoding="utf-8").startswith("window.TIMELINE = {"))
+        self.assertNotIn('id="old"', html)
+
+    def test_footage_is_cut_to_its_lyric_lines_and_placed_under_the_scenes(self):
+        timeline = {"duration_seconds": 10.0, "downbeats": [1.0, 3.0, 5.0],
+                    "captions": [{"start": 0.0, "words": [{"start": 0.0}, {"start": 0.5}]},
+                                 {"start": 2.0, "words": [{"start": 2.0}, {"start": 2.4}]}]}
+        self.day.write_json(self.day.timeline_json, timeline)
+        scenes = self.reel / "days" / "2026-10-06"
+        scenes.mkdir(parents=True)
+        (scenes / "1-a.js").write_text("", encoding="utf-8")
+        (scenes / "footage.json").write_text(json.dumps([
+            {"id": "f1", "clip": "hall", "start": "cap:1", "end": "cap:2", "from": 1.5},
+            {"id": "f2", "clip": "hall", "start": "word:2:1", "end": "cut:2", "rect": [0, 960, 1080, 960]},
+            {"id": "f3", "clip": "hall", "start": "cut:2", "end": "end"},
+        ]), encoding="utf-8")
+        media = self.reel / "media" / "2026-10-06"
+        media.mkdir(parents=True)
+        (media / "hall.mp4").write_bytes(b"clip")
+        cuts = []
+
+        def fake_cut(source, target, seconds, entry):
+            cuts.append((entry["id"], round(seconds, 3)))
+            target.write_bytes(b"cut")
+
+        html = video.footage_tags(self.day, timeline, self.reel, cut=fake_cut)
+        self.assertEqual(cuts, [("f1", 2.0), ("f2", 0.6), ("f3", 7.0)])
+        self.assertIn('id="f1" class="clip footage"', html)
+        self.assertIn('data-start="0.000" data-duration="2.000"', html)
+        self.assertIn('data-start="2.400" data-duration="0.600"', html)
+        self.assertIn("left:0px;top:960px;width:1080px;height:960px", html)
+        self.assertIn('data-start="3.000" data-duration="7.000"', html)
+        # A second run reuses the cut files.
+        video.footage_tags(self.day, timeline, self.reel, cut=fake_cut)
+        self.assertEqual(len(cuts), 3)
+        self.assertEqual(video.moment(4.5, timeline), 4.5)
+        with self.assertRaises(settings.RunError):
+            video.moment("soon", timeline)
+
+    def test_footage_with_a_join_label_becomes_one_clip(self):
+        timeline = {"duration_seconds": 10.0, "downbeats": [],
+                    "captions": [{"start": 0.0, "words": [{"start": 0.0}]}, {"start": 2.0, "words": [{"start": 2.0}]},
+                                 {"start": 5.0, "words": [{"start": 5.0}]}]}
+        scenes = self.reel / "days" / "2026-10-06"
+        scenes.mkdir(parents=True)
+        media = self.reel / "media" / "2026-10-06"
+        media.mkdir(parents=True)
+        (media / "hall.mp4").write_bytes(b"clip")
+        (scenes / "footage.json").write_text(json.dumps([
+            {"id": "f1", "clip": "hall", "start": "cap:1", "end": "cap:2", "join": "a"},
+            {"id": "g1", "clip": "hall", "start": 1.0, "end": 4.0, "rect": [100, 400, 600, 600], "track": 1},
+            {"id": "f2", "clip": "hall", "start": "cap:2", "end": "cap:3", "from": 3.0, "join": "a"},
+            {"id": "f3", "clip": "hall", "start": "cap:3", "end": "end"},
+        ]), encoding="utf-8")
+        joins = []
+
+        def fake_cut(source, target, seconds, entry):
+            target.write_bytes(b"cut")
+
+        def fake_join(parts, target):
+            joins.append([round(seconds, 3) for _, seconds in parts])
+            target.write_bytes(b"joined")
+
+        html = video.footage_tags(self.day, timeline, self.reel, cut=fake_cut, join=fake_join)
+        self.assertEqual(joins, [[2.0, 3.0]])
+        self.assertEqual(html.count("<video"), 3)
+        self.assertIn('id="f1" class="clip footage" src="media/2026-10-06/cut/f1-join-', html)
+        self.assertIn('data-start="0.000" data-duration="5.000"', html)
+        self.assertNotIn('id="f2"', html)
+        # A clip that does not follow on from the last one cannot join it.
+        (scenes / "footage.json").write_text(json.dumps([
+            {"id": "f1", "clip": "hall", "start": "cap:1", "end": "cap:2", "join": "a"},
+            {"id": "f2", "clip": "hall", "start": "cap:3", "end": "end", "join": "a"},
+        ]), encoding="utf-8")
+        with self.assertRaises(settings.RunError):
+            video.footage_tags(self.day, timeline, self.reel, cut=fake_cut, join=fake_join)
+
+
+class SteerTests(unittest.TestCase):
+    def test_a_brief_and_a_vocal_override_one_run_and_leave_the_settings_alone(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            brief = Path(tmp) / "brief.md"
+            brief.write_text("\nSweet intro, then a drop.\n", encoding="utf-8")
+            base = {"extra_instructions": "", "vocal": "auto", "length_seconds": 45}
+            run = runner.steer(base, str(brief), "both")
+            self.assertEqual(run["extra_instructions"], "Sweet intro, then a drop.")
+            self.assertEqual(run["vocal"], "both")
+            self.assertEqual(base, {"extra_instructions": "", "vocal": "auto", "length_seconds": 45})
+            self.assertEqual(runner.steer(base, None, None), base)
+            self.assertEqual(runner.steer(base, None, None, 60)["length_seconds"], 60)
+            with self.assertRaises(settings.RunError):
+                runner.steer(base, str(Path(tmp) / "missing.md"), None)
+
+
+class AmbienceTests(unittest.TestCase):
+    def test_the_amount_scales_the_place_and_leaves_the_microphone_alone(self):
+        space = ambience.SPACES["carpark"]
+        half = ambience.scale(space, 0.5)
+        self.assertAlmostEqual(half["wet"], space["wet"] - 6.02, places=2)
+        self.assertAlmostEqual(half["bed_db"], space["bed_db"] - 6.02, places=2)
+        self.assertEqual((half["hp"], half["lp"], half["rt"]), (space["hp"], space["lp"], space["rt"]))
+        self.assertEqual(ambience.scale(space, 1), space)
+        self.assertEqual(ambience.scale(space, 0)["bed_db"], -120)
+
+    def test_every_space_stays_subtle_and_has_a_bed_that_can_be_built(self):
+        for name, space in ambience.SPACES.items():
+            self.assertLessEqual(space["wet"], -15, name)
+            self.assertLessEqual(space["bed_db"], -30, name)
+            self.assertTrue(1 <= space["duck"] <= 2, name)
+            self.assertTrue(80 <= space["hp"] <= 100 and 8000 <= space["lp"] <= 11000, name)
+            self.assertIn("amix=inputs=", ambience.bed_graph(space["bed"], 10))
+
+    def test_the_mix_takes_the_voice_through_the_roll_off_and_ducks_the_bed_under_it(self):
+        graph = ambience.mix_graph(ambience.SPACES["rain"], -3, -20)
+        self.assertIn("[1:a]aformat=channel_layouts=stereo,highpass=f=100,lowpass=f=9000", graph)
+        self.assertIn("[b][key]sidechaincompress", graph)
+        self.assertIn("adelay=36|43", graph)
+        self.assertIn("[0:a][dry][wet][bed][slap]amix=inputs=5", graph)
+        self.assertIn("[0:a][dry][wet][bed]amix=inputs=4", ambience.mix_graph(ambience.SPACES["studio"], -3, -20))
 
 
 class RunnerTests(unittest.TestCase):
