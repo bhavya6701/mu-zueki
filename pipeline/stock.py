@@ -1,10 +1,10 @@
-"""Find and fetch free stock clips from Vecteezy for a day's reel.
+"""Find and fetch free stock clips from Vecteezy for a week's reel.
 
     python -m pipeline.stock search "cell tower"            list the free clips for a search (id and title)
-    python -m pipeline.stock get DATE NAME ID-SLUG [SIZE]   download one into reel/media/DATE/NAME.mp4
+    python -m pipeline.stock get WEEK NAME ID-SLUG [SIZE]   download one into reel/media/WEEK/NAME.mp4
 
 Only clips under Vecteezy's free licence are fetched (it requires attribution), and every download is
-written to reel/media/DATE/credits.json so the reel's description can credit them. SIZE is small,
+written to reel/media/WEEK/credits.json so the reel's description can credit them. SIZE is small,
 medium, large (the default) or original.
 """
 from __future__ import annotations
@@ -67,7 +67,7 @@ def describe(page: str, slug: str) -> dict:
     return {"title": re.sub(r"\s*\d+\s+Stock Video at Vecteezy$", "", text), "author": author.group(1) if author else None}
 
 
-def get(date: str, name: str, slug: str, size: str = "large") -> dict:
+def get(week: str, name: str, slug: str, size: str = "large") -> dict:
     """Download a free clip and record its credit. Returns the credit entry."""
     opener = _opener()
     page_url = f"{SITE}/video/{slug}"
@@ -82,11 +82,11 @@ def get(date: str, name: str, slug: str, size: str = "large") -> dict:
                               {"Accept": "application/json", "X-Requested-With": "XMLHttpRequest", "Referer": page_url}))
     if not answer.get("url"):
         raise RunError(f"Vecteezy did not give a file for {slug}: {str(answer)[:200]}")
-    folder = MEDIA_DIR / date
+    folder = MEDIA_DIR / week
     folder.mkdir(parents=True, exist_ok=True)
     target = folder / f"{name}.mp4"
     target.write_bytes(_read(opener, answer["url"], timeout=600))
-    credit = {"name": name, "file": f"media/{date}/{target.name}", "source": "Vecteezy", "url": page_url,
+    credit = {"name": name, "file": f"media/{week}/{target.name}", "source": "Vecteezy", "url": page_url,
               **describe(page, slug), "licence": "Vecteezy free licence (attribution required)"}
     ledger = folder / "credits.json"
     credits = [c for c in (json.loads(ledger.read_text(encoding="utf-8")) if ledger.exists() else []) if c["name"] != name]

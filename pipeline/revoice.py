@@ -1,16 +1,16 @@
-"""Give a finished song a different voice without touching its music: python -m pipeline.revoice DATE VOICE_ID
+"""Give a finished song a different voice without touching its music: python -m pipeline.revoice WEEK VOICE_ID
 
-The day's audio.mp3 is split into vocals and instrumental (ElevenLabs stem separation), the vocal alone is
+The week's audio.mp3 is split into vocals and instrumental (ElevenLabs stem separation), the vocal alone is
 converted to the chosen voice (ElevenLabs voice changer, which keeps the timing and delivery), lowered and
 compressed, and mixed back over the untouched instrumental. Word timings do not move, so the subtitles
-and timeline stay valid. Working files are kept in output/DATE/revoice/.
+and timeline stay valid. Working files are kept in output/WEEK/revoice/.
 
     --voices            list the account's voices (id, name, labels) and stop
     --semitones N       lower the new vocal by N semitones after conversion (default 0)
     --formant           lower the voice's body (formants) with the pitch; without it only the pitch moves
     --direct            skip the voice changer: only lower and compress the original vocal
     --gain DB           level of the new vocal against the instrumental (default 0)
-    --out NAME          write output/DATE/revoice/NAME.mp3 instead of replacing audio.mp3
+    --out NAME          write output/WEEK/revoice/NAME.mp3 instead of replacing audio.mp3
 
 Both ElevenLabs steps spend credits. The split is done once and reused.
 """
@@ -29,7 +29,7 @@ import zipfile
 from pathlib import Path
 
 from . import elevenlabs
-from .day import Day
+from .episode import Episode
 from .settings import OUTPUT_DIR, RunError, log
 
 STEMS_URL = "https://api.elevenlabs.io/v1/music/stem-separation?output_format=mp3_44100_128"
@@ -98,7 +98,7 @@ def split(source: Path, work: Path, api_key: str) -> tuple[Path, Path]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(prog="pipeline.revoice", description=__doc__.split("\n")[0])
-    parser.add_argument("date", nargs="?")
+    parser.add_argument("week", nargs="?")
     parser.add_argument("voice", nargs="?")
     parser.add_argument("--voices", action="store_true")
     parser.add_argument("--semitones", type=float, default=0)
@@ -117,14 +117,14 @@ def main() -> int:
             for voice in json.loads(call(VOICES_URL, api_key))["voices"]:
                 print(voice["voice_id"], "|", voice["name"], "|", voice.get("category"), "|", json.dumps(voice.get("labels") or {}))
             return 0
-        if not args.date or not (args.voice or args.direct):
-            raise RunError("Give a date and a voice id (or --direct). --voices lists the voices.")
-        day = Day(OUTPUT_DIR, args.date)
-        work = day.dir / "revoice"
+        if not args.week or not (args.voice or args.direct):
+            raise RunError("Give a week and a voice id (or --direct). --voices lists the voices.")
+        episode = Episode(OUTPUT_DIR, args.week)
+        work = episode.dir / "revoice"
         work.mkdir(parents=True, exist_ok=True)
         original = work / "original.mp3"
         if not original.exists():
-            shutil.copyfile(day.audio_mp3, original)  # the split always starts from the first voice
+            shutil.copyfile(episode.audio_mp3, original)  # the split always starts from the first voice
         vocals, music = split(original, work, api_key)
         if args.direct:
             new = vocals
@@ -138,7 +138,7 @@ def main() -> int:
         if args.semitones:
             ratio = 2 ** (-abs(args.semitones) / 12)
             chain = f"rubberband=pitch={ratio:.5f}:formant={'shifted' if args.formant else 'preserved'}:pitchq=quality," + chain
-        target = work / f"{args.out}.mp3" if args.out else day.audio_mp3
+        target = work / f"{args.out}.mp3" if args.out else episode.audio_mp3
         seconds = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(original)],
                                  capture_output=True, text=True).stdout.strip()
         ffmpeg("-i", str(music), "-i", str(new), "-filter_complex",

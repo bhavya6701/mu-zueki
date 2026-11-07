@@ -25,6 +25,14 @@
     '400 100px "JetBrains Mono"', '800 100px "JetBrains Mono"'];
   let tl = null;
 
+  // The picture's cue list for the sound design (earshot's real-sound cues.json): every move records the moment
+  // the eye reads it, what kind of event it is and how much it matters (weight 0..2). index.html writes it into the
+  // page after the build, and `python -m pipeline.sound cues WEEK` reads it from there.
+  R.cues = [];
+  let cueN = 0;
+  R.cue = (t, kind, o = {}) =>
+    R.cues.push(Object.assign({ t: Math.round(t * 10000) / 10000, kind, weight: 1, id: `${kind}:${++cueN}` }, o));
+
   // Repeatable pseudo-random numbers, so every render of a frame is identical.
   R.rng = function (seed) {
     let state = seed >>> 0;
@@ -54,19 +62,24 @@
 
   // ---- moves: all placed on the one timeline at absolute song time ----
   const fx = R.fx;
-  fx.slam = (node, t, from = 1.7, duration = 0.3) =>
-    tl.fromTo(node, { scale: from, opacity: 0 }, { scale: 1, opacity: 1, duration, ease: "power4.out" }, t);
-  fx.pop = (node, t, duration = 0.28) =>
-    tl.fromTo(node, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration, ease: "back.out(2.2)" }, t);
-  fx.rise = (node, t, duration = 0.3) =>
-    tl.fromTo(node, { y: 36, opacity: 0 }, { y: 0, opacity: 1, duration, ease: "power3.out" }, t);
-  fx.side = (node, t, direction = 1, duration = 0.32) =>
+  // (A slam lands in its first few frames, a pop reads at half its travel, a side-throw's whoosh peaks early.)
+  fx.slam = (node, t, from = 1.7, duration = 0.3) => (
+    R.cue(t + 0.05, "hit"),
+    tl.fromTo(node, { scale: from, opacity: 0 }, { scale: 1, opacity: 1, duration, ease: "power4.out" }, t));
+  fx.pop = (node, t, duration = 0.28) => (
+    R.cue(t + duration * 0.35, "pop", { weight: 0.8 }),
+    tl.fromTo(node, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration, ease: "back.out(2.2)" }, t));
+  fx.rise = (node, t, duration = 0.3) => (
+    R.cue(t + duration * 0.3, "pop", { weight: 0.4 }),
+    tl.fromTo(node, { y: 36, opacity: 0 }, { y: 0, opacity: 1, duration, ease: "power3.out" }, t));
+  fx.side = (node, t, direction = 1, duration = 0.32) => (
+    R.cue(t + 0.06, "whoosh", { weight: 0.8, dur: duration, pan: direction > 0 ? 0.5 : -0.5 }),
     tl.fromTo(
       node,
       { x: direction * 1100, skewX: direction * -14, opacity: 0 },
       { x: 0, skewX: 0, opacity: 1, duration, ease: "power4.out" },
       t,
-    );
+    ));
   fx.squash = (node, t, duration = 0.3) =>
     tl.fromTo(
       node,
@@ -81,6 +94,7 @@
   };
   // A number that rolls from one value to another; format turns the value into text.
   fx.count = (node, t, from, to, duration, format) => {
+    R.cue(t + duration, "tick", { weight: 0.7 });
     const value = { v: from };
     node.textContent = format(from);
     tl.to(value, { v: to, duration, ease: "power2.out", onUpdate: () => (node.textContent = format(value.v)) }, t);
@@ -227,6 +241,7 @@
       const stage = el("div", "stage", punch);
 
       tl.set(box, { autoAlpha: 1 }, t0);
+      R.cue(t0, "cut", { weight: 0.3 });
       // A shot whose successor wipes in over it (`over` seconds) stays up until the wipe is done.
       const next = shots[shots.indexOf(shot) + 1];
       if (next) tl.set(box, { autoAlpha: 0 }, t1 + (next.options.over || 0));
@@ -311,6 +326,8 @@
           return node;
         },
         pix: (name, cell, o) => PIX.make(name, cell, o),
+        // A pixelfx effect on this shot (lib/pfx.js).
+        pfx: (id, o) => R.pfx.inShot(s, id, o),
         // Sprites that fall through the frame from t for `duration`.
         rain(name, cell, count, t, duration, seed) {
           const random = R.rng(seed || 5);

@@ -1,9 +1,11 @@
-"""Render a day's reel with HyperFrames: python -m pipeline.video [YYYY-MM-DD]
+"""Render a week's reel with HyperFrames: python -m pipeline.video [YYYY-Www]
 
-Uses the day's finished audio.mp3 and timeline.json and the scenes in reel/days/DATE/. Writes
-output/DATE/reel.mp4. If the day has a reel/days/DATE/footage.json, the stock clips it lists are cut to
-their lyric lines (cropped to the frame, graded, silent) and placed under the scenes. It never calls ElevenLabs. The scenes are written by Claude from a reference
-video (see .claude/skills/run-pipeline); this module only prepares, renders and checks.
+Uses the week's finished audio.mp3 and timeline.json and the scenes in reel/weeks/WEEK/. Writes
+output/WEEK/reel.mp4. If the week has a reel/weeks/WEEK/footage.json, the stock clips it lists are cut to
+their lyric lines (cropped to the frame, graded, silent) and placed under the scenes. If it has a
+sfx.json, its sound effects are mixed under the song, so the effects stay a separate, editable list and
+are never baked into the only copy of the soundtrack. It never calls ElevenLabs. The scenes are written by
+Claude from a reference video (see .claude/skills/run-pipeline); this module only prepares, renders and checks.
 """
 from __future__ import annotations
 
@@ -16,15 +18,15 @@ import subprocess
 import sys
 from pathlib import Path
 
-from .day import Day
-from .settings import DATE_RE, OUTPUT_DIR, ROOT, RunError, log
+from .episode import Episode
+from .settings import OUTPUT_DIR, ROOT, WEEK_RE, RunError, log
 
 REEL_DIR = ROOT / "reel"
 SIZE = (1080, 1920)
 FPS = 60
-# The block of index.html that lists the scenes of the day being rendered.
-DAY_BLOCK = re.compile(r"(<!-- day:start[^>]*-->\n).*?([ \t]*<!-- day:end -->)", re.S)
-# The block inside the composition root that holds the day's footage clips.
+# The block of index.html that lists the scenes of the week being rendered.
+SCENES_BLOCK = re.compile(r"(<!-- scenes:start[^>]*-->\n).*?([ \t]*<!-- scenes:end -->)", re.S)
+# The block inside the composition root that holds the week's footage clips.
 FOOTAGE_BLOCK = re.compile(r"(<!-- footage:start[^>]*-->\n).*?([ \t]*<!-- footage:end -->)", re.S)
 FOOTAGE_FPS = 30
 FOOTAGE_TAIL = 0.25  # seconds a cut clip runs past its slot, so a slot never ends on a missing frame
@@ -46,9 +48,9 @@ def _run(args: list[str], timeout: int, cwd: Path = REEL_DIR) -> subprocess.Comp
                           timeout=timeout)
 
 
-def scenes_for(date: str, reel_dir: Path = REEL_DIR) -> list[Path]:
-    """The day's scene files in the order they run (file-name order)."""
-    return sorted((reel_dir / "days" / date).glob("*.js"))
+def scenes_for(week: str, reel_dir: Path = REEL_DIR) -> list[Path]:
+    """The week's scene files in the order they run (file-name order)."""
+    return sorted((reel_dir / "weeks" / week).glob("*.js"))
 
 
 def moment(spec, timeline: dict) -> float:
@@ -83,9 +85,10 @@ def cut_clip(source: Path, target: Path, seconds: float, entry: dict) -> None:
     look = f",{entry['look']}" if entry.get("look") else ""
     args = [_tool("ffmpeg"), "-v", "error", "-y", "-ss", str(entry.get("from", 0)), "-i", str(source)]
     if entry.get("key"):
-        # A green-screen clip: the green is replaced by a flat colour.
+        # A green-screen clip: the green (or the clip's own screen colour, "screen") is replaced by a flat colour.
+        screen = entry.get("screen", "0x00FF00")
         args += ["-f", "lavfi", "-i", f"color=c={entry['key']}:s={width}x{height}:r={FOOTAGE_FPS}", "-filter_complex",
-                 f"[0:v]{fill},chromakey=0x00FF00:0.2:0.08,fps={FOOTAGE_FPS}[fg];[1:v][fg]overlay=shortest=0{look}[v]", "-map", "[v]"]
+                 f"[0:v]{fill},chromakey={screen}:0.2:0.08,fps={FOOTAGE_FPS}[fg];[1:v][fg]overlay=shortest=0{look}[v]", "-map", "[v]"]
     else:
         args += ["-vf", f"{fill},fps={FOOTAGE_FPS}{look}"]
     args += ["-t", f"{seconds + FOOTAGE_TAIL:.3f}", "-an", "-c:v", "libx264", "-crf", "18", "-preset", "medium",
@@ -115,16 +118,16 @@ def join_clips(parts: list[tuple[Path, float]], target: Path) -> None:
     partial.replace(target)
 
 
-def footage_tags(day: Day, timeline: dict, reel_dir: Path = REEL_DIR, cut=cut_clip, join=join_clips) -> str:
-    """The <video> clips for the day's footage.json (cutting any that are not cut yet), as HTML.
+def footage_tags(episode: Episode, timeline: dict, reel_dir: Path = REEL_DIR, cut=cut_clip, join=join_clips) -> str:
+    """The <video> clips for the week's footage.json (cutting any that are not cut yet), as HTML.
 
     Entries that share a "join" label (back to back, same rectangle and track) are joined into one clip, so a
     reel with many short shots does not put dozens of <video> elements on the page (the check has a fixed
     time budget for loading them)."""
-    manifest = reel_dir / "days" / day.date / "footage.json"
+    manifest = reel_dir / "weeks" / episode.week / "footage.json"
     if not manifest.exists():
         return ""
-    media = reel_dir / "media" / day.date
+    media = reel_dir / "media" / episode.week
     (media / "cut").mkdir(parents=True, exist_ok=True)
     tags = []
     groups: dict[str, dict] = {}
@@ -134,7 +137,7 @@ def footage_tags(day: Day, timeline: dict, reel_dir: Path = REEL_DIR, cut=cut_cl
             raise RunError(f"footage.json: {entry['id']} ends before it starts")
         source = media / f"{entry['clip']}.mp4"
         if not source.exists():
-            raise RunError(f"footage.json: {source.name} is not in reel/media/{day.date}/ (fetch it with pipeline.stock)")
+            raise RunError(f"footage.json: {source.name} is not in reel/media/{episode.week}/ (fetch it with pipeline.stock)")
         # The cut is named after everything that shapes it, so changing an entry makes a new file.
         shape = json.dumps({**{k: v for k, v in entry.items() if k not in ("id", "start", "end", "join")}, "s": round(end - start, 3)}, sort_keys=True)
         target = media / "cut" / f"{entry['id']}-{hashlib.sha1(shape.encode()).hexdigest()[:10]}.mp4"
@@ -161,24 +164,49 @@ def footage_tags(day: Day, timeline: dict, reel_dir: Path = REEL_DIR, cut=cut_cl
             if not group["file"].exists():
                 join(group["parts"], group["file"])
     return "".join(
-        f'      <video id="{t["id"]}" class="clip footage" src="media/{day.date}/cut/{t["file"].name}" muted playsinline '
+        f'      <video id="{t["id"]}" class="clip footage" src="media/{episode.week}/cut/{t["file"].name}" muted playsinline '
         f'data-start="{t["start"]:.3f}" data-duration="{t["end"] - t["start"]:.3f}" data-track-index="{t["track"]}" '
         f'style="left:{t["rect"][0]}px;top:{t["rect"][1]}px;width:{t["rect"][2]}px;height:{t["rect"][3]}px"></video>\n'
         for t in tags)
 
 
-def prepare(day: Day, reel_dir: Path = REEL_DIR) -> None:
-    """Point the reel project at this day: its song, its timings, its length and its scenes."""
-    scenes = scenes_for(day.date, reel_dir)
-    if not scenes:
-        raise RunError(f"No scenes for {day.date} yet (expected reel/days/{day.date}/*.js). "
-                       "Ask Claude to run the pipeline: it writes them from a reference video.")
-    for needed in (day.audio_mp3, day.timeline_json):
-        if not needed.exists():
-            raise RunError(f"{needed.name} is missing for {day.date}; run the song pipeline first")
-    timeline = day.read_json(day.timeline_json)
+def mix_sound(song: Path, cues: list[dict], timeline: dict, target: Path, reel_dir: Path = REEL_DIR) -> None:
+    """The song with the sound effects of sfx.json under it. Each cue is {"file": path from reel/, "at": a
+    footage-style time ("cap:N", "word:N:I", "cut:N" or seconds), "gain": dB (default -6)}."""
+    if not cues:
+        shutil.copyfile(song, target)
+        return
+    args, chains = [_tool("ffmpeg"), "-v", "error", "-y", "-i", str(song)], []
+    for n, cue in enumerate(cues, start=1):
+        source = reel_dir / cue["file"]
+        if not source.exists():
+            raise RunError(f"sfx.json: {cue['file']} was not found under reel/")
+        delay = max(0, round(moment(cue["at"], timeline) * 1000))
+        args += ["-i", str(source)]
+        chains.append(f"[{n}]aresample=44100,volume={cue.get('gain', -6)}dB,adelay={delay}:all=1[c{n}]")
+    graph = ("[0]aresample=44100[s];" + ";".join(chains) + ";[s]" + "".join(f"[c{n}]" for n in range(1, len(cues) + 1))
+             + f"amix=inputs={len(cues) + 1}:normalize=0:duration=first,alimiter=limit=0.95[out]")
+    result = _run(args + ["-filter_complex", graph, "-map", "[out]", "-b:a", "192k", str(target)], timeout=300, cwd=ROOT)
+    if result.returncode != 0:
+        raise RunError("Could not mix the sound effects: " + (result.stderr or result.stdout)[-600:])
 
-    shutil.copyfile(day.audio_mp3, reel_dir / "audio.mp3")
+
+def prepare(episode: Episode, reel_dir: Path = REEL_DIR) -> None:
+    """Point the reel project at this episode: its song, its timings, its length and its scenes."""
+    scenes = scenes_for(episode.week, reel_dir)
+    if not scenes:
+        raise RunError(f"No scenes for {episode.week} yet (expected reel/weeks/{episode.week}/*.js). "
+                       "Ask Claude to run the pipeline: it writes them from a reference video.")
+    for needed in (episode.audio_mp3, episode.timeline_json):
+        if not needed.exists():
+            raise RunError(f"{needed.name} is missing for {episode.week}; run the song pipeline first")
+    timeline = episode.read_json(episode.timeline_json)
+
+    cues = reel_dir / "weeks" / episode.week / "sfx.json"
+    if cues.exists():
+        mix_sound(episode.audio_mp3, json.loads(cues.read_text(encoding="utf-8")), timeline, reel_dir / "audio.mp3", reel_dir)
+    else:
+        shutil.copyfile(episode.audio_mp3, reel_dir / "audio.mp3")
     (reel_dir / "data").mkdir(exist_ok=True)
     # A render must not fetch, so the timings are loaded as a script.
     (reel_dir / "data" / "timeline.js").write_text(
@@ -186,14 +214,14 @@ def prepare(day: Day, reel_dir: Path = REEL_DIR) -> None:
 
     index = reel_dir / "index.html"
     html = index.read_text(encoding="utf-8")
-    tags = "".join(f'    <script src="days/{day.date}/{scene.name}"></script>\n' for scene in scenes)
-    html, blocks = DAY_BLOCK.subn(lambda m: m.group(1) + tags + m.group(2), html)
-    # Yesterday's footage goes first, so the only lengths left are the composition root's and the song's.
+    tags = "".join(f'    <script src="weeks/{episode.week}/{scene.name}"></script>\n' for scene in scenes)
+    html, blocks = SCENES_BLOCK.subn(lambda m: m.group(1) + tags + m.group(2), html)
+    # Last week's footage goes first, so the only lengths left are the composition root's and the song's.
     html, cleared = FOOTAGE_BLOCK.subn(lambda m: m.group(1) + m.group(2), html)
     html, lengths = re.subn(r'data-duration="[^"]*"', f'data-duration="{timeline["duration_seconds"]}"', html)
     if blocks != 1 or cleared != 1 or lengths != 2:
-        raise RunError("reel/index.html no longer has its day block, its footage block and two data-duration attributes")
-    clips = footage_tags(day, timeline, reel_dir)
+        raise RunError("reel/index.html no longer has its scenes block, its footage block and two data-duration attributes")
+    clips = footage_tags(episode, timeline, reel_dir)
     html = FOOTAGE_BLOCK.sub(lambda m: m.group(1) + clips + m.group(2), html)
     index.write_text(html, encoding="utf-8")
 
@@ -231,21 +259,21 @@ def check_reel(info: dict, song_seconds: float) -> list[str]:
     return problems
 
 
-def render(day: Day) -> list[str]:
-    """Render output/DATE/reel.mp4. Returns problems found in the result (empty when it is good)."""
-    prepare(day)
+def render(episode: Episode) -> list[str]:
+    """Render output/WEEK/reel.mp4. Returns problems found in the result (empty when it is good)."""
+    prepare(episode)
     npx = _tool("npx")
     check = _run([npx, "hyperframes", "check", "."], timeout=600)
     if check.returncode != 0:
         raise RunError("The scenes did not pass hyperframes check:\n" + (check.stdout or check.stderr)[-1500:])
 
-    reel = day.dir / "reel.mp4"
-    log(f"video: rendering {day.date} (a few minutes)")
+    reel = episode.dir / "reel.mp4"
+    log(f"video: rendering {episode.week} (a few minutes)")
     result = _run([npx, "hyperframes", "render", ".", "--fps", str(FPS), "--quality", "delivery",
                    "--workers", "4", "--output", str(reel)], timeout=3600)
     if result.returncode != 0 or not reel.exists():
         raise RunError("HyperFrames could not render the reel:\n" + (result.stderr or result.stdout)[-1500:])
-    problems = check_reel(probe(reel), day.read_json(day.timeline_json)["duration_seconds"])
+    problems = check_reel(probe(reel), episode.read_json(episode.timeline_json)["duration_seconds"])
     log(f"video: wrote {reel}" + ("" if not problems else "; problems: " + "; ".join(problems)))
     return problems
 
@@ -253,13 +281,13 @@ def render(day: Day) -> list[str]:
 def main() -> int:
     if sys.stdout is not None and hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    days = sorted(d.name for d in OUTPUT_DIR.iterdir() if d.is_dir() and DATE_RE.match(d.name)) if OUTPUT_DIR.is_dir() else []
-    date = sys.argv[1] if len(sys.argv) > 1 else (days[-1] if days else None)
-    if not date or not DATE_RE.match(date):
-        log("video: FAILED: give a date such as 2026-10-06, or make a song first")
+    weeks = sorted(d.name for d in OUTPUT_DIR.iterdir() if d.is_dir() and WEEK_RE.match(d.name)) if OUTPUT_DIR.is_dir() else []
+    week = sys.argv[1] if len(sys.argv) > 1 else (weeks[-1] if weeks else None)
+    if not week or not WEEK_RE.match(week):
+        log("video: FAILED: give a week such as 2026-W44, or make a song first")
         return 1
     try:
-        return 2 if render(Day(OUTPUT_DIR, date)) else 0
+        return 2 if render(Episode(OUTPUT_DIR, week)) else 0
     except RunError as exc:
         log(f"video: FAILED: {exc}")
         return 1

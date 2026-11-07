@@ -1,0 +1,133 @@
+{
+ "_doc": "What `python -m pipeline.openverse library` fetches into reel/sfx/library/<type>/ for real-sfx: per type (real-sfx's pack types: whoosh, impact, riser, pop, chime, click, glitch, foley, scifi, power; coin and sub drops are found by their names), searches in order and how many recordings to keep. One-shots only: `seconds` is the allowed length (default 0.1-4 s). CC0 / PDM / CC BY only (pipeline/openverse.py). Add searches or raise a count and run it again: only what is missing is fetched.",
+ "seconds": [
+  0.1,
+  4.0
+ ],
+ "types": {
+  "whoosh": {
+   "count": 8,
+   "queries": [
+    "whoosh",
+    "swoosh fast",
+    "air swish",
+    "whoosh transition"
+   ]
+  },
+  "impact": {
+   "count": 14,
+   "queries": [
+    "impact hit",
+    "punch impact",
+    "short explosion",
+    "cinematic hit",
+    "boom impact",
+    "hit metal",
+    "drum hit",
+    "heavy punch"
+   ]
+  },
+  "foley": {
+   "count": 6,
+   "queries": [
+    "thud",
+    "body fall thump",
+    "wood thump",
+    "book drop"
+   ]
+  },
+  "pop": {
+   "count": 12,
+   "queries": [
+    "pop",
+    "bubble pop",
+    "cork pop",
+    "mouth pop",
+    "pop sound effect",
+    "plop",
+    "ui pop",
+    "soft pop"
+   ]
+  },
+  "click": {
+   "count": 6,
+   "queries": [
+    "button click",
+    "switch click",
+    "mechanical click",
+    "tick"
+   ]
+  },
+  "coin": {
+   "count": 6,
+   "queries": [
+    "coin drop",
+    "coin arcade",
+    "coins",
+    "cash register"
+   ]
+  },
+  "glitch": {
+   "count": 6,
+   "queries": [
+    "glitch",
+    "digital glitch",
+    "static burst",
+    "data glitch"
+   ]
+  },
+  "scifi": {
+   "count": 5,
+   "queries": [
+    "electric zap",
+    "electric spark",
+    "laser zap"
+   ]
+  },
+  "power": {
+   "count": 3,
+   "queries": [
+    "tv turn off",
+    "power down",
+    "crt off",
+    "shutdown"
+   ],
+   "seconds": [
+    0.2,
+    4.0
+   ]
+  },
+  "riser": {
+   "count": 3,
+   "queries": [
+    "riser",
+    "reverse cymbal",
+    "rising tension"
+   ],
+   "seconds": [
+    0.5,
+    6.0
+   ]
+  },
+  "chime": {
+   "count": 4,
+   "queries": [
+    "ding",
+    "bell ding",
+    "chime"
+   ]
+  },
+  "sub_drop": {
+   "count": 3,
+   "queries": [
+    "sub drop",
+    "bass drop",
+    "boom low"
+   ],
+   "seconds": [
+    0.3,
+    4.0
+   ]
+  }
+ }
+}

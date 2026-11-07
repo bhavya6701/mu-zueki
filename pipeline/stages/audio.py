@@ -12,7 +12,7 @@ import shutil
 from pathlib import Path
 
 from .. import elevenlabs, listen
-from ..day import DONE, FAILED, REVIEW, Day, StageResult
+from ..episode import DONE, FAILED, REVIEW, Episode, StageResult
 from ..settings import OUTPUT_DIR, log
 from ..text import lyric_tokens
 
@@ -29,7 +29,7 @@ NUMBER_WORDS = frozenset(
 )
 TRIM_ABOVE_SECONDS = 0.3
 TRIM_PREROLL_SECONDS = 0.1
-USAGE_FIELDS = ("when", "news_date", "takes", "models", "estimated_credits", "measured_credits", "credits_left")
+USAGE_FIELDS = ("when", "episode", "takes", "models", "estimated_credits", "measured_credits", "credits_left")
 
 
 def scorable(tokens: list[str]) -> list[str]:
@@ -95,7 +95,7 @@ def record_usage(ledger: Path, row: dict) -> None:
         writer.writerow(row)
 
 
-def run(day: Day, settings: dict, compose=None, transcribe=None, get_credits=None, ledger: Path | None = None
+def run(episode: Episode, settings: dict, compose=None, transcribe=None, get_credits=None, ledger: Path | None = None
         ) -> StageResult:
     compose = compose or elevenlabs.compose
     transcribe = transcribe or listen.transcribe
@@ -105,16 +105,16 @@ def run(day: Day, settings: dict, compose=None, transcribe=None, get_credits=Non
     api_key = elevenlabs.load_api_key()
     if not api_key:
         return StageResult(FAILED, ["No ElevenLabs API key found. Put ELEVENLABS_API_KEY=your-key in config\\.env"])
-    song = day.read_json(day.song_json)
+    song = episode.read_json(episode.song_json)
     plan = song["plan"]
     estimate = elevenlabs.estimate_credits(plan)
     cap = settings["max_credits_per_song"]
-    spent = sum(credits_charged(r) for r in read_usage(ledger) if r["news_date"] == day.date)
+    spent = sum(credits_charged(r) for r in read_usage(ledger) if r.get("episode") == episode.week)
     before = get_credits(api_key)
     if before is not None and before[1] - before[0] < estimate:
         return StageResult(FAILED, [f"Not enough ElevenLabs credits: {before[1] - before[0]} left, about {estimate} needed"])
 
-    takes_dir = day.dir / "takes"
+    takes_dir = episode.dir / "takes"
     takes_dir.mkdir(parents=True, exist_ok=True)
     best, models, notes = None, [], []
     for n in range(1, settings["max_takes"] + 1):
@@ -146,7 +146,7 @@ def run(day: Day, settings: dict, compose=None, transcribe=None, get_credits=Non
         after = get_credits(api_key)
         measured = (after[0] - before[0]) or None if before is not None and after is not None else None
         record_usage(ledger, {
-            "when": f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}", "news_date": day.date, "takes": len(models),
+            "when": f"{dt.datetime.now():%Y-%m-%d %H:%M:%S}", "episode": episode.week, "takes": len(models),
             "models": " ".join(models), "estimated_credits": estimate * len(models),
             "measured_credits": "" if measured is None else measured,
             "credits_left": "" if after is None else after[1] - after[0],
@@ -162,16 +162,16 @@ def run(day: Day, settings: dict, compose=None, transcribe=None, get_credits=Non
     start = best["start_seconds"]
     if start is not None and start > TRIM_ABOVE_SECONDS:
         trimmed = round(start - TRIM_PREROLL_SECONDS, 3)
-        listen.trim_start(best["path"], day.audio_mp3, trimmed)
+        listen.trim_start(best["path"], episode.audio_mp3, trimmed)
         words = [(w, round(s - trimmed, 3), round(e - trimmed, 3)) for w, s, e in words if s >= trimmed]
         best = dict(best, start_seconds=round(start - trimmed, 3))
         log(f"audio: trimmed {trimmed:.2f}s of lead-in")
     else:
-        shutil.copyfile(best["path"], day.audio_mp3)
+        shutil.copyfile(best["path"], episode.audio_mp3)
     issues = problems(best)
-    day.write_json(day.audio_json, {
+    episode.write_json(episode.audio_json, {
         "take": best["take"], "takes_made": len(models), "model": best["model"],
-        "duration_seconds": round(listen.duration(day.audio_mp3), 2), "trimmed_seconds": trimmed,
+        "duration_seconds": round(listen.duration(episode.audio_mp3), 2), "trimmed_seconds": trimmed,
         "first_lyric_seconds": best["start_seconds"], "coverage": best["coverage"],
         "section_coverage": best["section_coverage"], "problems": issues,
         "heard": " ".join(w[0] for w in words), "words": [list(w) for w in words],

@@ -10,6 +10,7 @@ reel/audio.mp3
 reel/data/
 reel/renders/
 reel/snapshots/
+reel/lib/pixelfx/records/
 reel/.hyperframes/
 reel/node_modules/
 instagram/posts/*/reel.mp4
@@ -19,3 +20,8 @@ reel/references/*.mp4
 reel/media/
 reel/sfx/
 video_experiment/
+
+# real-sfx: the index and caches it builds from the local library (python scripts/build_index.py)
+.claude/skills/real-sfx/library_index.json
+.claude/skills/real-sfx/ambience_steady.json
+.claude/skills/real-sfx/taste_ratings.json

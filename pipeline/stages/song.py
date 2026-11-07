@@ -6,8 +6,8 @@ from pathlib import Path
 
 from .. import claude_cli
 from ..checks import check_song
-from ..day import DONE, FAILED, Day, StageResult
-from ..settings import DATE_RE, OUTPUT_DIR, PROMPT_DIR, log
+from ..episode import DONE, FAILED, Episode, StageResult
+from ..settings import OUTPUT_DIR, PROMPT_DIR, WEEK_RE, log
 
 NAME = "song"
 PROMPT_FILES = ("persona.md", "elevenlabs_format.md")
@@ -22,7 +22,7 @@ VERIFIER_SCHEMA = {
     "required": ["pass", "issues"],
     "properties": {"pass": {"type": "boolean"}, "issues": {"type": "array", "items": {"type": "string"}}},
 }
-VERIFIER_SYSTEM = """You are a strict fact checker for a daily finance-news song.
+VERIFIER_SYSTEM = """You are a strict fact checker for a weekly finance-news song.
 You receive the song's lyrics, its on-screen captions, its post caption, and the news file it was
 written from. The news file is the only source of truth.
 
@@ -43,15 +43,15 @@ def system_prompt(prompt_dir: Path = PROMPT_DIR) -> str:
     return "\n\n---\n\n".join((prompt_dir / name).read_text(encoding="utf-8") for name in PROMPT_FILES)
 
 
-def recent_hooks(output_dir: Path, before_date: str, n: int) -> list[str]:
+def recent_hooks(output_dir: Path, before_week: str, n: int) -> list[str]:
     if n <= 0 or not output_dir.is_dir():
         return []
-    days = sorted(
-        (d.name for d in output_dir.iterdir() if d.is_dir() and DATE_RE.match(d.name) and d.name < before_date),
+    weeks = sorted(
+        (d.name for d in output_dir.iterdir() if d.is_dir() and WEEK_RE.match(d.name) and d.name < before_week),
         reverse=True,
     )
     hooks = []
-    for name in days:
+    for name in weeks:
         try:
             hook = json.loads((output_dir / name / "song.json").read_text(encoding="utf-8")).get("hook", "").strip()
         except (OSError, json.JSONDecodeError):
@@ -69,7 +69,7 @@ def user_prompt(settings: dict, news_name: str, news_text: str, hooks: list[str]
         return auto_text if value == "auto" else json.dumps(value)
 
     lines = [
-        "Write today's song and return it through the structured output.",
+        "Write this week's song and return it through the structured output.",
         "",
         "SETTINGS",
         f"- Length: {settings['length_seconds']} seconds",
@@ -80,7 +80,7 @@ def user_prompt(settings: dict, news_name: str, news_text: str, hooks: list[str]
     if settings["exclude_story_ranks"]:
         lines.append(f"- Do not use stories with these ranks: {settings['exclude_story_ranks']}")
     if not settings["explicit"]:
-        lines.append("- Clean version: no profanity at all today (this overrides the uncensored rule)")
+        lines.append("- Clean version: no profanity at all this week (this overrides the uncensored rule)")
     if settings["extra_instructions"].strip():
         lines.append(f"- Extra instructions from Zueki: {settings['extra_instructions'].strip()}")
     if hooks:
@@ -119,11 +119,11 @@ def hit_total(score: dict) -> float:
 
 
 def render_markdown(song: dict, news_name: str, issues: list[str]) -> str:
-    out = [f"# Mu-Zueki: {song['news_date']}", ""]
+    out = [f"# Mu-Zueki: {song['news_week']}", ""]
     if issues:
         out += ["> **NEEDS REVIEW.** No audio was generated because of:", *[f"> - {i}" for i in issues], ""]
     out += [
-        f"**{song['day_in_one_sentence']}**",
+        f"**{song['week_in_one_sentence']}**",
         "",
         f"- **News file:** {news_name}",
         "- **Stories:** " + "; ".join(f"#{s['rank']} {s['headline']} ({s['status']})" for s in song["stories_used"]),
@@ -157,12 +157,12 @@ def render_markdown(song: dict, news_name: str, issues: list[str]) -> str:
     return "\n".join(out)
 
 
-def run(day: Day, settings: dict, ask=claude_cli.ask) -> StageResult:
-    news_text = day.news_path.read_text(encoding="utf-8")
+def run(episode: Episode, settings: dict, ask=claude_cli.ask) -> StageResult:
+    news_text = episode.news_path.read_text(encoding="utf-8")
     news = json.loads(news_text)
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     system = system_prompt()
-    hooks = recent_hooks(OUTPUT_DIR, day.date, settings["avoid_repeating_last_n_days"])
+    hooks = recent_hooks(OUTPUT_DIR, episode.week, settings["avoid_repeating_last_n_weeks"])
     model = settings["claude_model"]
 
     def review(song: dict) -> list[str]:
@@ -172,20 +172,20 @@ def run(day: Day, settings: dict, ask=claude_cli.ask) -> StageResult:
         log(f"song: fact checker found {len(checker)} issue(s)")
         return issues + checker
 
-    log(f"song: writing from {day.news_path.name}")
-    song = ask(system, user_prompt(settings, day.news_path.name, news_text, hooks), schema, model)
+    log(f"song: writing from {episode.news_path.name}")
+    song = ask(system, user_prompt(settings, episode.news_path.name, news_text, hooks), schema, model)
     issues = review(song)
     if issues:
         for i in issues:
             log(f"song:   issue: {i}")
         log("song: asking for one repaired version")
-        song = ask(system, user_prompt(settings, day.news_path.name, news_text, hooks, song, issues), schema, model)
+        song = ask(system, user_prompt(settings, episode.news_path.name, news_text, hooks, song, issues), schema, model)
         issues = review(song)
 
-    song["news_date"] = day.date
+    song["news_week"] = episode.week
     song["length_seconds"] = settings["length_seconds"]
-    day.write_json(day.song_json, song)
-    day.write_text(day.song_md, render_markdown(song, day.news_path.name, issues))
-    day.write_text(day.caption_txt, song["post_caption"])
+    episode.write_json(episode.song_json, song)
+    episode.write_text(episode.song_md, render_markdown(song, episode.news_path.name, issues))
+    episode.write_text(episode.caption_txt, song["post_caption"])
     # A song that failed its checks must not reach the audio stage: that would spend credits on it.
     return StageResult(FAILED if issues else DONE, issues)

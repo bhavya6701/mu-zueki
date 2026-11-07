@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from .. import beats, listen
-from ..day import DONE, REVIEW, Day, StageResult
+from ..episode import DONE, REVIEW, Episode, StageResult
 from ..settings import log
 from ..text import render_srt
 
@@ -10,21 +10,21 @@ NAME = "subtitles"
 MAX_INTERPOLATED_SHARE = 0.25
 
 
-def audio_analysis(day: Day, bpm: int, sections: list[dict]) -> tuple[dict, list]:
+def audio_analysis(episode: Episode, bpm: int, sections: list[dict]) -> tuple[dict, list]:
     """(beat grid, loudness and bass of each section), measured from the finished audio."""
-    samples, rate = listen.read_audio(day.audio_mp3)
+    samples, rate = listen.read_audio(episode.audio_mp3)
     mono = samples.astype("float32").mean(axis=0) / 32768
     grid = beats.find_beats(mono, rate, bpm)
     energy = beats.section_energy(mono, rate, [(s["start"], s["end"]) for s in sections])
     return grid, energy
 
 
-def run(day: Day, settings: dict, analyse=audio_analysis) -> StageResult:
-    song = day.read_json(day.song_json)
-    audio = day.read_json(day.audio_json)
+def run(episode: Episode, settings: dict, analyse=audio_analysis) -> StageResult:
+    song = episode.read_json(episode.song_json)
+    audio = episode.read_json(episode.audio_json)
     words = [tuple(w) for w in audio["words"]]
     captions, interpolated = listen.align(song["captions"], words)
-    day.write_text(day.subtitles_srt, render_srt(captions))
+    episode.write_text(episode.subtitles_srt, render_srt(captions))
 
     sections = []
     for n, chunk in enumerate(song["plan"]["chunks"], 1):
@@ -36,13 +36,13 @@ def run(day: Day, settings: dict, analyse=audio_analysis) -> StageResult:
             "end": own[-1]["end"] if own else None,
             "styles": chunk["positive_styles"],
         })
-    grid, energy = analyse(day, song["bpm"], sections)
+    grid, energy = analyse(episode, song["bpm"], sections)
     for section, level in zip(sections, energy):
         section["energy"] = level
 
-    day.write_json(day.timeline_json, {
-        "date": day.date,
-        "audio": day.audio_mp3.name,
+    episode.write_json(episode.timeline_json, {
+        "episode": episode.week,
+        "audio": episode.audio_mp3.name,
         "duration_seconds": audio["duration_seconds"],
         "bpm": grid["bpm"],
         "seconds_per_beat": round(60 / grid["bpm"], 4),

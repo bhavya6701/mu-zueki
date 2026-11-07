@@ -1,8 +1,8 @@
 A DIFFERENT SONG FOR THIS RUN: a slow, melodic, sung-rap song with a played, many-instrument arrangement, set in one real place. Where anything below conflicts with the persona or the formatting guide, the instruction below wins; everything it does not mention still applies (facts only from the news file, no artist names in styles or lyrics, English only, the Mew-Zookie signature, the caption and fact-map rules, vocal from 0:00). Set vocal to male.
 
-THE FEEL. Think of the slow, intimate, melody-first songs of the Indian independent scene, in the manner of Chaar Diwari and Arpit Bala (describe the sound in the styles; never name them): a young man half-singing, half-rapping close to the microphone, late at night, as if to one person. Tender and a little theatrical, wry rather than angry. The day's news is told as something that happened to him and to the street he is standing on, not read out as a bulletin.
+THE FEEL. Think of the slow, intimate, melody-first songs of the Indian independent scene, in the manner of Chaar Diwari and Arpit Bala (describe the sound in the styles; never name them): a young man half-singing, half-rapping close to the microphone, late at night, as if to one person. Tender and a little theatrical, wry rather than angry. The week's news is told as something that happened to him and to the street he is standing on, not read out as a bulletin.
 
-THE PLACE. Choose ONE real place where this song is being sung, taken from the day's main story and its mood (examples of the kind only: a wet street outside a closed exchange at night, a petrol pump at dawn, an empty trading floor, a rooftop over traffic, a train platform, a car park under a mall). The lyrics mention what is seen and heard there at least twice, plainly (the rain, the signboard, the shutters, the screens). The whole song stays in that place. Begin reel_notes with one line in exactly this form, because the ambience and the video are built from it:
+THE PLACE. Choose ONE real place where this song is being sung, taken from the week's main story and its mood (examples of the kind only: a wet street outside a closed exchange at night, a petrol pump at dawn, an empty trading floor, a rooftop over traffic, a train platform, a car park under a mall). The lyrics mention what is seen and heard there at least twice, plainly (the rain, the signboard, the shutters, the screens). The whole song stays in that place. Begin reel_notes with one line in exactly this form, because the ambience and the video are built from it:
 PLACE: <the place in six words or fewer> | <indoor-small, indoor-large or outdoor> | <three sounds heard there, comma separated>
 
 THE VOICE.
@@ -22,10 +22,10 @@ THE MUSIC. Slow and played by a band, not a loop. Many instruments, each named i
 - Negative styles for every chunk: fast rap, double-time, aggressive, shouting, trap hi-hat rolls, EDM, heavy 808, autotune, robotic vocal, female vocals, mumbled vocals, intro, build-up, fade out, wall of reverb.
 
 THE SHAPE (about four to five chunks).
-1. Verse 1: where he is and what happened today, in the first two lines. Sung from 0:00.
-2. Hook: one simple sung refrain of two to four lines carrying the day's main fact or image; it ends on the longest held word of the song. It may return once, shortened, near the end.
+1. Verse 1: where he is and what happened this week, in the first two lines. Sung from 0:00.
+2. Hook: one simple sung refrain of two to four lines carrying the week's main fact or image; it ends on the longest held word of the song. It may return once, shortened, near the end.
 3. Verse 2: the second side of the story (who gained, who lost, what it means for an ordinary person), with at least one real punchline or double meaning, delivered quietly.
-4. The bare line: voice and one instrument, the single most important sentence of the day.
+4. The bare line: voice and one instrument, the single most important sentence of the week.
 5. The close: the refrain's last line once more with the whole band, the last word held, then the sign-off spoken softly ("That's the tape. Mew-Zookie.") and a hard stop.
 Choose one main story and at most two that feed it. A story that cannot be finished is left out.
 

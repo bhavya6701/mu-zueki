@@ -56,7 +56,7 @@
   // The HUD around every shot: title, running timecode, corner marks, a level strip that jumps on the
   // beat and the chapter label. It sits outside the camera, so it holds still while the shot pushes in.
   C.hud = function (s, chapter, options) {
-    const o = Object.assign({ title: "MU-ZUEKI", sub: "TAPE " + T.date.replace(/-/g, "."), live: true }, options);
+    const o = Object.assign({ title: "MU-ZUEKI", sub: "TAPE " + T.episode.replace(/-/g, "."), live: true }, options);
     const hud = loose(el("div", "hud", s.box));
     hud.style.color = o.color || s.fg;
     const place = (node, css) => ((node.style.cssText += css), node);

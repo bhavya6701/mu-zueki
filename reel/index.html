@@ -88,6 +88,11 @@
         src: url("fonts/ReenieBeanie-400.woff2") format("woff2");
         font-weight: 400;
       }
+      @font-face {
+        font-family: "Silkscreen";
+        src: url("fonts/Silkscreen-700.woff2") format("woff2");
+        font-weight: 700;
+      }
       * {
         margin: 0;
         padding: 0;
@@ -184,6 +189,16 @@
         height: 100%;
         overflow: visible;
         pointer-events: none;
+      }
+      /* pixelfx effects (lib/pfx.js): small canvases scaled up with crisp pixels. */
+      .pfx-box {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      canvas.pfx {
+        position: absolute;
+        image-rendering: pixelated;
       }
       svg.pix {
         display: block;
@@ -487,6 +502,159 @@
           repeating-radial-gradient(circle at 17% 23%, rgba(255, 250, 235, 0.05) 0 1px, transparent 1px 3px),
           repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.04) 0 1px, transparent 1px 4px);
       }
+      /* The arcade look (lib/arcade.js): worlds inside a CRT. */
+      .arc-plate {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        image-rendering: pixelated;
+      }
+      .arc-scrim {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(5, 6, 14, 0.2) 0%, rgba(5, 6, 14, 0.85) 38%, rgba(5, 6, 14, 0.85) 62%, rgba(5, 6, 14, 0.3) 100%);
+      }
+      .arc-flash {
+        position: absolute;
+        inset: 0;
+        z-index: 7;
+        pointer-events: none;
+      }
+      .arc-glow {
+        text-shadow: 0 0 22px currentColor, 0 0 6px currentColor, 0 6px 0 rgba(0, 0, 0, 0.6);
+        -webkit-text-stroke: 4px rgba(5, 6, 14, 0.85);
+        paint-order: stroke fill;
+      }
+      .row .arc-sub,
+      .arc-sub {
+        letter-spacing: 0.32em;
+        opacity: 0.85;
+      }
+      .arc-glitch {
+        position: relative;
+        font-family: "Silkscreen", monospace;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+      }
+      .arc-glitch span,
+      .arc-glitch strong {
+        display: block;
+        font-weight: 700;
+      }
+      .arc-glitch span {
+        position: absolute;
+        left: 0;
+        top: 0;
+        mix-blend-mode: screen;
+      }
+      .arc-g-red {
+        color: #ff2a3c;
+      }
+      .arc-g-cyan {
+        color: #2ad4ff;
+      }
+      .arc-glitch strong {
+        position: relative;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      }
+      svg.arc-line {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 0 10px rgba(255, 59, 59, 0.8));
+      }
+      .arc-toast {
+        width: 760px;
+        border: 6px solid #f4f2ee;
+        background: #05060e;
+        box-shadow: 10px 10px 0 rgba(255, 59, 59, 0.6);
+        font-family: "Silkscreen", monospace;
+        font-weight: 700;
+        color: #f4f2ee;
+        text-transform: uppercase;
+        white-space: normal;
+      }
+      .arc-toast-title {
+        background: #c41a1a;
+        padding: 10px 22px;
+        font-size: 40px;
+      }
+      .arc-toast-value {
+        padding: 22px 22px 8px;
+        font-size: 74px;
+        text-shadow: 0 0 18px rgba(255, 255, 255, 0.45);
+      }
+      .arc-toast-bar {
+        margin: 10px 22px 24px;
+        height: 34px;
+        border: 5px solid #f4f2ee;
+        padding: 4px;
+      }
+      .arc-toast-fill {
+        height: 100%;
+        background: #ffc94a;
+        transform-origin: 0 50%;
+      }
+      .arc-toast-note {
+        padding: 0 22px 20px;
+        font-size: 30px;
+        color: #ffc94a;
+      }
+      .arc-crt-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 958px;
+        height: 4px;
+        background: #ffffff;
+        box-shadow: 0 0 30px 8px rgba(160, 220, 255, 0.9);
+        z-index: 8;
+      }
+      /* Inside the cautious vertical-video safe margins (top 288, right 192, bottom 672 at 1080x1920; the
+         video-review check of 2026-11-04): the platform's buttons sit on the right, its caption at the bottom. */
+      /* The camera pushes in up to 9 % around the centre, so the stage sits that much further inside the
+         margins (top 288 / 1.09 from the centre, right 192 likewise). */
+      .look-arcade .stage {
+        top: 345px;
+        bottom: 830px;
+        left: 96px;
+        right: 222px;
+      }
+      .look-arcade .caption {
+        top: 1110px;
+        height: 130px;
+        left: 96px;
+        right: 192px;
+      }
+      .look-arcade .capline {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 40px;
+        line-height: 1.2;
+        text-transform: uppercase;
+        color: #f4f2ee;
+        -webkit-text-stroke: 8px #05060e;
+        paint-order: stroke fill;
+      }
+      /* The CRT over the whole shot (after the registry's yt-screen-warp): scanlines, pixel grid, glass sheen, vignette. */
+      .look-arcade::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 6;
+        pointer-events: none;
+        background:
+          linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0%, transparent 28%),
+          repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0 2px, transparent 2px 5px),
+          repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0 1px, transparent 1px 5px);
+        box-shadow:
+          inset 0 0 220px rgba(0, 0, 0, 0.75),
+          inset 0 0 26px rgba(0, 0, 0, 0.6);
+      }
     </style>
   </head>
   <body>
@@ -498,19 +666,23 @@
       data-width="1080"
       data-height="1920"
     >
-      <!-- footage:start (written by pipeline/video.py: the day's stock clips, cut to their lyric lines) -->
-      <video id="f01" class="clip footage" src="media/2026-10-13/cut/f01-join-ac32a48c75.mp4" muted playsinline data-start="0.000" data-duration="12.240" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
-      <video id="f09" class="clip footage" src="media/2026-10-13/cut/f09-join-0002505539.mp4" muted playsinline data-start="12.240" data-duration="12.790" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
-      <video id="g01" class="clip footage" src="media/2026-10-13/cut/g01-1483b85bf5.mp4" muted playsinline data-start="12.660" data-duration="2.560" data-track-index="1" style="left:130px;top:470px;width:820px;height:462px"></video>
-      <video id="g02" class="clip footage" src="media/2026-10-13/cut/g02-b2675ec84a.mp4" muted playsinline data-start="15.530" data-duration="0.970" data-track-index="1" style="left:250px;top:470px;width:580px;height:580px"></video>
-      <video id="g03" class="clip footage" src="media/2026-10-13/cut/g03-ab1a3b0756.mp4" muted playsinline data-start="18.870" data-duration="1.210" data-track-index="1" style="left:250px;top:470px;width:580px;height:580px"></video>
-      <video id="f16" class="clip footage" src="media/2026-10-13/cut/f16-join-683e293035.mp4" muted playsinline data-start="25.030" data-duration="15.010" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
-      <video id="g04" class="clip footage" src="media/2026-10-13/cut/g04-10d8cea511.mp4" muted playsinline data-start="31.760" data-duration="2.360" data-track-index="1" style="left:330px;top:420px;width:420px;height:672px"></video>
-      <video id="g05" class="clip footage" src="media/2026-10-13/cut/g05-59a543b200.mp4" muted playsinline data-start="34.120" data-duration="0.900" data-track-index="1" style="left:100px;top:560px;width:880px;height:496px"></video>
-      <video id="g06" class="clip footage" src="media/2026-10-13/cut/g06-0de326f549.mp4" muted playsinline data-start="38.540" data-duration="1.500" data-track-index="1" style="left:110px;top:520px;width:860px;height:484px"></video>
-      <video id="f23" class="clip footage" src="media/2026-10-13/cut/f23-join-65b6975a38.mp4" muted playsinline data-start="40.040" data-duration="15.990" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
-      <video id="g07" class="clip footage" src="media/2026-10-13/cut/g07-396033b722.mp4" muted playsinline data-start="46.860" data-duration="1.100" data-track-index="1" style="left:250px;top:470px;width:580px;height:580px"></video>
-      <video id="g08" class="clip footage" src="media/2026-10-13/cut/g08-1d88de9b2b.mp4" muted playsinline data-start="49.920" data-duration="2.300" data-track-index="1" style="left:250px;top:470px;width:580px;height:580px"></video>
+      <!-- footage:start (written by pipeline/video.py: the week's stock clips, cut to their lyric lines) -->
+      <video id="f01" class="clip footage" src="media/2026-W44/cut/f01-328dc5ab79.mp4" muted playsinline data-start="0.000" data-duration="1.700" data-track-index="0" style="left:0px;top:600px;width:1080px;height:608px"></video>
+      <video id="f02" class="clip footage" src="media/2026-W44/cut/f02-bebbc0107f.mp4" muted playsinline data-start="5.780" data-duration="2.940" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f03" class="clip footage" src="media/2026-W44/cut/f03-cb9e390337.mp4" muted playsinline data-start="8.720" data-duration="3.100" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f04" class="clip footage" src="media/2026-W44/cut/f04-8f56ce55d8.mp4" muted playsinline data-start="14.000" data-duration="1.980" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f05" class="clip footage" src="media/2026-W44/cut/f05-e968b69dd5.mp4" muted playsinline data-start="17.980" data-duration="2.000" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f06" class="clip footage" src="media/2026-W44/cut/f06-5064ea8684.mp4" muted playsinline data-start="23.940" data-duration="1.840" data-track-index="0" style="left:0px;top:600px;width:1080px;height:608px"></video>
+      <video id="f07" class="clip footage" src="media/2026-W44/cut/f07-bc9b86226f.mp4" muted playsinline data-start="29.840" data-duration="2.000" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f08" class="clip footage" src="media/2026-W44/cut/f08-20565fda52.mp4" muted playsinline data-start="31.840" data-duration="2.040" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f09" class="clip footage" src="media/2026-W44/cut/f09-1a2efaa1f6.mp4" muted playsinline data-start="42.180" data-duration="1.760" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f10" class="clip footage" src="media/2026-W44/cut/f10-d7c94df890.mp4" muted playsinline data-start="43.940" data-duration="1.980" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f11" class="clip footage" src="media/2026-W44/cut/f11-a34969e003.mp4" muted playsinline data-start="48.400" data-duration="0.460" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f12" class="clip footage" src="media/2026-W44/cut/f12-4b0309e9d7.mp4" muted playsinline data-start="48.860" data-duration="0.300" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f13" class="clip footage" src="media/2026-W44/cut/f13-af83b9b529.mp4" muted playsinline data-start="49.160" data-duration="0.820" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f14" class="clip footage" src="media/2026-W44/cut/f14-52b77b333f.mp4" muted playsinline data-start="49.980" data-duration="1.140" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f15" class="clip footage" src="media/2026-W44/cut/f15-2cc37ffb19.mp4" muted playsinline data-start="51.120" data-duration="0.900" data-track-index="0" style="left:0px;top:0px;width:1080px;height:1920px"></video>
+      <video id="f16" class="clip footage" src="media/2026-W44/cut/f16-4c0b0692b9.mp4" muted playsinline data-start="52.020" data-duration="4.010" data-track-index="0" style="left:0px;top:600px;width:1080px;height:608px"></video>
       <!-- footage:end -->
       <audio
         id="song"
@@ -524,6 +696,9 @@
     <script src="data/timeline.js"></script>
     <script src="lib/pixel.js"></script>
     <script src="lib/kit.js"></script>
+    <script src="lib/pixelfx/pixelfx.js"></script>
+    <script src="lib/pfx.js"></script>
+    <script src="lib/arcade.js"></script>
     <script src="lib/ink.js"></script>
     <script src="lib/windows.js"></script>
     <script src="lib/circuit.js"></script>
@@ -531,16 +706,24 @@
     <script src="lib/slap.js"></script>
     <script src="lib/film.js"></script>
     <script src="lib/collage.js"></script>
-    <!-- day:start (written by pipeline/video.py: the scenes of the day being rendered) -->
-    <script src="days/2026-10-13/1-steps.js"></script>
-    <script src="days/2026-10-13/2-gold.js"></script>
-    <script src="days/2026-10-13/3-payday.js"></script>
-    <!-- day:end -->
+    <!-- scenes:start (written by pipeline/video.py: the scenes of the week being rendered) -->
+    <script src="weeks/2026-W44/1-hook.js"></script>
+    <script src="weeks/2026-W44/2-tape.js"></script>
+    <script src="weeks/2026-W44/3-hook.js"></script>
+    <script src="weeks/2026-W44/4-days.js"></script>
+    <script src="weeks/2026-W44/5-burn.js"></script>
+    <!-- scenes:end -->
     <script>
       // Type is measured to fit its row, so the fonts must be in before anything is built.
       Promise.all(R.fontFaces.map((face) => (Array.isArray(face) ? document.fonts.load(face[0], face[1]) : document.fonts.load(face)))).then(() => {
         const tl = gsap.timeline({ paused: true });
         R.build(tl);
+        // the cue list for the sound design (pipeline/sound.py reads it from the page)
+        const cues = document.createElement("script");
+        cues.type = "application/json";
+        cues.id = "hf-cues";
+        cues.textContent = JSON.stringify({ fps: 60, bpm: window.TIMELINE.bpm, duration: R.duration, cues: R.cues });
+        document.body.appendChild(cues);
         window.__timelines["main"] = tl;
         if (window.__hfForceTimelineRebind) window.__hfForceTimelineRebind();
       });

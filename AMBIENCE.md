@@ -8,9 +8,9 @@ video work**, because the place is chosen once and the song, the ambience and th
 The step is `pipeline/ambience.py`. Everything is done with FFmpeg; no audio editor is opened.
 
 ```
-.venv\Scripts\python.exe -m pipeline.ambience DATE --space rain
-.venv\Scripts\python.exe -m pipeline.ambience DATE --space carpark --amount 0.7 --out trial
-.venv\Scripts\python.exe -m pipeline.ambience DATE --space street --bed sfx --prompt "quiet city street at night, distant traffic"
+.venv\Scripts\python.exe -m pipeline.ambience WEEK --space rain
+.venv\Scripts\python.exe -m pipeline.ambience WEEK --space carpark --amount 0.7 --out trial
+.venv\Scripts\python.exe -m pipeline.ambience WEEK --space street --bed sfx --prompt "quiet city street at night, distant traffic"
 ```
 
 ## The rule above the others: less than you think
@@ -30,7 +30,7 @@ artificial. So:
 
 | Guideline | In this project |
 |-----------|-----------------|
-| **1. The space (reverb).** A dry voice has no reflections; simulate how sound bounces off the surfaces around it. | The song is split into vocal and instrumental (ElevenLabs stem separation, once per day). The vocal alone is convolved with a room impulse built for the space (`rt`, the ring time) and that "wet" copy is mixed under the dry voice at a measured level (`wet`), after a short gap (`pre`). |
+| **1. The space (reverb).** A dry voice has no reflections; simulate how sound bounces off the surfaces around it. | The song is split into vocal and instrumental (ElevenLabs stem separation, once per week). The vocal alone is convolved with a room impulse built for the space (`rt`, the ring time) and that "wet" copy is mixed under the dry voice at a measured level (`wet`), after a short gap (`pre`). |
 | Car park, concrete: hard reflections, long decay, 1.5 to 2.5 seconds. | `carpark`: 1.9 s ring at 17 dB under the voice, 28 ms gap. `hall` is the softer large room (1.3 s). |
 | Outdoors: almost no echo; a slapback of 20 to 40 ms with low feedback; mostly dry. | `outdoor`, `street`, `rain`: one echo at 32 to 36 ms, 19 to 20 dB down, a few milliseconds apart on the two sides, plus a 0.15 to 0.25 s ring that is barely there. |
 | **2. The texture (room tone).** A voice that cuts to absolute silence breaks the illusion; run a continuous bed under the whole scene. | A bed runs from the first sample to the last, 32 to 40 dB under the song. `--bed synth` (default, free) builds it from filtered noise: `room` (a quiet room's floor), `rumble` (distant traffic and the hum of the lights), `wind`, `rain`. `--bed sfx --prompt "..."` generates a 30-second looping bed with ElevenLabs sound effects instead (spends credits). |
@@ -70,14 +70,14 @@ the microphone roll-off). The roll-off itself does not change.
 ## What it costs and what it keeps
 
 - On 2026-10-12 the split and one generated bed together cost 955 credits.
-- The split spends ElevenLabs credits once per day (it is the same split `pipeline.revoice` makes; if
-  `output/DATE/revoice/` already has `vocals.mp3` and `instrumental.mp3`, copy them and `original.mp3`
-  into `output/DATE/ambience/` and nothing is spent). `--bed sfx` spends credits once per prompt.
+- The split spends ElevenLabs credits once per week (it is the same split `pipeline.revoice` makes; if
+  `output/WEEK/revoice/` already has `vocals.mp3` and `instrumental.mp3`, copy them and `original.mp3`
+  into `output/WEEK/ambience/` and nothing is spent). `--bed sfx` spends credits once per prompt.
   Say so before running.
-- `output/DATE/ambience/original.mp3` is the song as generated. Every run starts from it, so the step
+- `output/WEEK/ambience/original.mp3` is the song as generated. Every run starts from it, so the step
   can be repeated with another space or amount, and copying it back over `audio.mp3` undoes the step.
 - The length and every word time are unchanged: `subtitles.srt` and `timeline.json` stay valid.
-- `output/DATE/ambience/ambience.json` records the space, the measured gains, the level before and
+- `output/WEEK/ambience/ambience.json` records the space, the measured gains, the level before and
   after, and the share of lyric words heard before and after.
 
 ## What cannot be checked here

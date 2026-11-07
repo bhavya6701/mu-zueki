@@ -1,6 +1,6 @@
-"""Post a day's reel to Instagram: python -m pipeline.instagram DATE [--draft] [--check] [--again]
+"""Post a week's reel to Instagram: python -m pipeline.instagram WEEK [--draft] [--check] [--again]
 
-Each post lives in instagram/posts/DATE/: reel.mp4 (a copy of the day's reel), caption.txt (the
+Each post lives in instagram/posts/WEEK/: reel.mp4 (a copy of the week's reel), caption.txt (the
 description) and post.json (draft or posted, with the link). --draft only fills that folder.
 
 Uses Meta's official content publishing API. With a token from Instagram Login (it starts with IG),
@@ -16,7 +16,7 @@ to Meta directly. Needs a professional (creator or business) Instagram account a
                                  done with the `vercel` command, which must be installed
 
 --check only tests the credentials and shows the account; nothing is posted.
---again posts a day a second time (a posted day is otherwise refused).
+--again posts a week a second time (a posted week is otherwise refused).
 Posting is public and cannot be taken back from here, so this is run only after the reel is approved.
 """
 from __future__ import annotations
@@ -35,8 +35,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-from .day import Day
-from .settings import DATE_RE, ENV_PATH, OUTPUT_DIR, ROOT, RunError, log
+from .episode import Episode
+from .settings import ENV_PATH, WEEK_RE, OUTPUT_DIR, ROOT, RunError, log
 
 API_VERSION = "v25.0"
 DEFAULT_HOST = "graph.instagram.com"
@@ -163,26 +163,26 @@ def publish(reel: Path, caption: str, token: str, user_id: str, host: str, http=
     return {"id": post["id"], "permalink": link.get("permalink", "")}
 
 
-def stage(day: Day, posts_dir: Path = POSTS_DIR) -> Path:
-    """Fill instagram/posts/DATE/ with the day's reel and a caption, as a draft. Returns the folder.
+def stage(episode: Episode, posts_dir: Path = POSTS_DIR) -> Path:
+    """Fill instagram/posts/WEEK/ with the week's reel and a caption, as a draft. Returns the folder.
 
-    The reel is copied again if the day's reel has changed. A caption already in the folder is kept:
+    The reel is copied again if the week's reel has changed. A caption already in the folder is kept:
     that is where the approved description is written. Without one, the song's caption.txt is used.
     """
-    reel = day.dir / "reel.mp4"
+    reel = episode.dir / "reel.mp4"
     if not reel.exists():
-        raise RunError(f"There is no reel.mp4 for {day.date} yet")
-    folder = posts_dir / day.date
+        raise RunError(f"There is no reel.mp4 for {episode.week} yet")
+    folder = posts_dir / episode.week
     folder.mkdir(parents=True, exist_ok=True)
     copy = folder / "reel.mp4"
     if not copy.exists() or copy.stat().st_size != reel.stat().st_size or copy.stat().st_mtime < reel.stat().st_mtime:
         shutil.copy2(reel, copy)
     caption = folder / "caption.txt"
     if not caption.exists():
-        caption.write_text(day.caption_txt.read_text(encoding="utf-8").strip() + "\n", encoding="utf-8")
+        caption.write_text(episode.caption_txt.read_text(encoding="utf-8").strip() + "\n", encoding="utf-8")
     record = folder / "post.json"
     if not record.exists():
-        write_record(record, {"date": day.date, "status": "draft"})
+        write_record(record, {"week": episode.week, "status": "draft"})
     return folder
 
 
@@ -191,11 +191,11 @@ def write_record(path: Path, data: dict) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(prog="pipeline.instagram", description="Post a day's reel to Instagram.")
-    parser.add_argument("date", nargs="?", help="the day to post, such as 2026-10-08")
-    parser.add_argument("--draft", action="store_true", help="only fill instagram/posts/DATE/; post nothing")
+    parser = argparse.ArgumentParser(prog="pipeline.instagram", description="Post a week's reel to Instagram.")
+    parser.add_argument("week", nargs="?", help="the week to post, such as 2026-W44")
+    parser.add_argument("--draft", action="store_true", help="only fill instagram/posts/WEEK/; post nothing")
     parser.add_argument("--check", action="store_true", help="test the credentials and show the account; post nothing")
-    parser.add_argument("--again", action="store_true", help="post even though this day was already posted")
+    parser.add_argument("--again", action="store_true", help="post even though this episode was already posted")
     args = parser.parse_args()
     if sys.stdout is not None and hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -204,16 +204,18 @@ def main() -> int:
             token, user_id, host = credentials(read_env())
             log(f"instagram: the credentials work for @{account(token, user_id, host).get('username', '?')}")
             return 0
-        if not args.date or not DATE_RE.match(args.date):
-            raise RunError("Give the day to post, such as 2026-10-08")
-        folder = stage(Day(OUTPUT_DIR, args.date))
+        if not args.week or not WEEK_RE.match(args.week):
+            raise RunError("Give the week to post, such as 2026-W44")
+        folder = stage(Episode(OUTPUT_DIR, args.week))
         record = folder / "post.json"
         if args.draft:
             log(f"instagram: draft ready in {folder.relative_to(ROOT)}")
             return 0
         posted = json.loads(record.read_text(encoding="utf-8"))
         if posted.get("status") == "posted" and not args.again:
-            raise RunError(f"{args.date} was already posted: {posted.get('permalink')} (--again posts it a second time)")
+            raise RunError(f"{args.week} was already posted: {posted.get('permalink')} (--again posts it a second time)")
+        if posted.get("status") == "archived" and not args.again:
+            raise RunError(f"{args.week} is archived: kept, not to be posted ({posted.get('note', 'no note')}); --again posts it anyway")
         env = read_env()
         token, user_id, host = credentials(env)
         caption = (folder / "caption.txt").read_text(encoding="utf-8").strip()
@@ -222,7 +224,7 @@ def main() -> int:
             if not env.get(BLOB_TOKEN):
                 raise RunError(f"{BLOB_TOKEN} is missing from config/.env (see \"Posting to Instagram\" in README.md)")
             log("instagram: putting the reel on Vercel Blob so Instagram can fetch it")
-            video_url = host_video(reel, args.date, env[BLOB_TOKEN])
+            video_url = host_video(reel, args.week, env[BLOB_TOKEN])
         try:
             post = publish(reel, caption, token, user_id, host, cover_at=cover_at, video_url=video_url)
         finally:
@@ -233,7 +235,7 @@ def main() -> int:
                     log(f"instagram: the hosted copy was not deleted ({exc}); remove it in the Vercel dashboard")
         write_record(record, {**posted, "status": "posted", **post,
                               "posted_at": dt.datetime.now().isoformat(timespec="seconds")})
-        log(f"instagram: posted {args.date}: {post['permalink']}")
+        log(f"instagram: posted {args.week}: {post['permalink']}")
         return 0
     except RunError as exc:
         log(f"instagram: FAILED: {exc}")

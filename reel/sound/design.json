@@ -1,0 +1,96 @@
+{
+ "_doc": "The series' sound design for pipeline/sound.py. kinds: the cue kind the picture records (reel/lib/kit.js R.cue) -> [real-sfx event kind, base gain g (1.0 = the role's nominal level)]; null = no sound (hard cuts are carried by the music). A cue's weight scales g by its square root. real_sfx_kinds: our own kinds told to real-sfx's from_cues.py (--kind NAME=TARGET). real_sfx_map: per real-sfx kind, its pick and keys copied onto every cue of that kind (gain_db added to its level, highpass in Hz: hits keep out of the song's 808). density: at most this many sounds in any 10 s, heaviest cues first (real-sfx: 3-9 weighted events per 10 s for a film with its own music; earshot's music-led launch films: 3-13). mix_flags: real-sfx mix.py flags; the song is never ducked and the mix never loudness-normalised (pipeline/sound.py adds --no-loudnorm). quiet: [start, end] stretches in seconds that get no effects (a whispered line); usually set per week. A week overrides any key in reel/weeks/WEEK/sound.json.",
+ "kinds": {
+  "hit": [
+   "pop",
+   0.6
+  ],
+  "pop": [
+   "pop",
+   0.7
+  ],
+  "whoosh": [
+   "whoosh",
+   0.8
+  ],
+  "impact": [
+   "hit",
+   0.7
+  ],
+  "burst": [
+   "whoosh",
+   0.9
+  ],
+  "zap": [
+   "zap",
+   0.85
+  ],
+  "glitch": [
+   "glitch",
+   0.8
+  ],
+  "coin": [
+   "coins",
+   0.8
+  ],
+  "tick": [
+   "tick",
+   0.8
+  ],
+  "switch": [
+   "power",
+   1.0
+  ],
+  "cut": null
+ },
+ "density": 9,
+ "mix_flags": [
+  "--voice-safe",
+  "--voice-depth",
+  "light",
+  "--snap-beats",
+  "--sfx-trim-db",
+  "2",
+  "--no-match-layer"
+ ],
+ "real_sfx_map": {
+  "hit": {
+   "pick": {
+    "role": "hit"
+   },
+   "highpass": 140,
+   "gain_db": -1
+  },
+  "pop": {
+   "pick": {
+    "role": "pop"
+   },
+   "gain_db": 5
+  },
+  "glitch": {
+   "pick": {
+    "role": "glitch"
+   },
+   "gain_db": 3
+  },
+  "coins": {
+   "pick": {
+    "role": "coin"
+   },
+   "gain_db": 3
+  },
+  "zap": {
+   "pick": {
+    "role": "scifi"
+   },
+   "gain_db": 3
+  },
+  "power": {
+   "pick": {
+    "role": "power",
+    "max_dur": 0.4
+   }
+  }
+ },
+ "real_sfx_kinds": {}
+}

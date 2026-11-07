@@ -1,7 +1,7 @@
-"""Gather a day's top US finance news from the web and write raw_data/us_finance_news_DATE.json.
+"""Gather a week's top US finance news from the web and write raw_data/us_finance_news_week_YYYY-Www.json.
 
-Claude researches the day with web search, the result is checked for shape and dates, a second Claude
-call re-checks every story against its sources, and unsupported facts and stories are taken out.
+The week is Monday to Friday of an ISO week (US Eastern time). Claude researches it with web search, the
+result is checked for shape and dates, a second Claude call re-checks every story against its sources, and unsupported facts and stories are taken out.
 """
 from __future__ import annotations
 
@@ -11,24 +11,25 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from . import claude_cli
-from .settings import DATE_RE, PROMPT_DIR, RunError, log
+from .settings import DATE_RE, PROMPT_DIR, WEEK_RE, RunError, log, week_days
 
 SCHEMA_PATH = Path(__file__).resolve().parent / "news_schema.json"
 WEB_TOOLS = "WebSearch,WebFetch"
 EASTERN = ZoneInfo("America/New_York")
 WANTED_STORIES = 10
 FEWEST_STORIES = 8
+CLOSE = dt.time(16, 30)  # Friday's session is over, with time for the closing numbers to be published
 
-VERIFIER_SYSTEM = """You are a strict fact checker for a file of one day's US finance news.
+VERIFIER_SYSTEM = """You are a strict fact checker for a file of one week's US finance news.
 For every story, open its references (and search for other established sources if a page will not
 load) and check the headline, the summary and each key fact against what the sources say, and that
-the story belongs to the stated day (US Eastern time).
+the story's key event happened on its stated event_date, inside the stated week (US Eastern time).
 
 Give each story one verdict:
 - "confirmed": the event and every key fact are supported.
-- "partly": the event is real and on that day, but some key facts are wrong or unsupported. List those
+- "partly": the event is real and on that date, but some key facts are wrong or unsupported. List those
   key facts in wrong_facts, copied exactly as written in the file.
-- "unsupported": the event did not happen, is from another day, or its main claim is wrong.
+- "unsupported": the event did not happen, is from outside the week, or its main claim is wrong.
 Say why in notes. Do not be lenient: a figure you could not find in a source is unsupported."""
 
 VERIFIER_SCHEMA = {
@@ -47,13 +48,14 @@ VERIFIER_SCHEMA = {
 }
 
 
-def news_path(news_dir: Path, date: str) -> Path:
-    return news_dir / f"us_finance_news_{date}.json"
+def news_path(news_dir: Path, week: str) -> Path:
+    return news_dir / f"us_finance_news_week_{week}.json"
 
 
-def check_news(research: dict, date: str) -> list[str]:
+def check_news(research: dict, week: str) -> list[str]:
     """Problems with the researched stories that code can see; an empty list means the shape is good."""
     stories = research.get("stories", [])
+    monday, friday = week_days(week)
     problems = []
     if len(stories) != WANTED_STORIES:
         problems.append(f"There are {len(stories)} stories; {WANTED_STORIES} are wanted "
@@ -65,8 +67,9 @@ def check_news(research: dict, date: str) -> list[str]:
         problems.append("Two stories have the same headline")
     for story in stories:
         label = f"Story {story.get('rank')}"
-        if story.get("event_date") != date:
-            problems.append(f"{label}: event_date is {story.get('event_date')}, not {date}")
+        when = str(story.get("event_date", ""))
+        if not DATE_RE.match(when) or not monday.isoformat() <= when <= friday.isoformat():
+            problems.append(f"{label}: event_date is {when or 'missing'}, not a date from {monday} to {friday}")
         if not story.get("headline", "").strip() or not story.get("summary", "").strip():
             problems.append(f"{label}: headline and summary must not be empty")
         if len(story.get("key_facts", [])) < 2:
@@ -110,12 +113,13 @@ def apply_verdicts(stories: list[dict], verdicts: list[dict]) -> tuple[list[dict
     return kept, changes
 
 
-def research_prompt(date: str, now: dt.datetime, problems: list[str] | None = None, previous: dict | None = None) -> str:
-    day = dt.date.fromisoformat(date)
+def research_prompt(week: str, now: dt.datetime, problems: list[str] | None = None, previous: dict | None = None) -> str:
+    monday, friday = week_days(week)
     lines = [
-        f"Find the top {WANTED_STORIES} US finance news stories of {day:%A, %B} {day.day}, {day.year} ({date}).",
+        f"Find the top {WANTED_STORIES} US finance news stories of the trading week {monday:%A, %B} {monday.day} to "
+        f"{friday:%A, %B} {friday.day}, {friday.year} ({week}).",
         f"It is now {now:%A, %B} {now.day}, {now.year}, {now:%H:%M} US Eastern time.",
-        f"Every story's event_date must be {date}.",
+        f"Every story's event_date is the date of its key event, from {monday} to {friday}.",
     ]
     if problems:
         lines += ["", "Your previous answer had these problems. Fix them and return the whole answer again:",
@@ -123,26 +127,28 @@ def research_prompt(date: str, now: dt.datetime, problems: list[str] | None = No
     return "\n".join(lines)
 
 
-def gather(date: str, news_dir: Path, model: str, ask=claude_cli.ask, now: dt.datetime | None = None) -> Path:
-    """Research, check and write the news file for `date`. Raises RunError if the day cannot be trusted."""
+def gather(week: str, news_dir: Path, model: str, ask=claude_cli.ask, now: dt.datetime | None = None) -> Path:
+    """Research, check and write the news file for `week`. Raises RunError if the week cannot be trusted."""
     now = now or dt.datetime.now(EASTERN)
-    if not DATE_RE.match(date):
-        raise RunError(f"'{date}' is not a date like 2026-10-06")
-    if dt.date.fromisoformat(date) > now.date():
-        raise RunError(f"{date} is in the future (it is {now:%Y-%m-%d} in New York)")
+    if not WEEK_RE.match(week):
+        raise RunError(f"'{week}' is not a week like 2026-W44")
+    monday, friday = week_days(week)
+    if now < dt.datetime.combine(friday, CLOSE, EASTERN):
+        raise RunError(f"{week} is not over: Friday {friday} closes at 4:00 PM New York time "
+                       f"(it is {now:%Y-%m-%d %H:%M} there)")
     system = (PROMPT_DIR / "news_research.md").read_text(encoding="utf-8")
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 
-    log(f"news: researching {date} on the web (several minutes)")
-    research = ask(system, research_prompt(date, now), schema, model, timeout=2400, tools=WEB_TOOLS)
+    log(f"news: researching {week} on the web (several minutes)")
+    research = ask(system, research_prompt(week, now), schema, model, timeout=2400, tools=WEB_TOOLS)
     if not research.get("ready", True):
-        raise RunError(f"The news for {date} is not ready: {research.get('not_ready_reason', 'no reason given')}")
-    problems = check_news(research, date)
+        raise RunError(f"The news for {week} is not ready: {research.get('not_ready_reason', 'no reason given')}")
+    problems = check_news(research, week)
     explained = len(research.get("stories", [])) < WANTED_STORIES and research.get("limitations")
     if problems and not (explained and len(problems) == 1 and "stories;" in problems[0]):
         log("news: repairing: " + "; ".join(problems))
-        research = ask(system, research_prompt(date, now, problems, research), schema, model, timeout=2400, tools=WEB_TOOLS)
-        problems = [p for p in check_news(research, date) if "stories;" not in p]
+        research = ask(system, research_prompt(week, now, problems, research), schema, model, timeout=2400, tools=WEB_TOOLS)
+        problems = [p for p in check_news(research, week) if "stories;" not in p]
         if problems:
             raise RunError("The researched news still has problems: " + "; ".join(problems))
 
@@ -151,17 +157,18 @@ def gather(date: str, news_dir: Path, model: str, ask=claude_cli.ask, now: dt.da
                    VERIFIER_SCHEMA, model, timeout=2400, tools=WEB_TOOLS).get("stories", [])
     stories, changes = apply_verdicts(research["stories"], verdicts)
     if len(stories) < FEWEST_STORIES:
-        raise RunError(f"Only {len(stories)} stories for {date} survived the fact check; at least "
+        raise RunError(f"Only {len(stories)} stories for {week} survived the fact check; at least "
                        f"{FEWEST_STORIES} are needed. " + " ".join(changes))
 
-    day = dt.date.fromisoformat(date)
-    start = dt.datetime.combine(day, dt.time(0), EASTERN)
+    start = dt.datetime.combine(monday, dt.time(0), EASTERN)
+    end = dt.datetime.combine(friday, dt.time(23, 59, 59), EASTERN)
     data = {
         "metadata": {
-            "title": "Top US Finance News",
+            "title": "Top US Finance News of the Week",
+            "week": week,
             "generated_at": now.isoformat(timespec="seconds"),
             "timezone": "America/New_York",
-            "coverage_window": {"from": start.isoformat(), "to": start.replace(hour=23, minute=59, second=59).isoformat()},
+            "coverage_window": {"from": start.isoformat(), "to": end.isoformat()},
             "story_count": len(stories),
             "ranking_basis": research.get("ranking_basis", ""),
             "fact_check_method": "Researched by web search, then every story was re-checked against its sources in a "
@@ -174,7 +181,7 @@ def gather(date: str, news_dir: Path, model: str, ask=claude_cli.ask, now: dt.da
         },
         "stories": stories,
     }
-    path = news_path(news_dir, date)
+    path = news_path(news_dir, week)
     news_dir.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     log(f"news: wrote {path.name} with {len(stories)} stories" + "".join(f"\n    - {c}" for c in changes))

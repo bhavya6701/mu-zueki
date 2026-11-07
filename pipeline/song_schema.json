@@ -1,7 +1,7 @@
 {
   "type": "object",
   "required": [
-    "stories_used", "day_in_one_sentence", "mood", "vocal", "bpm", "hook", "plan", "captions",
+    "stories_used", "week_in_one_sentence", "mood", "vocal", "bpm", "hook", "plan", "captions",
     "fact_map", "beat_notes", "reel_notes", "post_caption", "hit_score"
   ],
   "properties": {
@@ -19,7 +19,7 @@
         }
       }
     },
-    "day_in_one_sentence": {"type": "string"},
+    "week_in_one_sentence": {"type": "string"},
     "mood": {
       "type": "object",
       "required": ["name", "reason", "turn"],
@@ -31,7 +31,7 @@
     },
     "vocal": {"type": "string", "description": "male, female or both"},
     "bpm": {"type": "integer"},
-    "hook": {"type": "string", "description": "The hook lines in display form, used to avoid repeating hooks on later days"},
+    "hook": {"type": "string", "description": "The hook lines in display form, used to avoid repeating hooks in later weeks"},
     "plan": {
       "type": "object",
       "required": ["chunks"],
@@ -95,7 +95,7 @@
         "loop_point": {"type": "string"}
       }
     },
-    "post_caption": {"type": "string", "description": "Names the date and stories, includes 'Mu-Zueki', ends with 'Not financial advice.'"},
+    "post_caption": {"type": "string", "description": "Names the week (\"the week of October 26\") and stories, includes 'Mu-Zueki', ends with 'Not financial advice.'"},
     "hit_score": {
       "type": "object",
       "required": ["bars", "flow", "hook", "production", "reel", "emotion", "structure", "notes"],

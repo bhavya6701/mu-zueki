@@ -1,0 +1,434 @@
+{
+  "metadata": {
+    "title": "Top US Finance News of the Week",
+    "week": "2026-W44",
+    "generated_at": "2026-11-04T00:55:36-05:00",
+    "timezone": "America/New_York",
+    "coverage_window": {
+      "from": "2026-10-26T00:00:00-04:00",
+      "to": "2026-10-30T23:59:59-04:00"
+    },
+    "story_count": 10,
+    "ranking_basis": "Stories are ranked by how much they moved markets during the week of Oct 26–30, 2026 and how widely they were covered. Rank 1 is the weekly index story. AI-spending worries drove the week: Alphabet had its worst day ever on Thursday, and on Friday Intel had its worst day since 1974, Amazon's cash burn weighed on stocks and the Nasdaq fell 2.9%. These come next together with the Fed's 10-2 hold, which had two dissents for a hike. After them come the Q3 GDP and September PCE inflation reports, oil's climb to six-month highs, the $6.3 billion Binance hack, and Microsoft's results. I chose one story per theme.",
+    "fact_check_method": "Researched by web search, then every story was re-checked against its sources in a second pass; facts and stories the re-check could not support were removed.",
+    "verification_status_legend": {
+      "verified": "Key facts confirmed by a primary source or by two or more independent sources",
+      "partially_verified": "Core event confirmed, but one or more specific figures rest on a single source or sources conflict"
+    },
+    "limitations": [
+      "Compiled by the pipeline's news step by web search.",
+      "Apple's fiscal Q4 report is left out. It was released Monday, Nov 2, 2026, after the week ended (CNBC, and the SEC filing is time-stamped 2026-11-02).",
+      "Oil prices depend on which contract is quoted. The expiring December Brent contract settled at $117.64, while the more-active January contract settled at $113.43. Both come from CNBC, and AP also cites $113.43. I could not confirm weekly percent changes for oil.",
+      "The 10-year Treasury yield (4.93% on Friday, down from 4.98%) and Bitcoin falling below $77,000 come from AP's Friday market story alone.",
+      "Coinbase's Friday drop is 13.6% in AP and 10.62% 'at press time' on another site, so it is left out of key_facts.",
+      "Some figures come from single secondary sources: the Fed's September hike being its first since July 2023, and CME FedWatch's 82.6% odds of a December hike (both Fox Business). These are flagged in the notes.",
+      "The Conference Board's October consumer-confidence reading (Oct 27) could only be found on a secondary blog, so it is left out.",
+      "The week had no market holiday; it was a full five-day week."
+    ]
+  },
+  "stories": [
+    {
+      "rank": 1,
+      "headline": "The S&P 500 fell 0.6% for the week to 7,580.07 after a Friday tech selloff pushed it down 1.8%, its worst day since June.",
+      "category": "Markets",
+      "event_date": "2026-10-30",
+      "summary": "Concerns that companies are spending too much on AI hit tech stocks late in the week. On Friday the S&P 500 fell 1.8%, its worst day since June, and the Nasdaq dropped 2.9% as Intel, Nvidia and Amazon fell. All three major indexes ended the week lower, while the small-cap Russell 2000 gained 1.3%. It was the S&P 500's third straight losing week.",
+      "key_facts": [
+        "S&P 500 closed Friday, Oct 30 at 7,580.07, down 140.32 points (1.8%) on the day.",
+        "S&P 500 fell 43.61 points (0.6%) for the week.",
+        "Dow Jones Industrial Average closed at 51,770.31, down 572.25 points (1.1%) Friday and down 444.85 points (0.9%) for the week.",
+        "Nasdaq Composite closed at 25,437.00, down 747.73 points (2.9%) Friday and down 518.34 points (2.0%) for the week.",
+        "Russell 2000 closed at 2,811.84, down 1.7% Friday but up 35.95 points (1.3%) for the week.",
+        "Friday was the S&P 500's worst day since June, and its third straight losing week.",
+        "Nvidia was the heaviest drag on the S&P 500 on Friday, falling 4.9%.",
+        "S&P 500 is up 10.7% year to date, as of the Oct 30 close."
+      ],
+      "entities": [
+        "S&P 500",
+        "Dow Jones Industrial Average",
+        "Nasdaq Composite",
+        "Russell 2000",
+        "Nvidia",
+        "Intel",
+        "Amazon"
+      ],
+      "tickers": [
+        "^GSPC",
+        "^DJI",
+        "^IXIC",
+        "^RUT",
+        "NVDA",
+        "INTC",
+        "AMZN"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "The closing levels and the daily, weekly and year-to-date changes come from AP's 'How major US stock indexes fared' table, and Portfolio-Terminal's market close page matches them (S&P 7,580.07, −1.82%). 'Worst day since June' and Nvidia's 4.9% drop come from AP's Friday market story. Early versions of that story gave intraday numbers (S&P down as much as 2.3%), so I used only the closing figures.",
+        "references": [
+          {
+            "source": "AP via Yahoo Finance",
+            "title": "How major US stock indexes fared Friday 10/30/2026",
+            "url": "https://finance.yahoo.com/markets/stocks/articles/major-us-stock-indexes-fared-202111310.html"
+          },
+          {
+            "source": "AP via KSL",
+            "title": "Wall Street drops to its worst day since June after the sell-off for tech stocks deepens",
+            "url": "https://www.ksl.com/article/51642450"
+          },
+          {
+            "source": "Portfolio Terminal",
+            "title": "Stock Market Close October 30, 2026: S&P 500 7,580.07 (−1.82%)",
+            "url": "https://portfolio-terminal.com/markets/stock-market-close/october-30-2026"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "headline": "The Fed held rates at 3.75%–4.00% in a 10-2 vote, with two officials dissenting in favor of a quarter-point hike.",
+      "category": "Federal Reserve",
+      "event_date": "2026-10-28",
+      "summary": "On Oct 28 the FOMC kept the federal funds target range at 3.75% to 4.00%. Governor Lisa Cook and Cleveland Fed President Beth Hammack dissented because they wanted a quarter-point increase. The statement said inflation remains elevated above the 2% goal and that economic activity has been expanding at a solid pace. Chair Kevin Warsh's next meeting is Dec 8–9.",
+      "key_facts": [
+        "The Fed kept the federal funds target range at 3.75% to 4.00% on Oct 28, 2026.",
+        "The vote was 10-2.",
+        "Lisa D. Cook and Beth M. Hammack dissented, preferring a 1/4 percentage point hike.",
+        "The next FOMC decision is due at the Dec 8–9 meeting."
+      ],
+      "entities": [
+        "Federal Reserve",
+        "FOMC",
+        "Kevin Warsh",
+        "Lisa Cook",
+        "Beth Hammack"
+      ],
+      "tickers": [],
+      "fact_check": {
+        "status": "verified",
+        "notes": "The decision, rate range, vote and dissenters are confirmed by the Fed's press release and by Fox Business. Fox Business alone reports that the Fed raised rates by 25 basis points in September (its first hike since July 2023) and that CME FedWatch put the odds of a December hike at 82.6% after the decision, so those figures are not in key_facts.",
+        "references": [
+          {
+            "source": "Federal Reserve",
+            "title": "Federal Reserve issues FOMC statement (Oct 28, 2026)",
+            "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm"
+          },
+          {
+            "source": "Fox Business",
+            "title": "October FOMC: Federal Reserve holds rates steady ahead of election",
+            "url": "https://www.foxbusiness.com/economy/federal-reserve-interest-rate-decision-october-28-2026"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 3,
+      "headline": "Intel fell about 28.5% on Friday, its worst day since 1974, after forecasting Q4 revenue of $15 billion to $16 billion.",
+      "category": "Earnings",
+      "event_date": "2026-10-30",
+      "summary": "Intel's third-quarter profit beat estimates, but its fourth-quarter forecast came in below them, and CEO Lip-Bu Tan said the PC industry 'continues to feel pressure.' The stock fell about 28.5% on Friday, its worst day since 1974. Third-quarter revenue rose 21% to $16.5 billion, but Intel guided to fourth-quarter revenue of $15.0 billion to $16.0 billion and a lower gross margin.",
+      "key_facts": [
+        "Intel shares fell 28.51% on Friday, Oct 30 (Reuters); AP said nearly 29%, the worst day since 1974.",
+        "Q3 2026 revenue was $16.5 billion, up 21% year over year.",
+        "Q3 non-GAAP EPS was $0.52; GAAP EPS was $0.60.",
+        "Q4 revenue guidance is $15.0 billion to $16.0 billion.",
+        "Q4 non-GAAP EPS guidance is $0.25.",
+        "Q4 non-GAAP gross margin guidance is 38.0%, down from 44.1% in Q3."
+      ],
+      "entities": [
+        "Intel",
+        "Lip-Bu Tan"
+      ],
+      "tickers": [
+        "INTC"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "The results and guidance come from Intel's earnings release filed with the SEC on Oct 29. The stock drop is confirmed by Reuters (28.51%, via The National) and AP ('almost 29%', worst since 1974). Intraday drops of more than 30% were reported but are not used.",
+        "references": [
+          {
+            "source": "SEC / Intel",
+            "title": "Intel Q3 2026 earnings release (Form 8-K exhibit)",
+            "url": "https://www.sec.gov/Archives/edgar/data/0000050863/000005086326000188/q326earningsrelease.htm"
+          },
+          {
+            "source": "The National (Reuters)",
+            "title": "Intel fell more than 25 per cent and was on track for its worst day in more than five decades",
+            "url": "https://www.thenationalnews.com/business/markets/2026/10/30/intel-amzn-nasdaq-ai/"
+          },
+          {
+            "source": "AP via KSL",
+            "title": "Wall Street drops to its worst day since June after the sell-off for tech stocks deepens",
+            "url": "https://www.ksl.com/article/51642450"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 4,
+      "headline": "Alphabet had its worst day ever on Thursday, falling 12.6% and losing about $500 billion in market value after reporting negative free cash flow.",
+      "category": "Earnings",
+      "event_date": "2026-10-29",
+      "summary": "Alphabet reported free cash flow of negative $9.07 billion for the third quarter, and search revenue came in below expectations. On Thursday, Oct 29 the stock fell 12.6%, its biggest one-day drop since it went public in 2004, erasing about $500 billion in market value. Alphabet kept its 2026 capital-spending forecast of $195 billion to $205 billion.",
+      "key_facts": [
+        "Alphabet fell 12.6% on Thursday, Oct 29, its worst one-day drop ever.",
+        "The drop erased about $500 billion in market value.",
+        "Q3 free cash flow was negative $9.07 billion; analysts had expected positive $2.7 billion.",
+        "Search revenue was $63.35 billion, up 12%, below expectations.",
+        "2026 capex guidance stayed at $195 billion to $205 billion."
+      ],
+      "entities": [
+        "Alphabet",
+        "Google"
+      ],
+      "tickers": [
+        "GOOGL",
+        "GOOG"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "NBC News gives the 12.6% close and the roughly $500 billion loss. CNBC confirms the record drop ('nearly 13%'), the $500 billion and the cash-flow, search and capex figures. AP says 'more than 12%.' Other outlets put the market-value loss at $475 billion to $511 billion.",
+        "references": [
+          {
+            "source": "NBC News",
+            "title": "Alphabet shares record their worst day ever, shedding $500 billion in value",
+            "url": "https://www.nbcnews.com/business/markets/alphabet-google-stock-ai-advertising-rcna606322"
+          },
+          {
+            "source": "CNBC",
+            "title": "Alphabet tanks nearly 13% for worst day ever, losing $500 billion in value",
+            "url": "https://www.cnbc.com/2026/10/29/alphabet-google-microsoft-msft-shares-today-earnings.html"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 5,
+      "headline": "Amazon's trailing 12-month free cash flow turned to an outflow of $42.4 billion as it spends about $220 billion this year on capital projects, much of it for AI.",
+      "category": "Earnings",
+      "event_date": "2026-10-29",
+      "summary": "Amazon's Q3 results came out Oct 29. Net sales rose 12% to $201.9 billion and AWS grew 39% to $46.0 billion, but EPS fell to $1.89. Spending on property and equipment pushed trailing 12-month free cash flow to an outflow of $42.4 billion. The shares fell 1.9% on Friday, adding to the tech selloff.",
+      "key_facts": [
+        "Q3 net sales were $201.9 billion, up 12% year over year.",
+        "AWS net sales were $46.0 billion, up 39%.",
+        "Operating income was $28.1 billion, up from $17.4 billion.",
+        "Diluted EPS was $1.89, down from $1.95.",
+        "Trailing 12-month free cash flow was an outflow of $42.4 billion, versus an inflow of $14.8 billion a year earlier.",
+        "Amazon expects 2026 cash capital expenditures of about $220 billion.",
+        "Q4 net sales guidance is $240 billion to $247 billion.",
+        "Amazon shares fell 1.9% on Friday, Oct 30."
+      ],
+      "entities": [
+        "Amazon",
+        "AWS"
+      ],
+      "tickers": [
+        "AMZN"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "All financial figures come from Amazon's earnings release filed with the SEC. AP gives the 1.9% Friday drop and confirms the $42.4 billion cash outflow. An earlier report of a 6–7% after-hours drop was not the final regular-session move.",
+        "references": [
+          {
+            "source": "SEC / Amazon",
+            "title": "Amazon.com Q3 2026 results (Form 8-K Exhibit 99.1)",
+            "url": "https://www.sec.gov/Archives/edgar/data/0001018724/000101872426000038/amzn-20260930xex991.htm"
+          },
+          {
+            "source": "AP via KSL",
+            "title": "Wall Street drops to its worst day since June after the sell-off for tech stocks deepens",
+            "url": "https://www.ksl.com/article/51642450"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 6,
+      "headline": "September PCE inflation rose to 3.6% from a year earlier, with core PCE at 3.1%.",
+      "category": "Economic data",
+      "event_date": "2026-10-29",
+      "summary": "The BEA's September income and spending report showed the PCE price index up 0.5% for the month and 3.6% from a year earlier. Core PCE, which excludes food and energy, rose 0.3% for the month and 3.1% from a year earlier. Spending grew faster than income, and the saving rate fell to 3.8%.",
+      "key_facts": [
+        "The PCE price index rose 0.5% in September and 3.6% from a year earlier.",
+        "Core PCE rose 0.3% in September and 3.1% from a year earlier.",
+        "Personal income rose $54.5 billion, or 0.2%.",
+        "Consumer spending rose $113.1 billion, or 0.5%.",
+        "The personal saving rate was 3.8%."
+      ],
+      "entities": [
+        "Bureau of Economic Analysis"
+      ],
+      "tickers": [],
+      "fact_check": {
+        "status": "verified",
+        "notes": "All figures are from the BEA release (primary source) dated Oct 29, 2026. One outlet dated the release Oct 30, but BEA's own page says Oct 29.",
+        "references": [
+          {
+            "source": "BEA",
+            "title": "Personal Income and Outlays, September 2026",
+            "url": "https://bea.gov/news/2026/personal-income-and-outlays-september-2026"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 7,
+      "headline": "The US economy grew at a 3.4% annual rate in the third quarter, up from 2.2% in the second.",
+      "category": "Economic data",
+      "event_date": "2026-10-29",
+      "summary": "The BEA's first estimate shows real GDP grew at a 3.4% annualized rate in Q3 2026, faster than the 2.2% pace in Q2. Growth came mainly from investment in inventories and equipment, especially computers, and from consumer and government spending. The quarter's PCE price index slowed to 2.1% from 5.0%.",
+      "key_facts": [
+        "Real GDP grew at a 3.4% annual rate in Q3 2026 (advance estimate).",
+        "Q2 2026 growth was 2.2%.",
+        "The Q3 PCE price index rose 2.1%, down from 5.0% in Q2.",
+        "Q3 core PCE prices rose 2.5%, down from 3.3%.",
+        "BEA's second estimate is due Nov 25, 2026."
+      ],
+      "entities": [
+        "Bureau of Economic Analysis"
+      ],
+      "tickers": [],
+      "fact_check": {
+        "status": "verified",
+        "notes": "All figures are from the BEA's advance-estimate release (primary source), published Oct 29, 2026 at 8:30 a.m. EDT. Advisor Perspectives also reports 3.4%. The Nov 25 date for the second estimate comes from BEA's release calendar as reported in search results.",
+        "references": [
+          {
+            "source": "BEA",
+            "title": "GDP (Advance Estimate), 3rd Quarter 2026",
+            "url": "https://bea.gov/news/2026/gdp-advance-estimate-3rd-quarter-2026"
+          },
+          {
+            "source": "Advisor Perspectives",
+            "title": "Q3 GDP Advance Estimate: Real GDP at 3.4%",
+            "url": "https://www.advisorperspectives.com/dshort/updates/2026/10/29/q3-gdp-advance-estimate-real-gdp-at-3-4"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 8,
+      "headline": "Oil settled at six-month highs on Friday, with WTI at $104.12, and Brent ended October up 13.6% after a tanker was attacked in the Strait of Hormuz.",
+      "category": "Commodities",
+      "event_date": "2026-10-30",
+      "summary": "Oil rose about 2% on Friday after a tanker in the Strait of Hormuz was hit by explosives and Houthi forces struck Saudi energy sites. Traders were also watching for escalation in the US-Iran war. WTI settled at $104.12, and Brent's expiring December contract settled at $117.64. Both benchmarks were headed for a fourth straight monthly gain.",
+      "key_facts": [
+        "WTI crude settled up $2.12 (2.08%) at $104.12 on Oct 30.",
+        "Brent's expiring December contract settled up $2.76 (2.4%) at $117.64.",
+        "Brent's more-active January contract settled at $113.43, up $2.63.",
+        "Brent rose 13.6% in October and WTI rose 15.2%.",
+        "Prices settled at their highest levels since late April."
+      ],
+      "entities": [
+        "Brent crude",
+        "WTI crude",
+        "Strait of Hormuz",
+        "Iran",
+        "Houthis"
+      ],
+      "tickers": [
+        "CL=F",
+        "BZ=F"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "CNBC reports all the settlement prices. AP independently confirms the January Brent contract up 2.4% at $113.43. Because the December Brent contract expired that day, sources quote different Brent prices ($113 to $118). Weekly changes were not available.",
+        "references": [
+          {
+            "source": "CNBC",
+            "title": "Oil jumps 2%, settles at 6-month highs on fears of escalation in Iran",
+            "url": "https://www.cnbc.com/2026/10/30/oil-rises-on-supply-concerns-as-houthis-attack-saudi-arabia.html"
+          },
+          {
+            "source": "AP via KSL",
+            "title": "Wall Street drops to its worst day since June after the sell-off for tech stocks deepens",
+            "url": "https://www.ksl.com/article/51642450"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 9,
+      "headline": "Binance estimated a hack on its exchange at about $6.3 billion, the crypto industry's largest theft, and the FBI linked it to North Korea.",
+      "category": "Crypto",
+      "event_date": "2026-10-29",
+      "summary": "On Thursday, Oct 29, Binance, the world's largest crypto exchange, said hackers had made unauthorized withdrawals, and it estimated the total impact at about $6.3 billion. The FBI put the impact at about $6 billion and blamed North Korea's 'TraderTraitor' group. Binance paused deposits and withdrawals, froze about $3 billion of the stolen assets, and said users would not bear the losses. Bitcoin fell below $77,000.",
+      "key_facts": [
+        "Binance estimated the hack's total impact at about $6.3 billion.",
+        "The FBI estimated the impact at about $6 billion and linked it to North Korea's 'TraderTraitor' group.",
+        "Binance said it had frozen about $3 billion of affected assets.",
+        "Binance said it would cover the losses from its SAFU fund and company funds.",
+        "Bitcoin fell below $77,000 on Oct 30, down from more than $86,000 earlier in the month."
+      ],
+      "entities": [
+        "Binance",
+        "FBI",
+        "North Korea",
+        "Bitcoin"
+      ],
+      "tickers": [
+        "BTC-USD"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "The $6.3 billion estimate, the FBI attribution and the $3 billion frozen are reported by AP via ABC7 and by the Honolulu Star-Advertiser. Other blockchain-analysis firms gave estimates from $5.9 billion to $6.43 billion. The Bitcoin level comes only from AP's Friday market story.",
+        "references": [
+          {
+            "source": "AP via ABC7 News",
+            "title": "Binance estimates security breach impact at $6.3 billion",
+            "url": "https://abc7news.com/story/binance-estimates-security-breach-impact-63-billion/19999397/"
+          },
+          {
+            "source": "Honolulu Star-Advertiser",
+            "title": "Hack hits cryptocurrency exchange Binance, causing $6.3B loss",
+            "url": "https://www.staradvertiser.com/2026/10/29/breaking-news/hack-hits-cryptocurrency-exchange-binance-causing-6-3b-loss/"
+          },
+          {
+            "source": "AP via KSL",
+            "title": "Wall Street drops to its worst day since June after the sell-off for tech stocks deepens",
+            "url": "https://www.ksl.com/article/51642450"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 10,
+      "headline": "Microsoft's quarterly revenue rose 19% to $92.3 billion, and its Azure cloud business grew 48%.",
+      "category": "Earnings",
+      "event_date": "2026-10-28",
+      "summary": "Microsoft's fiscal first-quarter results came out Oct 28. Revenue rose 19% to $92.3 billion, and Microsoft Cloud revenue reached $63.9 billion. Azure grew 48%. Spending on property and equipment roughly doubled to $39.4 billion, but free cash flow stayed positive, and the stock was roughly flat on Thursday while Alphabet plunged.",
+      "key_facts": [
+        "Revenue was $92.3 billion, up 19%.",
+        "GAAP net income was $36.6 billion, up 32%.",
+        "GAAP diluted EPS was $4.92; non-GAAP EPS was $4.89.",
+        "Microsoft Cloud revenue was $63.9 billion, up 30%.",
+        "Azure revenue grew 48%.",
+        "Additions to property and equipment were $39.4 billion, up from $19.4 billion a year earlier.",
+        "Free cash flow fell 27% to $18.63 billion."
+      ],
+      "entities": [
+        "Microsoft",
+        "Azure",
+        "Satya Nadella",
+        "Amy Hood"
+      ],
+      "tickers": [
+        "MSFT"
+      ],
+      "fact_check": {
+        "status": "verified",
+        "notes": "The results come from Microsoft's investor-relations press release (primary source). The free-cash-flow figure and the flat stock move come from CNBC. CNBC also gives capex including finance leases as $45.2 billion, which is a different measure from the $39.4 billion in cash additions to property and equipment.",
+        "references": [
+          {
+            "source": "Microsoft Investor Relations",
+            "title": "Microsoft FY27 Q1 press release",
+            "url": "https://www.microsoft.com/en-us/investor/earnings/fy-2027-q1/press-release-webcast"
+          },
+          {
+            "source": "CNBC",
+            "title": "Alphabet tanks nearly 13% for worst day ever, losing $500 billion in value",
+            "url": "https://www.cnbc.com/2026/10/29/alphabet-google-microsoft-msft-shares-today-earnings.html"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -3,6 +3,7 @@ Copyright 2022 The Bricolage Grotesque Project Authors (https://github.com/ateli
 Copyright 2022 The Instrument Serif Project Authors (https://github.com/Instrument/instrument-serif)
 Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)
 Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)
+Copyright 2001 The Silkscreen Project Authors (https://github.com/googlefonts/silkscreen)
 Copyright 2020 The Space Grotesk Project Authors (https://github.com/floriankarsten/space-grotesk)
 Copyright 2019 The Baloo Bhai 2 Project Authors (https://github.com/EkType/Baloo2)
 Copyright 2020 The Anton Project Authors (https://github.com/googlefonts/AntonFont.git)

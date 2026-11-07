@@ -1,0 +1,72 @@
+[
+  {
+    "name": "arcade",
+    "file": "media/2026-W44/arcade.mp4",
+    "source": "Vecteezy",
+    "url": "https://www.vecteezy.com/video/23026017-cyberpunk-retro-arcade-machine-game-pixel-art-animation",
+    "title": "Cyberpunk retro arcade machine game pixel art animation",
+    "author": "ryanpermana",
+    "licence": "Vecteezy free licence (attribution required)"
+  },
+  {
+    "name": "datacenter",
+    "file": "media/2026-W44/datacenter.mp4",
+    "source": "Vecteezy",
+    "url": "https://www.vecteezy.com/video/81697336-modern-data-center-interior-with-rows-of-blue-server-racks",
+    "title": "Modern Data Center Interior with Rows of Blue Server Racks",
+    "author": "sailoka",
+    "licence": "Vecteezy free licence (attribution required)"
+  },
+  {
+    "name": "fed",
+    "file": "media/2026-W44/fed.mp4",
+    "source": "Vecteezy",
+    "url": "https://www.vecteezy.com/video/63215493-time-lapse-of-the-federal-reserve-building-in-a-sunny-day-washington-dc-usa",
+    "title": "Time lapse of the Federal reserve building in a sunny day, Washington DC, USA.",
+    "author": "tananuru763225",
+    "licence": "Vecteezy free licence (attribution required)"
+  },
+  {
+    "name": "burn",
+    "file": "media/2026-W44/burn.mp4",
+    "source": "Vecteezy",
+    "url": "https://www.vecteezy.com/video/50766422-a-pile-of-burning-money-on-fire",
+    "title": "A pile of burning money on fire",
+    "author": "valik640707230",
+    "licence": "Vecteezy free licence (attribution required)"
+  },
+  {
+    "name": "screens",
+    "file": "media/2026-W44/screens.mp4",
+    "source": "Vecteezy",
+    "url": "https://www.vecteezy.com/video/36474404-financial-analyst-working-on-a-computer-with-multi-monitor-workstation-with-real-time-stocks-commodities-and-foreign-exchange-charts-businessman-works-in-investment-bank-city-office-at-night",
+    "title": "Financial Analyst Working on a Computer with Multi-Monitor Workstation with Real-Time Stocks, Commodities and Foreign Exchange Charts. Businessman Works in Investment Bank City Office at Night.",
+    "author": "armmypicca",
+    "licence": "Vecteezy free licence (attribution required)"
+  },
+  {
+    "name": "chip",
+    "file": "media/2026-W44/chip.mp4",
+    "source": "Vecteezy",
+    "url": "https://www.vecteezy.com/video/51092804-futuristic-illustration-of-a-glowing-microchip-on-a-circuit-board-representing-advanced-technology-and-innovation-in-electronics",
+    "title": "Futuristic illustration of a glowing microchip on a circuit board, representing advanced technology and innovation in electronics.",
+    "author": "kinwun",
+    "licence": "Vecteezy free licence (attribution required)"
+  },
+  {
+    "name": "level-up notification",
+    "source": "uiverse.io",
+    "url": "https://uiverse.io/MijailVillegas/swift-fireant-79",
+    "title": "Level Up notification (rebuilt as the Fed card in lib/arcade.js)",
+    "author": "MijailVillegas",
+    "licence": "MIT"
+  },
+  {
+    "name": "pixelfx",
+    "source": "GitHub",
+    "url": "https://github.com/patch-gg/pixelfx",
+    "title": "pixelfx pixel art effects (with code adapted from Sprite Fusion's open-source VFX by Hugo Duprez)",
+    "author": "Patch, Hugo Duprez",
+    "licence": "MIT"
+  }
+]

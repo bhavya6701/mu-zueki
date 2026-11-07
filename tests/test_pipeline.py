@@ -4,6 +4,7 @@ import datetime
 import json
 import os
 import sys
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -11,8 +12,8 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pipeline import __main__ as runner  # noqa: E402
-from pipeline import ambience, checks, elevenlabs, instagram, listen, news, settings, text, video  # noqa: E402
-from pipeline.day import DONE, FAILED, REVIEW, Day, StageResult  # noqa: E402
+from pipeline import ambience, checks, elevenlabs, instagram, listen, news, openverse, plates, settings, sound, text, video  # noqa: E402
+from pipeline.episode import DONE, FAILED, REVIEW, Episode, StageResult  # noqa: E402
 from pipeline.stages import audio as audio_stage  # noqa: E402
 from pipeline.stages import song as song_stage  # noqa: E402
 from pipeline.stages import subtitles as subtitles_stage  # noqa: E402
@@ -38,15 +39,15 @@ NEWS = {
     ]
 }
 HOOK = ["S and P near seventy-eight hundred on Tuesday", "Record close and the chips led the way"]
-VERSE = [f"bar number {w} of the verse" for w in "one two three four five six".split()]
+VERSE = [f"bar number {w} of the verse" for w in "one two three four five six seven eight nine ten".split()]
 STYLES = ["boom bap hip hop", "90 BPM", "dusty drums", "warm piano", "confident female rap vocal", "triumphant"]
 
 
 def good_song():
     return {
-        "news_date": "2026-10-06",
+        "news_week": "2026-W41",
         "stories_used": [{"rank": 1, "headline": "S&P 500 and Nasdaq close at record highs", "status": "verified"}],
-        "day_in_one_sentence": "Stocks hit records.",
+        "week_in_one_sentence": "Stocks hit records.",
         "mood": {"name": "triumphant", "reason": "records", "turn": ""},
         "vocal": "female",
         "bpm": 90,
@@ -54,7 +55,7 @@ def good_song():
         "plan": {"chunks": [
             {"text": "[Verse 1]\n" + "\n".join(HOOK) + " (yeah)", "duration_ms": 6000,
              "positive_styles": STYLES, "negative_styles": ["pop"], "context_adherence": "high"},
-            {"text": "[Verse 2]\n{drums only}\n" + "\n".join(VERSE), "duration_ms": 16000,
+            {"text": "[Verse 2]\n{drums only}\n" + "\n".join(VERSE), "duration_ms": 26000,
              "positive_styles": ["laid-back rap"], "negative_styles": []},
             {"text": "[Outro]\n{beat cuts out}\nThat's the tape, Mew-Zookie", "duration_ms": 4000,
              "positive_styles": ["spoken word"], "negative_styles": []},
@@ -75,7 +76,7 @@ def good_song():
     }
 
 
-CFG = settings.validate({"length_seconds": 30})
+CFG = settings.validate({"length_seconds": 45})
 
 
 def sung_words(song, start=0.0, step=0.4, skip_sections=()):
@@ -97,12 +98,12 @@ class SettingsTests(unittest.TestCase):
 
     def test_shipped_settings_file_is_valid(self):
         cfg = settings.load_settings()
-        self.assertEqual((cfg["length_seconds"], cfg["max_takes"]), (45, 3))
+        self.assertEqual((cfg["length_seconds"], cfg["max_takes"]), (60, 3))
 
     def test_invalid_values_name_the_field(self):
         cases = {
-            "length_seconds": 50, "vocal": "robot", "news_date": "yesterday", "story_focus": [],
-            "exclude_story_ranks": ["1"], "explicit": "yes", "avoid_repeating_last_n_days": -1,
+            "length_seconds": 30, "vocal": "robot", "news_week": "2026-10-06", "story_focus": [],
+            "exclude_story_ranks": ["1"], "explicit": "yes", "avoid_repeating_last_n_weeks": -1,
             "claude_model": "", "elevenlabs_model": "music_v1", "max_takes": 0, "max_credits_per_song": 0,
         }
         for name, value in cases.items():
@@ -114,15 +115,23 @@ class SettingsTests(unittest.TestCase):
         with self.assertRaises(settings.SettingsError):
             settings.validate({"lenght_seconds": 45})
 
+    def test_weeks_run_monday_to_friday(self):
+        self.assertEqual(settings.week_of(datetime.date(2026, 10, 27)), "2026-W44")
+        self.assertEqual(settings.week_of(datetime.date(2027, 1, 1)), "2026-W53")  # ISO weeks cross the new year
+        self.assertEqual(settings.week_days("2026-W44"), (datetime.date(2026, 10, 26), datetime.date(2026, 10, 30)))
+        with self.assertRaises(settings.RunError):
+            settings.week_days("2026-10-26")
+
     def test_news_file_selection(self):
         with tempfile.TemporaryDirectory() as tmp:
             d = Path(tmp)
-            for name in ("us_finance_news_2026-10-05.json", "us_finance_news_2026-10-06.json", "notes.json"):
+            for name in ("us_finance_news_week_2026-W43.json", "us_finance_news_week_2026-W44.json",
+                         "us_finance_news_2026-10-06.json", "notes.json"):
                 (d / name).write_text("{}")
-            self.assertEqual(settings.find_news_file(d)[1], "2026-10-06")
-            self.assertEqual(settings.find_news_file(d, "2026-10-05")[0].name, "us_finance_news_2026-10-05.json")
+            self.assertEqual(settings.find_news_file(d)[1], "2026-W44")
+            self.assertEqual(settings.find_news_file(d, "2026-W43")[0].name, "us_finance_news_week_2026-W43.json")
             with self.assertRaises(settings.RunError):
-                settings.find_news_file(d, "2026-10-01")
+                settings.find_news_file(d, "2026-W40")
             with self.assertRaises(settings.RunError):
                 settings.find_news_file(d / "nope")
 
@@ -172,7 +181,7 @@ class CheckTests(unittest.TestCase):
         plan = self.plan(0, duration_ms=10000)
         plan["chunks"][2]["duration_ms"] = 2000
         self.one("chunk 3 lasts 2000 ms", plan=plan)
-        self.one("the reel is 30s", plan=self.plan(1, duration_ms=30000))
+        self.one("the reel is 45s", plan=self.plan(1, duration_ms=40000))
         self.one("lasts only", plan=self.plan(1, duration_ms=4000))
 
     def test_styles(self):
@@ -186,7 +195,7 @@ class CheckTests(unittest.TestCase):
     def test_bar_budget_and_bpm(self):
         body = "[Verse 2]\n" + "\n".join(VERSE + [f"extra bar {i}" for i in range(6)])
         issues = self.issues(plan=self.plan(1, text=body))
-        self.assertTrue(any("only about 11 fit" in i for i in issues), issues)
+        self.assertTrue(any("only about 16 fit" in i for i in issues), issues)
         self.one("outside the usable range", bpm=300)
 
     def test_signature_once_or_twice(self):
@@ -224,7 +233,7 @@ class CheckTests(unittest.TestCase):
     def test_stories_and_post_caption(self):
         used = [{"rank": 9, "headline": "x", "status": "verified"}, {"rank": 1, "headline": "x", "status": "verified"}]
         self.one("not in the news file", stories_used=used)
-        cfg = settings.validate({"length_seconds": 30, "exclude_story_ranks": [1]})
+        cfg = settings.validate({"length_seconds": 45, "exclude_story_ranks": [1]})
         self.assertTrue(any("excluded" in i for i in self.issues(cfg=cfg)))
         self.one("must include 'Mu-Zueki'", post_caption="Records. Not financial advice.")
         self.one("must end with", post_caption="Mu-Zueki. Buy now!")
@@ -247,26 +256,27 @@ class SongStageTests(unittest.TestCase):
 
     def test_schema_requires_what_the_checks_read(self):
         schema = json.loads(song_stage.SCHEMA_PATH.read_text(encoding="utf-8"))
-        self.assertEqual(set(schema["required"]), set(good_song()) - {"news_date"})
+        self.assertEqual(set(schema["required"]), set(good_song()) - {"news_week"})
 
     def test_hit_total(self):
         self.assertAlmostEqual(sum(song_stage.HIT_WEIGHTS.values()), 1.0)
         self.assertEqual(song_stage.hit_total(good_song()["hit_score"]), 8.0)
 
-    def test_recent_hooks_newest_first_and_before_date(self):
+    def test_recent_hooks_newest_first_and_before_the_week(self):
         with tempfile.TemporaryDirectory() as tmp:
-            for date, hook in (("2026-10-03", "h3"), ("2026-10-04", "h4"), ("2026-10-05", "h5"), ("2026-10-06", "h6")):
-                (Path(tmp) / date).mkdir()
-                (Path(tmp) / date / "song.json").write_text(json.dumps({"hook": hook}))
-            self.assertEqual(song_stage.recent_hooks(Path(tmp), "2026-10-06", 2), ["h5", "h4"])
-            self.assertEqual(song_stage.recent_hooks(Path(tmp), "2026-10-06", 0), [])
+            for week, hook in (("2026-W38", "h3"), ("2026-W39", "h4"), ("2026-W40", "h5"), ("2026-W41", "h6"),
+                               ("2026-10-05", "old daily")):
+                (Path(tmp) / week).mkdir()
+                (Path(tmp) / week / "song.json").write_text(json.dumps({"hook": hook}))
+            self.assertEqual(song_stage.recent_hooks(Path(tmp), "2026-W41", 2), ["h5", "h4"])
+            self.assertEqual(song_stage.recent_hooks(Path(tmp), "2026-W41", 0), [])
 
     def run_stage(self, replies):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
         news = Path(tmp.name) / "us_finance_news_2026-10-06.json"
         news.write_text(json.dumps(NEWS), encoding="utf-8")
-        day = Day(Path(tmp.name) / "out", "2026-10-06", news)
+        day = Episode(Path(tmp.name) / "out", "2026-W41", news)
         calls = []
 
         def ask(system, user, schema, model, timeout=900):
@@ -280,7 +290,7 @@ class SongStageTests(unittest.TestCase):
     def test_clean_song_is_written(self):
         result, day, calls = self.run_stage(iter([good_song(), {"pass": True, "issues": []}]))
         self.assertEqual((result.state, len(calls)), (DONE, 2))
-        self.assertEqual(day.read_json(day.song_json)["length_seconds"], 30)
+        self.assertEqual(day.read_json(day.song_json)["length_seconds"], 45)
         self.assertIn("Mu-Zueki", day.caption_txt.read_text(encoding="utf-8"))
         self.assertNotIn("NEEDS REVIEW", day.song_md.read_text(encoding="utf-8"))
 
@@ -348,8 +358,8 @@ class ElevenLabsTests(unittest.TestCase):
             self.assertEqual(elevenlabs.load_api_key(env), "env-key")
 
     def test_estimate_and_request_plan(self):
-        self.assertEqual(elevenlabs.plan_seconds(self.PLAN), 26.0)
-        self.assertEqual(elevenlabs.estimate_credits(self.PLAN), 195)
+        self.assertEqual(elevenlabs.plan_seconds(self.PLAN), 36.0)
+        self.assertEqual(elevenlabs.estimate_credits(self.PLAN), 270)
         sent = elevenlabs.request_plan(self.PLAN)
         self.assertNotIn("negative_styles", sent["chunks"][1])  # empty optional fields are not sent
         self.assertEqual(sent["chunks"][0]["context_adherence"], "high")
@@ -472,7 +482,7 @@ class AudioStageTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.day = Day(Path(self.tmp.name), "2026-10-06")
+        self.day = Episode(Path(self.tmp.name), "2026-W41")
         self.day.write_json(self.day.song_json, good_song())
         self.ledger = Path(self.tmp.name) / "usage.csv"
         self.trims = []
@@ -496,7 +506,7 @@ class AudioStageTests(unittest.TestCase):
             return f"take{len(made)}".encode()
 
         result = audio_stage.run(
-            self.day, cfg or settings.validate({"length_seconds": 30}), compose=compose or fake_compose,
+            self.day, cfg or settings.validate({"length_seconds": 45}), compose=compose or fake_compose,
             transcribe=lambda path: next(heard), get_credits=lambda key: next(balance, None), ledger=self.ledger)
         return result, made
 
@@ -517,7 +527,7 @@ class AudioStageTests(unittest.TestCase):
         self.assertEqual((report["coverage"], report["first_lyric_seconds"], report["trimmed_seconds"]), (1.0, 0.0, 0.0))
         self.assertFalse((self.day.dir / "takes").exists())
         (row,) = audio_stage.read_usage(self.ledger)
-        self.assertEqual((row["takes"], row["estimated_credits"], row["measured_credits"]), ("1", "195", "300"))
+        self.assertEqual((row["takes"], row["estimated_credits"], row["measured_credits"]), ("1", "270", "300"))
 
     def test_take_with_skipped_opening_is_retaken_on_the_fallback_model(self):
         skipped = sung_words(good_song(), skip_sections=(1,))
@@ -543,15 +553,15 @@ class AudioStageTests(unittest.TestCase):
         self.assertEqual((report["trimmed_seconds"], report["first_lyric_seconds"], report["words"][0][1]), (1.9, 0.1, 0.1))
 
     def test_credit_cap_stops_takes(self):
-        cfg = settings.validate({"length_seconds": 30, "max_credits_per_song": 400})
+        cfg = settings.validate({"length_seconds": 45, "max_credits_per_song": 550})
         skipped = sung_words(good_song(), skip_sections=(1,))
         result, made = self.run_stage([skipped, skipped, skipped], cfg=cfg)
-        self.assertEqual(len(made), 2)  # a third take at 195 credits would pass the 400 cap
+        self.assertEqual(len(made), 2)  # a third take at 270 credits would pass the 550 cap
         self.assertTrue(any("credit cap" in n for n in result.notes), result.notes)
 
     def test_earlier_spending_on_the_same_song_counts(self):
         audio_stage.record_usage(self.ledger, dict.fromkeys(audio_stage.USAGE_FIELDS, "") | {
-            "news_date": "2026-10-06", "estimated_credits": 195, "measured_credits": 4900})
+            "episode": "2026-W41", "estimated_credits": 270, "measured_credits": 4900})
         result, made = self.run_stage([sung_words(good_song())])
         self.assertEqual((result.state, made), (FAILED, []))
 
@@ -571,14 +581,14 @@ class AudioStageTests(unittest.TestCase):
     def test_estimate_counts_when_the_balance_does_not_move(self):
         self.run_stage([sung_words(good_song())], balance=((0, 50000), (0, 50000)))
         (row,) = audio_stage.read_usage(self.ledger)
-        self.assertEqual((row["measured_credits"], audio_stage.credits_charged(row)), ("", 195))
+        self.assertEqual((row["measured_credits"], audio_stage.credits_charged(row)), ("", 270))
 
 
 class SubtitlesStageTests(unittest.TestCase):
     def make_day(self, words):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
-        day = Day(Path(tmp.name), "2026-10-06")
+        day = Episode(Path(tmp.name), "2026-W41")
         day.write_json(day.song_json, good_song())
         day.write_json(day.audio_json, {"duration_seconds": 25.0, "words": [list(w) for w in words]})
         def analyse(day, bpm, sections):
@@ -599,7 +609,7 @@ class SubtitlesStageTests(unittest.TestCase):
         first, second = timeline["sections"][:2]
         self.assertEqual(first["start"], 0.0)
         self.assertLessEqual(first["end"], second["start"])
-        self.assertEqual(len(timeline["captions"]), 9)
+        self.assertEqual(len(timeline["captions"]), 13)
         self.assertEqual({c["timing"] for c in timeline["captions"]}, {"heard"})
         self.assertEqual((timeline["beats"], timeline["downbeats"], timeline["seconds_per_beat"]),
                          ([0.0, 0.5, 1.0], [0.0], 0.5))
@@ -612,7 +622,7 @@ class SubtitlesStageTests(unittest.TestCase):
     def test_many_unheard_captions_need_review(self):
         result, day = self.make_day(sung_words(good_song(), skip_sections=(2,)))
         self.assertEqual(result.state, REVIEW)
-        self.assertIn("6 of 9 captions", result.notes[0])
+        self.assertIn("10 of 13 captions", result.notes[0])
 
 
 def researched(date="2026-10-08", count=10):
@@ -629,7 +639,7 @@ def researched(date="2026-10-08", count=10):
 
 
 class NewsTests(unittest.TestCase):
-    NOW = datetime.datetime(2026, 10, 8, 18, 0, tzinfo=news.EASTERN)
+    NOW = datetime.datetime(2026, 10, 9, 18, 0, tzinfo=news.EASTERN)  # Friday of 2026-W41, after the close
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -639,29 +649,29 @@ class NewsTests(unittest.TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def gather(self, answers, date="2026-10-08"):
+    def gather(self, answers, week="2026-W41"):
         calls = []
 
         def ask(system, user, schema, model, timeout=0, tools=""):
             calls.append({"user": user, "tools": tools})
             return answers[len(calls) - 1]
-        return news.gather(date, self.dir, "opus", ask=ask, now=self.NOW), calls
+        return news.gather(week, self.dir, "opus", ask=ask, now=self.NOW), calls
 
     def test_good_research_passes_the_shape_check(self):
-        self.assertEqual(news.check_news(researched(), "2026-10-08"), [])
+        self.assertEqual(news.check_news(researched(), "2026-W41"), [])
 
     def test_shape_problems_are_reported(self):
         bad = researched()
-        bad["stories"][2]["event_date"] = "2026-10-07"
+        bad["stories"][2]["event_date"] = "2026-10-03"
         bad["stories"][3]["key_facts"] = ["only one"]
         bad["stories"][4]["fact_check"]["references"] = [{"source": "x", "title": "t", "url": "made up"}]
         bad["stories"][5]["fact_check"]["references"].pop()
-        problems = "\n".join(news.check_news(bad, "2026-10-08"))
-        self.assertIn("Story 3: event_date is 2026-10-07", problems)
+        problems = "\n".join(news.check_news(bad, "2026-W41"))
+        self.assertIn("Story 3: event_date is 2026-10-03, not a date from 2026-10-05 to 2026-10-09", problems)
         self.assertIn("Story 4: needs at least two key facts", problems)
         self.assertIn("Story 5: needs at least one reference with a real URL", problems)
         self.assertIn("Story 6: 'verified' needs two references", problems)
-        self.assertIn("9 stories", news.check_news(researched(count=9), "2026-10-08")[0])
+        self.assertIn("9 stories", news.check_news(researched(count=9), "2026-W41")[0])
 
     def test_verdicts_remove_wrong_facts_and_unsupported_stories(self):
         stories = researched()["stories"]
@@ -683,35 +693,39 @@ class NewsTests(unittest.TestCase):
     def test_gather_writes_the_file_after_both_passes(self):
         verdicts = {"stories": [{"rank": n, "verdict": "confirmed", "wrong_facts": [], "notes": ""} for n in range(1, 11)]}
         path, calls = self.gather([researched(), verdicts])
-        self.assertEqual(path.name, "us_finance_news_2026-10-08.json")
+        self.assertEqual(path.name, "us_finance_news_week_2026-W41.json")
         self.assertEqual([c["tools"] for c in calls], ["WebSearch,WebFetch"] * 2)
-        self.assertIn("Thursday, October 8, 2026", calls[0]["user"])
+        self.assertIn("Monday, October 5 to Friday, October 9, 2026", calls[0]["user"])
         data = json.loads(path.read_text(encoding="utf-8"))
         self.assertEqual(data["metadata"]["story_count"], 10)
         self.assertEqual(len(data["stories"]), 10)
-        self.assertEqual(settings.find_news_file(self.dir, "2026-10-08")[0], path)
+        self.assertEqual(settings.find_news_file(self.dir, "2026-W41")[0], path)
+        self.assertEqual(data["metadata"]["week"], "2026-W41")
+        self.assertEqual(data["metadata"]["coverage_window"]["to"][:10], "2026-10-09")
 
     def test_bad_research_is_repaired_once(self):
         bad = researched()
-        bad["stories"][0]["event_date"] = "2026-10-07"
+        bad["stories"][0]["event_date"] = "2026-10-12"
         verdicts = {"stories": [{"rank": n, "verdict": "confirmed", "wrong_facts": [], "notes": ""} for n in range(1, 11)]}
         path, calls = self.gather([bad, researched(), verdicts])
         self.assertEqual(len(calls), 3)
-        self.assertIn("Story 1: event_date is 2026-10-07", calls[1]["user"])
+        self.assertIn("Story 1: event_date is 2026-10-12", calls[1]["user"])
         self.assertTrue(path.exists())
 
-    def test_gather_refuses_an_unfinished_day_a_future_day_and_a_gutted_file(self):
+    def test_gather_refuses_an_unready_answer_an_unfinished_week_and_a_gutted_file(self):
         with self.assertRaises(settings.RunError) as caught:
             self.gather([dict(researched(), ready=False, not_ready_reason="the market is still open")])
         self.assertIn("the market is still open", str(caught.exception))
         with self.assertRaises(settings.RunError) as caught:
-            self.gather([], date="2026-10-09")
-        self.assertIn("in the future", str(caught.exception))
+            self.gather([], week="2026-W42")
+        self.assertIn("is not over", str(caught.exception))
+        with self.assertRaises(settings.RunError):
+            self.gather([], week="2026-10-09")
         verdicts = {"stories": [{"rank": n, "verdict": "unsupported", "wrong_facts": [], "notes": "no"} for n in range(1, 4)]}
         with self.assertRaises(settings.RunError) as caught:
             self.gather([researched(), verdicts])
         self.assertIn("Only 7 stories", str(caught.exception))
-        self.assertFalse(news.news_path(self.dir, "2026-10-08").exists())
+        self.assertFalse(news.news_path(self.dir, "2026-W41").exists())
 
 
 class InstagramTests(unittest.TestCase):
@@ -803,7 +817,7 @@ class InstagramTests(unittest.TestCase):
 
     def test_stage_fills_the_post_folder_and_keeps_an_edited_caption(self):
         root = Path(self.tmp.name)
-        day = Day(root / "output", "2026-10-08")
+        day = Episode(root / "output", "2026-W41")
         day.write_text(day.caption_txt, "From the song.")
         with self.assertRaises(settings.RunError):
             instagram.stage(day, root / "posts")
@@ -811,7 +825,7 @@ class InstagramTests(unittest.TestCase):
         folder = instagram.stage(day, root / "posts")
         self.assertEqual((folder / "reel.mp4").read_bytes(), b"first cut")
         self.assertEqual((folder / "caption.txt").read_text(encoding="utf-8"), "From the song.\n")
-        self.assertEqual(json.loads((folder / "post.json").read_text(encoding="utf-8")), {"date": "2026-10-08", "status": "draft"})
+        self.assertEqual(json.loads((folder / "post.json").read_text(encoding="utf-8")), {"week": "2026-W41", "status": "draft"})
         # The approved description is written into the folder; a new render must not wipe it.
         (folder / "caption.txt").write_text("Approved text.", encoding="utf-8")
         (day.dir / "reel.mp4").write_bytes(b"second, longer cut")
@@ -856,7 +870,7 @@ class ReelPrepareTests(unittest.TestCase):
         '<div id="root" data-duration="1">\n'
         '      <!-- footage:start (clips) -->\n      <video id="old" data-duration="3"></video>\n      <!-- footage:end -->\n'
         '<audio id="song" data-duration="1"></audio>\n</div>\n'
-        '    <!-- day:start (scenes) -->\n    <script src="days/2026-01-01/old.js"></script>\n    <!-- day:end -->\n'
+        '    <!-- scenes:start (scenes) -->\n    <script src="weeks/2026-W01/old.js"></script>\n    <!-- scenes:end -->\n'
     )
 
     def setUp(self):
@@ -866,17 +880,17 @@ class ReelPrepareTests(unittest.TestCase):
         self.reel = root / "reel"
         self.reel.mkdir()
         (self.reel / "index.html").write_text(self.INDEX, encoding="utf-8")
-        self.day = Day(root / "output", "2026-10-06")
+        self.day = Episode(root / "output", "2026-W41")
         self.day.write_json(self.day.timeline_json, {"duration_seconds": 40.96, "captions": []})
         self.day.dir.joinpath("audio.mp3").write_bytes(b"song")
 
-    def test_day_without_scenes_is_refused(self):
+    def test_week_without_scenes_is_refused(self):
         with self.assertRaises(settings.RunError) as caught:
             video.prepare(self.day, self.reel)
-        self.assertIn("No scenes for 2026-10-06", str(caught.exception))
+        self.assertIn("No scenes for 2026-W41", str(caught.exception))
 
-    def test_prepare_points_the_project_at_the_day(self):
-        scenes = self.reel / "days" / "2026-10-06"
+    def test_prepare_points_the_project_at_the_week(self):
+        scenes = self.reel / "weeks" / "2026-W41"
         scenes.mkdir(parents=True)
         for name in ("2-verse.js", "1-hook.js"):
             (scenes / name).write_text("", encoding="utf-8")
@@ -884,8 +898,8 @@ class ReelPrepareTests(unittest.TestCase):
         html = (self.reel / "index.html").read_text(encoding="utf-8")
         self.assertEqual(html.count('data-duration="40.96"'), 2)
         self.assertNotIn("old.js", html)
-        self.assertLess(html.index("days/2026-10-06/1-hook.js"), html.index("days/2026-10-06/2-verse.js"))
-        self.assertIn("<!-- day:end -->", html)
+        self.assertLess(html.index("weeks/2026-W41/1-hook.js"), html.index("weeks/2026-W41/2-verse.js"))
+        self.assertIn("<!-- scenes:end -->", html)
         self.assertEqual((self.reel / "audio.mp3").read_bytes(), b"song")
         self.assertTrue((self.reel / "data" / "timeline.js").read_text(encoding="utf-8").startswith("window.TIMELINE = {"))
         self.assertNotIn('id="old"', html)
@@ -895,7 +909,7 @@ class ReelPrepareTests(unittest.TestCase):
                     "captions": [{"start": 0.0, "words": [{"start": 0.0}, {"start": 0.5}]},
                                  {"start": 2.0, "words": [{"start": 2.0}, {"start": 2.4}]}]}
         self.day.write_json(self.day.timeline_json, timeline)
-        scenes = self.reel / "days" / "2026-10-06"
+        scenes = self.reel / "weeks" / "2026-W41"
         scenes.mkdir(parents=True)
         (scenes / "1-a.js").write_text("", encoding="utf-8")
         (scenes / "footage.json").write_text(json.dumps([
@@ -903,7 +917,7 @@ class ReelPrepareTests(unittest.TestCase):
             {"id": "f2", "clip": "hall", "start": "word:2:1", "end": "cut:2", "rect": [0, 960, 1080, 960]},
             {"id": "f3", "clip": "hall", "start": "cut:2", "end": "end"},
         ]), encoding="utf-8")
-        media = self.reel / "media" / "2026-10-06"
+        media = self.reel / "media" / "2026-W41"
         media.mkdir(parents=True)
         (media / "hall.mp4").write_bytes(b"clip")
         cuts = []
@@ -930,9 +944,9 @@ class ReelPrepareTests(unittest.TestCase):
         timeline = {"duration_seconds": 10.0, "downbeats": [],
                     "captions": [{"start": 0.0, "words": [{"start": 0.0}]}, {"start": 2.0, "words": [{"start": 2.0}]},
                                  {"start": 5.0, "words": [{"start": 5.0}]}]}
-        scenes = self.reel / "days" / "2026-10-06"
+        scenes = self.reel / "weeks" / "2026-W41"
         scenes.mkdir(parents=True)
-        media = self.reel / "media" / "2026-10-06"
+        media = self.reel / "media" / "2026-W41"
         media.mkdir(parents=True)
         (media / "hall.mp4").write_bytes(b"clip")
         (scenes / "footage.json").write_text(json.dumps([
@@ -953,7 +967,7 @@ class ReelPrepareTests(unittest.TestCase):
         html = video.footage_tags(self.day, timeline, self.reel, cut=fake_cut, join=fake_join)
         self.assertEqual(joins, [[2.0, 3.0]])
         self.assertEqual(html.count("<video"), 3)
-        self.assertIn('id="f1" class="clip footage" src="media/2026-10-06/cut/f1-join-', html)
+        self.assertIn('id="f1" class="clip footage" src="media/2026-W41/cut/f1-join-', html)
         self.assertIn('data-start="0.000" data-duration="5.000"', html)
         self.assertNotIn('id="f2"', html)
         # A clip that does not follow on from the last one cannot join it.
@@ -1012,7 +1026,7 @@ class RunnerTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.day = Day(Path(self.tmp.name), "2026-10-06")
+        self.day = Episode(Path(self.tmp.name), "2026-W41")
         self.ran = []
         patcher = mock.patch.object(runner, "log", lambda m: None)
         patcher.start()
@@ -1058,6 +1072,199 @@ class RunnerTests(unittest.TestCase):
         self.day.reset(["audio", "subtitles"])  # what --from audio does
         runner.run_stages(self.day, CFG, stages)
         self.assertEqual(self.ran, ["song", "audio", "subtitles", "audio", "subtitles"])
+
+
+class PlatesTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        root = Path(self.tmp.name)
+        self.downloads, self.media = root / "dl", root / "media"
+        self.downloads.mkdir()
+        for n, name in enumerate(("watermarked_img_9.jpg", "notes.jpg", "Gemini_Generated_Image (2).jpeg", "watermarked_img_1.jpg")):
+            path = self.downloads / name
+            path.write_bytes(name.encode())
+            os.utime(path, (1000 + n, 1000 + n))
+        self.scaled, self.sheets = [], []
+        for name, fake in (("fill_frame", lambda s, t: (self.scaled.append(s.name), t.write_bytes(s.read_bytes()))),
+                           ("contact_sheet", lambda plates_, t: self.sheets.append([p.name for p in plates_]))):
+            patcher = mock.patch.object(plates, name, fake)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+        patcher = mock.patch.object(plates, "log", lambda m: None)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def test_newest_downloads_are_named_in_download_order(self):
+        folder = plates.bring_in("2026-W44", ["sky", "desk"], self.downloads, self.media)
+        # The two newest Gemini files, oldest first: the Library download (third) then watermarked_img_1 (fourth).
+        self.assertEqual((folder / "sky.jpg").read_bytes(), b"Gemini_Generated_Image (2).jpeg")
+        self.assertEqual((folder / "desk.jpg").read_bytes(), b"watermarked_img_1.jpg")
+        record = json.loads((folder / "plates.json").read_text(encoding="utf-8"))
+        self.assertEqual(record["sky"]["file"], "media/2026-W44/plates/sky.jpg")
+        self.assertEqual(self.sheets[-1], ["sky.jpg", "desk.jpg"])
+        self.assertTrue((self.downloads / "watermarked_img_9.jpg").exists())  # older ones are left alone
+
+    def test_bad_requests_are_refused(self):
+        for week, names in (("2026-10-27", ["a"]), ("2026-W44", ["a", "a"]), ("2026-W44", ["a", "b", "c", "d"])):
+            with self.assertRaises(settings.RunError):
+                plates.bring_in(week, names, self.downloads, self.media)
+
+
+class CutClipTests(unittest.TestCase):
+    def cut(self, entry):
+        calls = []
+
+        def run(args, **kwargs):
+            calls.append(args)
+            Path(args[-1]).write_bytes(b"x")
+            return subprocess.CompletedProcess(args, 0, "", "")
+
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(video.subprocess, "run", run):
+            video.cut_clip(Path(tmp) / "in.mp4", Path(tmp) / "out.mp4", 2.0, entry)
+        return calls[0][calls[0].index("-filter_complex") + 1]
+
+    def test_a_keyed_clip_loses_pure_green_unless_its_screen_colour_is_given(self):
+        self.assertIn("chromakey=0x00FF00:", self.cut({"key": "0x0b0d1a"}))
+        self.assertIn("chromakey=0x5AFF00:", self.cut({"key": "0x0b0d1a", "screen": "0x5AFF00"}))
+
+
+class OpenverseTests(unittest.TestCase):
+    RECORD = {"id": "abc", "title": "Coin", "creator": "someone", "source": "freesound", "license": "by", "license_version": "4.0",
+              "license_url": "https://creativecommons.org/licenses/by/4.0/", "foreign_landing_url": "https://freesound.org/s/1/",
+              "attribution": '"Coin" by someone is licensed under CC BY 4.0.', "url": "https://cdn.freesound.org/previews/1/1_2-hq.mp3"}
+
+    def test_only_cc0_pdm_and_by_are_allowed(self):
+        for licence, ok in (("cc0", True), ("pdm", True), ("by", True), ("by-sa", False), ("by-nc", False), ("by-nd", False)):
+            self.assertEqual(openverse.allowed({"license": licence}), ok, licence)
+
+    def test_a_download_is_converted_and_credited(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder, credits = Path(tmp) / "sfx", Path(tmp) / "sound" / "openverse.json"
+            fetch = lambda url, timeout=60: json.dumps(self.RECORD).encode() if "api.openverse" in url else b"mp3"
+            converted = []
+            openverse.get("coin-a", "abc", folder, credits, fetch=fetch, to_wav=lambda s, t: (converted.append(s.name), t.write_bytes(b"wav")))
+            self.assertTrue((folder / "coin-a.wav").exists())
+            self.assertEqual(converted, ["coin-a.download.mp3"])
+            self.assertFalse((folder / "coin-a.download.mp3").exists())
+            entry = json.loads(credits.read_text(encoding="utf-8"))["coin-a"]
+            self.assertTrue(entry["needs_credit"])
+            self.assertIn("CC BY 4.0", entry["attribution"])
+
+    def test_a_share_alike_recording_is_refused(self):
+        record = dict(self.RECORD, license="by-sa")
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(settings.RunError):
+            openverse.get("x", "abc", Path(tmp), Path(tmp) / "c.json", fetch=lambda url, timeout=60: json.dumps(record).encode())
+
+
+class SoundTests(unittest.TestCase):
+    PAGE = {"fps": 60, "bpm": 120, "duration": 10.0, "cues": [
+        {"t": 1.25, "kind": "hit", "weight": 1, "id": "hit:2"},
+        {"t": 0.5, "kind": "whoosh", "weight": 0.7, "id": "whoosh:1", "dur": 0.2, "pan": -0.5}]}
+    KINDS = {"hit": ["thump", 0.5], "pop": ["pop", 0.7], "impact": ["hit", 1.0], "whoosh": ["whoosh", 0.8]}
+
+    def test_the_page_cues_become_earshot_frames_and_back(self):
+        cue_file = sound.to_cue_file(self.PAGE)
+        self.assertEqual(cue_file["total"], 600)
+        self.assertEqual([e["id"] for e in cue_file["events"]], ["whoosh:1", "hit:2"])
+        self.assertEqual(cue_file["events"][0], {"f": 30.0, "kind": "whoosh", "weight": 0.7, "id": "whoosh:1", "pan": -0.5, "dur": 12.0})
+        back = sound.from_cue_file(cue_file)
+        self.assertEqual([c["t"] for c in back], [0.5, 1.25])
+        self.assertEqual(back[0]["dur"], 0.2)
+
+    def test_cues_need_the_page_prepared_for_the_week(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            reel = Path(tmp)
+            (reel / "weeks" / "2026-W44").mkdir(parents=True)
+            (reel / "index.html").write_text('<script src="weeks/2026-W43/1-a.js"></script>', encoding="utf-8")
+            with self.assertRaises(settings.RunError):
+                sound.cues("2026-W44", reel, read=lambda index: self.PAGE)
+            (reel / "index.html").write_text('<script src="weeks/2026-W44/1-a.js"></script>', encoding="utf-8")
+            with mock.patch.object(sound, "log", lambda m: None), mock.patch.object(sound, "ROOT", reel):
+                target = sound.cues("2026-W44", reel, read=lambda index: self.PAGE)
+            self.assertEqual(len(json.loads(target.read_text(encoding="utf-8"))["events"]), 2)
+
+    def test_the_heaviest_cues_win_within_the_gap_and_unmapped_kinds_stay_quiet(self):
+        cues = [{"t": 1.0, "kind": "impact", "weight": 1.4, "id": "a"}, {"t": 1.05, "kind": "hit", "weight": 1, "id": "b"},
+                {"t": 2.0, "kind": "pop", "weight": 0.8, "id": "c"}, {"t": 3.0, "kind": "cut", "weight": 0.3, "id": "d"}]
+        kept, dropped = sound.choose(cues, self.KINDS, density=12)
+        self.assertEqual([c["id"] for c in kept], ["a", "c"])
+        self.assertEqual([(c["id"], why) for c, why in dropped], [("b", "another sound within 90 ms")])
+
+    def test_a_quiet_stretch_gets_no_sound(self):
+        cues = [{"t": 1.0, "kind": "impact", "weight": 1.4, "id": "a"}, {"t": 5.0, "kind": "pop", "weight": 1, "id": "b"}]
+        kept, dropped = sound.choose(cues, self.KINDS, density=12, quiet=[[4.5, 6.0]])
+        self.assertEqual([c["id"] for c in kept], ["a"])
+        self.assertEqual([(c["id"], why) for c, why in dropped], [("b", "in a quiet stretch")])
+
+    def test_no_ten_second_stretch_holds_more_than_the_density(self):
+        cues = [{"t": i * 0.5, "kind": "hit", "weight": 1 + (i % 3) * 0.1, "id": str(i)} for i in range(30)]
+        kept, dropped = sound.choose(cues, self.KINDS, density=4)
+        self.assertLessEqual(max(sum(1 for k in kept if c["t"] <= k["t"] < c["t"] + 10) for c in kept), 4)
+        self.assertTrue(dropped and all(why.startswith("over 4") for _, why in dropped))
+
+    def test_events_take_the_design_kind_a_weighted_gain_and_whoosh_lengths(self):
+        events = sound.to_events([{"t": 0.5, "kind": "whoosh", "weight": 1.0, "id": "w", "dur": 0.32},
+                                  {"t": 1.0, "kind": "impact", "weight": 1.44, "id": "i"}], self.KINDS)
+        self.assertEqual(events, [{"t": 0.5, "type": "whoosh", "g": 0.8, "id": "w", "len": 0.32},
+                                  {"t": 1.0, "type": "hit", "g": 1.2, "id": "i"}])
+
+    def test_pans_from_the_picture_reach_the_cue_sheet(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            sheet = Path(tmp) / "sheet.json"
+            sheet.write_text(json.dumps({"cues": [{"t": 0.5, "label": "whoosh"}, {"t": 1.0, "label": "hit"}]}), encoding="utf-8")
+            n = sound.pan_sheet(sheet, [{"t": 0.502, "type": "whoosh", "pan": -0.5}, {"t": 1.0, "type": "hit"}])
+            cues = json.loads(sheet.read_text(encoding="utf-8"))["cues"]
+        self.assertEqual(n, 1)
+        self.assertEqual([c.get("pan") for c in cues], [-0.5, None])
+
+    def test_a_week_overrides_the_series_design_key_by_key(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            reel = Path(tmp)
+            (reel / "sound").mkdir()
+            (reel / "weeks" / "2026-W44").mkdir(parents=True)
+            (reel / "sound" / "design.json").write_text(json.dumps({"kinds": {"hit": ["thump", 0.5], "pop": ["pop", 0.7]}, "density": 12}), encoding="utf-8")
+            (reel / "weeks" / "2026-W44" / "sound.json").write_text(json.dumps({"kinds": {"pop": None}, "density": 8}), encoding="utf-8")
+            d = sound.design(reel, "2026-W44")
+        self.assertEqual(d["kinds"], {"hit": ["thump", 0.5], "pop": None})
+        self.assertEqual(d["density"], 8)
+
+
+class SoundMixTests(unittest.TestCase):
+    TIMELINE = {"captions": [{"start": 1.5, "end": 3.0, "words": []}], "downbeats": [], "duration_seconds": 10}
+
+    def test_cues_are_delayed_to_their_moments_and_mixed_under_the_song(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            reel = Path(tmp)
+            (reel / "sfx").mkdir()
+            (reel / "sfx" / "hit.wav").write_bytes(b"x")
+            calls = []
+            with mock.patch.object(video, "_run", lambda args, timeout, cwd=None: calls.append(args) or mock.Mock(returncode=0)), \
+                    mock.patch.object(video, "_tool", lambda name: name):
+                video.mix_sound(reel / "song.mp3", [{"file": "sfx/hit.wav", "at": "cap:1", "gain": -9}, {"file": "sfx/hit.wav", "at": 4}],
+                                self.TIMELINE, reel / "out.mp3", reel)
+            graph = calls[0][calls[0].index("-filter_complex") + 1]
+            self.assertIn("volume=-9dB,adelay=1500:all=1", graph)
+            self.assertIn("volume=-6dB,adelay=4000:all=1", graph)
+            self.assertIn("amix=inputs=3:normalize=0:duration=first", graph)
+            with self.assertRaises(settings.RunError):
+                video.mix_sound(reel / "song.mp3", [{"file": "sfx/missing.wav", "at": 1}], self.TIMELINE, reel / "out.mp3", reel)
+
+
+class PixelfxTests(unittest.TestCase):
+    REEL = Path(__file__).resolve().parent.parent / "reel"
+
+    def test_the_reel_loads_pixelfx_after_the_kit_and_before_the_scenes(self):
+        html = (self.REEL / "index.html").read_text(encoding="utf-8")
+        kit, bundle, adapter = (html.index(f'src="lib/{name}"') for name in ("kit.js", "pixelfx/pixelfx.js", "pfx.js"))
+        self.assertLess(kit, bundle)
+        self.assertLess(bundle, adapter)
+        self.assertLess(adapter, html.index("<!-- scenes:start"))
+
+    def test_the_bundle_is_built_and_keeps_the_licence(self):
+        lib = self.REEL / "lib" / "pixelfx"
+        self.assertTrue((lib / "pixelfx.js").read_text(encoding="utf-8").startswith("// pixelfx (MIT"))
+        self.assertIn("MIT License", (lib / "LICENSE").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

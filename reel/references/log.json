@@ -86,5 +86,15 @@
     },
     "template": "collage",
     "note": "96 BPM live-band song (faster than 2026-10-12, many instruments) set on bank-tower steps; street ambience; torn-paper collage over Vecteezy footage with meme GIFs from GIPHY as die-cut stickers (user approved meme-original GIFs only)"
+  },
+  {
+    "date": "2026-W44",
+    "source": "search",
+    "reference": {
+      "file": "arcade-crt.mp4",
+      "url": "https://whatships.com/videos/history-of-video-games/"
+    },
+    "template": "arcade",
+    "note": "first weekly reel and first with pixelfx: the week as an arcade game on a CRT; Gemini pixel-art plates (5), Vecteezy footage, pixelfx effects on every hit including the new finance/red-candles"
   }
 ]

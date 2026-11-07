@@ -1,0 +1,18 @@
+[
+  {"id": "f01", "clip": "arcade", "start": "cap:1", "end": "cap:3", "from": 0.5, "rect": [0, 600, 1080, 608], "key": "0x0b0b0b", "screen": "0x5AFF00"},
+  {"id": "f02", "clip": "burn", "start": "cap:7", "end": "cap:9", "from": 1.0, "x": 0.5, "look": "eq=contrast=1.18:saturation=0.85:brightness=-0.05,colorchannelmixer=rr=1.1:gg=0.62:bb=0.6"},
+  {"id": "f03", "clip": "screens", "start": "cap:9", "end": "cap:12", "from": 1.0, "x": 0.2, "look": "eq=contrast=1.15:saturation=0.55:brightness=-0.06,colorchannelmixer=rr=1.05:gg=0.75:bb=0.85"},
+  {"id": "f04", "clip": "chip", "start": "cap:14", "end": "cap:16", "from": 2.0, "x": 0.5, "look": "hue=h=140:s=1.1,eq=contrast=1.12:brightness=-0.05"},
+  {"id": "f05", "clip": "datacenter", "start": "cap:18", "end": "cap:20", "from": 0.5, "x": 0.5, "look": "eq=contrast=1.15:saturation=0.7:brightness=-0.08,colorchannelmixer=rr=1.15:gg=0.8:bb=0.7"},
+  {"id": "f06", "clip": "arcade", "start": "cap:24", "end": "cap:26", "from": 4.0, "rect": [0, 600, 1080, 608], "key": "0x0b0b0b", "screen": "0x5AFF00"},
+  {"id": "f07", "clip": "burn", "start": "cap:30", "end": "cap:32", "from": 4.0, "x": 0.5, "look": "eq=contrast=1.18:saturation=0.85:brightness=-0.05,colorchannelmixer=rr=1.1:gg=0.62:bb=0.6"},
+  {"id": "f08", "clip": "fed", "start": "cap:32", "end": "cap:34", "from": 2.0, "x": 0.45, "look": "eq=contrast=1.12:saturation=0.6:brightness=-0.1,colorchannelmixer=rr=0.85:gg=0.92:bb=1.15"},
+  {"id": "f09", "clip": "datacenter", "start": "cap:41", "end": "cap:43", "from": 3.0, "x": 0.5, "look": "eq=contrast=1.15:saturation=0.7:brightness=-0.08,colorchannelmixer=rr=1.15:gg=0.8:bb=0.7"},
+  {"id": "f10", "clip": "chip", "start": "cap:43", "end": "cap:45", "from": 5.0, "x": 0.5, "look": "hue=s=0.12,eq=contrast=1.2:brightness=-0.1"},
+  {"id": "f11", "clip": "datacenter", "start": "cap:47", "end": "cap:48", "from": 5.0, "x": 0.5, "look": "eq=contrast=1.2:saturation=0.7,colorchannelmixer=rr=1.15:gg=0.8:bb=0.7"},
+  {"id": "f12", "clip": "burn", "start": "cap:48", "end": "cap:49", "from": 7.0, "x": 0.5, "look": "eq=contrast=1.2:saturation=0.9"},
+  {"id": "f13", "clip": "screens", "start": "cap:49", "end": "cap:50", "from": 5.0, "x": 0.2, "look": "eq=contrast=1.2:saturation=0.6,colorchannelmixer=rr=1.05:gg=0.75:bb=0.85"},
+  {"id": "f14", "clip": "chip", "start": "cap:50", "end": "cap:51", "from": 7.0, "x": 0.5, "look": "hue=h=140:s=1.1,eq=contrast=1.15"},
+  {"id": "f15", "clip": "burn", "start": "cap:51", "end": "cap:52", "from": 8.5, "x": 0.5, "look": "eq=contrast=1.2:saturation=0.9"},
+  {"id": "f16", "clip": "arcade", "start": "cap:52", "end": "end", "from": 9.0, "rect": [0, 600, 1080, 608], "key": "0x0b0b0b", "screen": "0x5AFF00"}
+]

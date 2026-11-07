@@ -98,6 +98,8 @@ There are no flow tags, so each change of delivery gets its own chunk with style
 | What changes | Add to that chunk's `positive_styles` | `context_adherence` |
 |--------------|----------------------------------------|---------------------|
 | Laid-back verse | `laid-back conversational rap`, `behind-the-beat delivery` | `high` |
+| Locked-in verse | `tight syncopated rap flow with triplet pockets and internal rhymes`, `every syllable locked to the beat` | `high` |
+| Building verse | `building, accelerating triplet flow, words stacking tighter every bar`, `growing intensity` | `high` |
 | Aggressive switch | `aggressive rap delivery`, `hard consonants`, `full drums and 808` | `high` |
 | Double time | `double-time rap`, `rapid-fire but clearly enunciated syllables`, `rolling hi-hats` | `high` |
 | Half time | `half-time drums`, `heavy sparse kick`, `slow deliberate rap` | `high` |
@@ -105,6 +107,8 @@ There are no flow tags, so each change of delivery gets its own chunk with style
 | Sung hook | `melodic sung hook`, `autotuned vocal`, `stacked harmonies`, plus the full-beat styles above | `high` |
 
 Do not use `low` adherence in a reel; the song is too short to survive a hard break in sound.
+
+**Tested (The Unbowed, October 2026):** the locked-in triplet flow above, with multisyllabic internal rhymes in the lyrics themselves, gave the best-sounding rap, and every word was heard. A mid tempo of about 90 BPM kept that flow clear; faster tempos crowd it. Say the same voice in every chunk (`the same deep, controlled male rap voice, one consistent rapper throughout`) or later chunks may change singer.
 
 **Tested:** fast, dense sections are where the words get lost. Keep double time to 2 bars, give it a chunk of its own with a little extra duration, and never put a key number in it.
 
@@ -115,6 +119,7 @@ Do not use `low` adherence in a reel; the song is too short to survive a hard br
 The model fits the lyrics into the time each chunk is given, so the durations control the pace.
 
 - **Work from bars:** chunk duration in ms = bars in the chunk x 240,000 / BPM. Four bars at 130 BPM is 7,385 ms.
+- **Whole bars only.** When every chunk is a whole number of bars, each section starts on a downbeat and every lyric lands on a predictable bar number, which the reel uses to cut and to time its characters' actions.
 - **Minimum 3,000 ms per chunk.** Anything shorter must be merged into a neighbouring chunk.
 - **The total of all chunks must not exceed the reel length,** and should end 2 to 5 seconds short of it.
 - A chunk with too many words for its duration gets rushed or cut. If in doubt, give it a little more time.
@@ -123,8 +128,9 @@ The model fits the lyrics into the time each chunk is given, so the durations co
 
 ## The Ending
 
-- **Sign-off:** give it its own final chunk of 3 to 4 seconds when the budget allows: label `[Outro]`, the cue `{beat cuts out}`, the spoken line with the signature, then `{hard stop}`. Styles: `spoken word`, `no drums`, `abrupt ending, no fade`.
-- If there is no room for a separate outro chunk, put the sign-off as the last line of the final chunk.
+- **End on a hook echo:** a final chunk of 2 bars (3 to 6 seconds): label `[Outro]`, the cue `{beat cuts out}`, the hook's last words again (with the signature if it has not been used twice), then `{hard stop}`. Styles: `the beat cuts out completely`, `a low whispered echo of the last line`, `choir chord held underneath` (or the song's own pad), `no drums`, `abrupt ending, no fade`. Negative styles: `new lyrics`, `spoken monologue`, `fade out`.
+- Do not close on a spoken moral or summary line. It was tried and rejected: the echo loops better and does not preach.
+- If there is no room for a separate outro chunk, end the final chunk on the hook line itself.
 
 ---
 

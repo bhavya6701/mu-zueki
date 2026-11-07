@@ -1,0 +1,947 @@
+{
+ "fps": 60,
+ "bpm": 120,
+ "total": 3362,
+ "events": [
+  {
+   "f": 0,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:1"
+  },
+  {
+   "f": 54.0,
+   "kind": "glitch",
+   "weight": 0.9,
+   "id": "glitch:2",
+   "dur": 18.9
+  },
+  {
+   "f": 79.8,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:3"
+  },
+  {
+   "f": 88.8,
+   "kind": "coin",
+   "weight": 0.9,
+   "id": "spawn/coin-drop:3:0"
+  },
+  {
+   "f": 102.0,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:5"
+  },
+  {
+   "f": 102.0,
+   "kind": "whoosh",
+   "weight": 0.5599999999999999,
+   "id": "whoosh:6",
+   "dur": 12.0
+  },
+  {
+   "f": 128.4,
+   "kind": "impact",
+   "weight": 1.4,
+   "id": "explosions/big-explosion:6:0"
+  },
+  {
+   "f": 151.2,
+   "kind": "pop",
+   "weight": 0.9,
+   "id": "ui/damage-number:7:0"
+  },
+  {
+   "f": 178.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:9"
+  },
+  {
+   "f": 201.0,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:10"
+  },
+  {
+   "f": 248.4,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:11"
+  },
+  {
+   "f": 248.4,
+   "kind": "impact",
+   "weight": 1.1,
+   "id": "finance/red-candles:11:0"
+  },
+  {
+   "f": 251.4,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:15"
+  },
+  {
+   "f": 272.4,
+   "kind": "impact",
+   "weight": 1.1,
+   "id": "finance/red-candles:12:1"
+  },
+  {
+   "f": 289.8,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:16"
+  },
+  {
+   "f": 296.4,
+   "kind": "impact",
+   "weight": 1.1,
+   "id": "finance/red-candles:13:2"
+  },
+  {
+   "f": 346.8,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:17"
+  },
+  {
+   "f": 346.8,
+   "kind": "glitch",
+   "weight": 0.9,
+   "id": "glitch:18",
+   "dur": 10.8
+  },
+  {
+   "f": 391.2,
+   "kind": "glitch",
+   "weight": 0.9,
+   "id": "glitch:19",
+   "dur": 32.4
+  },
+  {
+   "f": 447.6,
+   "kind": "impact",
+   "weight": 1.4,
+   "id": "explosions/small-explosion:20:0"
+  },
+  {
+   "f": 450.6,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:20"
+  },
+  {
+   "f": 487.2,
+   "kind": "whoosh",
+   "weight": 0.9,
+   "id": "transitions/glitch-wipe:21:0"
+  },
+  {
+   "f": 523.2,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:23"
+  },
+  {
+   "f": 523.2,
+   "kind": "whoosh",
+   "weight": 0.48999999999999994,
+   "id": "whoosh:24",
+   "dur": 12.0
+  },
+  {
+   "f": 577.2,
+   "kind": "tick",
+   "weight": 0.7,
+   "id": "tick:25"
+  },
+  {
+   "f": 628.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:26"
+  },
+  {
+   "f": 673.2,
+   "kind": "pop",
+   "weight": 0.9,
+   "id": "ui/health-bar-hit:26:0"
+  },
+  {
+   "f": 709.2,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:28"
+  },
+  {
+   "f": 709.2,
+   "kind": "whoosh",
+   "weight": 0.35,
+   "id": "whoosh:29",
+   "dur": 15.0
+  },
+  {
+   "f": 712.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:30"
+  },
+  {
+   "f": 742.8,
+   "kind": "pop",
+   "weight": 0.9,
+   "id": "ui/damage-number:31:0"
+  },
+  {
+   "f": 745.8,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:31"
+  },
+  {
+   "f": 809.4,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:33"
+  },
+  {
+   "f": 840,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:34"
+  },
+  {
+   "f": 843.0,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:35"
+  },
+  {
+   "f": 860.4,
+   "kind": "zap",
+   "weight": 1.1,
+   "id": "lightning/zap-hit:35:0"
+  },
+  {
+   "f": 865.98,
+   "kind": "pop",
+   "weight": 0.9,
+   "id": "ui/crit-number:36:0"
+  },
+  {
+   "f": 958.8,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:38"
+  },
+  {
+   "f": 962.4,
+   "kind": "whoosh",
+   "weight": 0.8,
+   "id": "whoosh:39",
+   "pan": 0.5,
+   "dur": 19.2
+  },
+  {
+   "f": 975.0,
+   "kind": "whoosh",
+   "weight": 0.8,
+   "id": "whoosh:40",
+   "pan": -0.5,
+   "dur": 19.2
+  },
+  {
+   "f": 987.6,
+   "kind": "whoosh",
+   "weight": 0.8,
+   "id": "whoosh:41",
+   "pan": 0.5,
+   "dur": 19.2
+  },
+  {
+   "f": 1036.8,
+   "kind": "impact",
+   "weight": 1.4,
+   "id": "explosions/firework-burst:41:0"
+  },
+  {
+   "f": 1053.6,
+   "kind": "impact",
+   "weight": 1.4,
+   "id": "explosions/firework-burst:42:0"
+  },
+  {
+   "f": 1064.4,
+   "kind": "impact",
+   "weight": 1.4,
+   "id": "explosions/firework-burst:43:0"
+  },
+  {
+   "f": 1078.8,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:45"
+  },
+  {
+   "f": 1084.2,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:46"
+  },
+  {
+   "f": 1104.0,
+   "kind": "burst",
+   "weight": 1,
+   "id": "fire/flame-pillar:48:0"
+  },
+  {
+   "f": 1153.2,
+   "kind": "burst",
+   "weight": 1,
+   "id": "fire/flame-pillar:49:0"
+  },
+  {
+   "f": 1156.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:47"
+  },
+  {
+   "f": 1171.8,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:48"
+  },
+  {
+   "f": 1198.8,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:51"
+  },
+  {
+   "f": 1198.8,
+   "kind": "whoosh",
+   "weight": 0.5599999999999999,
+   "id": "whoosh:52",
+   "dur": 21.0
+  },
+  {
+   "f": 1204.2,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:53"
+  },
+  {
+   "f": 1278.0,
+   "kind": "pop",
+   "weight": 0.9,
+   "id": "ui/level-up:55:0"
+  },
+  {
+   "f": 1281.0,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:54"
+  },
+  {
+   "f": 1289.88,
+   "kind": "pop",
+   "weight": 0.8,
+   "id": "pop:55"
+  },
+  {
+   "f": 1317.6,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:57"
+  },
+  {
+   "f": 1348.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:58"
+  },
+  {
+   "f": 1386.6,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:59"
+  },
+  {
+   "f": 1436.4,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:60"
+  },
+  {
+   "f": 1436.4,
+   "kind": "whoosh",
+   "weight": 0.48999999999999994,
+   "id": "whoosh:61",
+   "dur": 12.0
+  },
+  {
+   "f": 1436.4,
+   "kind": "pop",
+   "weight": 0.9,
+   "id": "ui/coin-collect:64:0"
+  },
+  {
+   "f": 1494.0,
+   "kind": "glitch",
+   "weight": 0.9,
+   "id": "glitch:62",
+   "dur": 18.9
+  },
+  {
+   "f": 1521.0,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:63"
+  },
+  {
+   "f": 1528.8,
+   "kind": "coin",
+   "weight": 0.9,
+   "id": "spawn/coin-drop:63:0"
+  },
+  {
+   "f": 1546.8,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:66"
+  },
+  {
+   "f": 1570.8,
+   "kind": "zap",
+   "weight": 1.1,
+   "id": "lightning/lightning-strike:66:0"
+  },
+  {
+   "f": 1619.4,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:68"
+  },
+  {
+   "f": 1642.2,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:69"
+  },
+  {
+   "f": 1687.2,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:70"
+  },
+  {
+   "f": 1687.2,
+   "kind": "impact",
+   "weight": 1.1,
+   "id": "finance/red-candles:70:0"
+  },
+  {
+   "f": 1690.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:74"
+  },
+  {
+   "f": 1711.2,
+   "kind": "impact",
+   "weight": 1.1,
+   "id": "finance/red-candles:71:1"
+  },
+  {
+   "f": 1728.6,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:75"
+  },
+  {
+   "f": 1735.2,
+   "kind": "impact",
+   "weight": 1.1,
+   "id": "finance/red-candles:72:2"
+  },
+  {
+   "f": 1790.4,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:76"
+  },
+  {
+   "f": 1790.4,
+   "kind": "glitch",
+   "weight": 0.9,
+   "id": "glitch:77",
+   "dur": 10.8
+  },
+  {
+   "f": 1831.2,
+   "kind": "glitch",
+   "weight": 0.9,
+   "id": "glitch:78",
+   "dur": 32.4
+  },
+  {
+   "f": 1888.8,
+   "kind": "impact",
+   "weight": 1.4,
+   "id": "explosions/small-explosion:79:0"
+  },
+  {
+   "f": 1891.8,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:79"
+  },
+  {
+   "f": 1900.2,
+   "kind": "switch",
+   "weight": 1.1,
+   "id": "switch:81"
+  },
+  {
+   "f": 1910.4,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:82"
+  },
+  {
+   "f": 1910.4,
+   "kind": "whoosh",
+   "weight": 0.7,
+   "id": "whoosh:83",
+   "dur": 18.0
+  },
+  {
+   "f": 1918.8,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:84"
+  },
+  {
+   "f": 1960.8,
+   "kind": "whoosh",
+   "weight": 0.6,
+   "id": "whoosh:85",
+   "dur": 14.4
+  },
+  {
+   "f": 2004.6,
+   "kind": "tick",
+   "weight": 0.8,
+   "id": "tick:86"
+  },
+  {
+   "f": 2032.8,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:87"
+  },
+  {
+   "f": 2035.8,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:88"
+  },
+  {
+   "f": 2062.2,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:89"
+  },
+  {
+   "f": 2101.2,
+   "kind": "pop",
+   "weight": 0.9,
+   "id": "ui/combo-counter:90:0"
+  },
+  {
+   "f": 2104.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:90"
+  },
+  {
+   "f": 2140.8,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:92"
+  },
+  {
+   "f": 2149.2,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:93"
+  },
+  {
+   "f": 2159.4,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:94"
+  },
+  {
+   "f": 2160.78,
+   "kind": "zap",
+   "weight": 1.1,
+   "id": "lightning/lightning-strike:95:0"
+  },
+  {
+   "f": 2171.16,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:95"
+  },
+  {
+   "f": 2265.0,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:97"
+  },
+  {
+   "f": 2277.6,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:98"
+  },
+  {
+   "f": 2286.0,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:99"
+  },
+  {
+   "f": 2306.4,
+   "kind": "glitch",
+   "weight": 0.9,
+   "id": "glitch:100",
+   "dur": 27.0
+  },
+  {
+   "f": 2327.4,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:101"
+  },
+  {
+   "f": 2359.2,
+   "kind": "zap",
+   "weight": 1.1,
+   "id": "lightning/zap-hit:101:0"
+  },
+  {
+   "f": 2396.4,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:103"
+  },
+  {
+   "f": 2399.4,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:104"
+  },
+  {
+   "f": 2438.4,
+   "kind": "coin",
+   "weight": 0.9,
+   "id": "spawn/coin-drop:106:0"
+  },
+  {
+   "f": 2474.4,
+   "kind": "tick",
+   "weight": 0.7,
+   "id": "tick:105"
+  },
+  {
+   "f": 2490.6,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:106"
+  },
+  {
+   "f": 2530.8,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:108"
+  },
+  {
+   "f": 2539.2,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:109"
+  },
+  {
+   "f": 2592.6,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:110"
+  },
+  {
+   "f": 2636.4,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:111"
+  },
+  {
+   "f": 2639.4,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:112"
+  },
+  {
+   "f": 2650.8,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:113"
+  },
+  {
+   "f": 2691.6,
+   "kind": "pop",
+   "weight": 0.9,
+   "id": "ui/countdown:114:0"
+  },
+  {
+   "f": 2694.6,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:114"
+  },
+  {
+   "f": 2755.2,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:116"
+  },
+  {
+   "f": 2755.2,
+   "kind": "whoosh",
+   "weight": 0.7,
+   "id": "whoosh:117",
+   "dur": 27.0
+  },
+  {
+   "f": 2763.6,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:119"
+  },
+  {
+   "f": 2772.0,
+   "kind": "impact",
+   "weight": 1.4,
+   "id": "explosions/nuke:117:0"
+  },
+  {
+   "f": 2781.48,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:120"
+  },
+  {
+   "f": 2830.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:121"
+  },
+  {
+   "f": 2904.0,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:122"
+  },
+  {
+   "f": 2904.0,
+   "kind": "whoosh",
+   "weight": 0.42,
+   "id": "whoosh:123",
+   "dur": 7.2
+  },
+  {
+   "f": 2907.0,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:124"
+  },
+  {
+   "f": 2914.8,
+   "kind": "impact",
+   "weight": 1.4,
+   "id": "explosions/small-explosion:125:0"
+  },
+  {
+   "f": 2917.8,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:125"
+  },
+  {
+   "f": 2931.6,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:127"
+  },
+  {
+   "f": 2931.6,
+   "kind": "whoosh",
+   "weight": 0.42,
+   "id": "whoosh:128",
+   "dur": 7.2
+  },
+  {
+   "f": 2934.6,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:129"
+  },
+  {
+   "f": 2938.38,
+   "kind": "zap",
+   "weight": 1,
+   "id": "scifi/emp-blast:130:0"
+  },
+  {
+   "f": 2941.38,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:130"
+  },
+  {
+   "f": 2949.6,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:132"
+  },
+  {
+   "f": 2949.6,
+   "kind": "whoosh",
+   "weight": 0.42,
+   "id": "whoosh:133",
+   "dur": 7.2
+  },
+  {
+   "f": 2952.6,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:134"
+  },
+  {
+   "f": 2981.4,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:135"
+  },
+  {
+   "f": 2988.0,
+   "kind": "impact",
+   "weight": 1,
+   "id": "impacts/blunt-hit:135:0"
+  },
+  {
+   "f": 2998.8,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:137"
+  },
+  {
+   "f": 2998.8,
+   "kind": "whoosh",
+   "weight": 0.42,
+   "id": "whoosh:138",
+   "dur": 7.2
+  },
+  {
+   "f": 3001.8,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:139"
+  },
+  {
+   "f": 3013.2,
+   "kind": "zap",
+   "weight": 1.1,
+   "id": "lightning/zap-hit:140:0"
+  },
+  {
+   "f": 3034.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:140"
+  },
+  {
+   "f": 3067.2,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:142"
+  },
+  {
+   "f": 3067.2,
+   "kind": "whoosh",
+   "weight": 0.42,
+   "id": "whoosh:143",
+   "dur": 7.2
+  },
+  {
+   "f": 3070.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:144"
+  },
+  {
+   "f": 3073.2,
+   "kind": "coin",
+   "weight": 0.9,
+   "id": "spawn/coin-drop:145:0"
+  },
+  {
+   "f": 3100.2,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:145"
+  },
+  {
+   "f": 3121.2,
+   "kind": "cut",
+   "weight": 0.3,
+   "id": "cut:147"
+  },
+  {
+   "f": 3121.2,
+   "kind": "whoosh",
+   "weight": 0.5599999999999999,
+   "id": "whoosh:148",
+   "dur": 18.0
+  },
+  {
+   "f": 3121.2,
+   "kind": "glitch",
+   "weight": 0.9,
+   "id": "glitch:149",
+   "dur": 35.1
+  },
+  {
+   "f": 3201.0,
+   "kind": "pop",
+   "weight": 0.4,
+   "id": "pop:150"
+  },
+  {
+   "f": 3221.82,
+   "kind": "hit",
+   "weight": 1,
+   "id": "hit:151"
+  },
+  {
+   "f": 3336.6,
+   "kind": "switch",
+   "weight": 1.1,
+   "id": "switch:152"
+  }
+ ]
+}

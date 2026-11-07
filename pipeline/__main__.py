@@ -1,8 +1,9 @@
-"""Run the daily Mu-Zueki pipeline: python -m pipeline [--force | --from STAGE] [--date YYYY-MM-DD]
-                                     [--brief FILE] [--vocal VOICE] [--length SECONDS] [--stop-after STAGE]
+"""Run the weekly Mu-Zueki pipeline: python -m pipeline [--force | --from STAGE] [--week YYYY-Www]
+                                      [--brief FILE] [--vocal VOICE] [--length SECONDS] [--stop-after STAGE]
 
-With --date, a day that has no news file yet gets one first: the news step researches that day's top
-US finance stories on the web and writes raw_data/us_finance_news_DATE.json (see pipeline/news.py).
+With --week (a week such as 2026-W44, or 'last' for the newest finished one), a week that has no news file
+yet gets one first: the news step researches that week's top US finance stories on the web and writes
+raw_data/us_finance_news_week_YYYY-Www.json (see pipeline/news.py).
 
 --from STAGE reruns that stage and everything after it, keeping what came before. Only the audio
 stage spends ElevenLabs credits, so "--from subtitles" or later never does.
@@ -16,42 +17,44 @@ Exit codes: 0 = done or nothing to do, 1 = a stage failed, 2 = finished but need
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import shutil
 import sys
 import traceback
 from pathlib import Path
 
 from . import news
-from .day import DONE, FAILED, REVIEW, Day, StageResult
-from .settings import NEWS_DIR, OUTPUT_DIR, RunError, SettingsError, find_news_file, load_settings, log
+from .episode import DONE, FAILED, REVIEW, Episode, StageResult
+from .settings import (LENGTHS, NEWS_DIR, OUTPUT_DIR, RunError, SettingsError, find_news_file, last_finished_week,
+                       load_settings, log)
 from .stages import STAGES
 
 
-def run_stages(day: Day, settings: dict, stages=STAGES) -> int:
+def run_stages(episode: Episode, settings: dict, stages=STAGES) -> int:
     """Run each stage that is not finished yet, in order. Returns the exit code."""
     code, ran = 0, False
     for position, stage in enumerate(stages):
-        state = day.state(stage.NAME)
+        state = episode.state(stage.NAME)
         if state in (DONE, REVIEW) and not ran:
             code = max(code, 2 if state == REVIEW else 0)
             continue
         # This stage runs, so everything after it is out of date.
-        day.reset([s.NAME for s in stages[position + 1:]])
+        episode.reset([s.NAME for s in stages[position + 1:]])
         try:
-            result = stage.run(day, settings)
+            result = stage.run(episode, settings)
         except (RunError, SettingsError) as exc:
             result = StageResult(FAILED, [str(exc)])
         except Exception:
             result = StageResult(FAILED, ["unexpected error:\n" + traceback.format_exc()])
         ran = True
-        day.mark(stage.NAME, result)
+        episode.mark(stage.NAME, result)
         log(f"{stage.NAME}: {result.state}" + "".join(f"\n    - {n}" for n in result.notes))
         if result.state == FAILED:
             return 1
         if result.state == REVIEW:
             code = 2
     if not ran:
-        log(f"{day.date}: already done; nothing to do (--from STAGE reruns from a stage, --force starts over)")
+        log(f"{episode.week}: already done; nothing to do (--from STAGE reruns from a stage, --force starts over)")
     return code
 
 
@@ -71,14 +74,15 @@ def steer(settings: dict, brief: str | None, vocal: str | None, length: int | No
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(prog="pipeline", description="Write, generate and subtitle the daily song.")
-    parser.add_argument("--force", action="store_true", help="start the day over: rewrite the song and everything after")
+    parser = argparse.ArgumentParser(prog="pipeline", description="Write, generate and subtitle the weekly song.")
+    parser.add_argument("--force", action="store_true", help="start the week over: rewrite the song and everything after")
     parser.add_argument("--from", dest="from_stage", choices=[s.NAME for s in STAGES],
                         help="rerun this stage and every stage after it")
-    parser.add_argument("--date", help="news date to run (default: the news_date setting); its news is gathered from the web if there is no file yet")
+    parser.add_argument("--week", help="week to run, such as 2026-W44, or 'last' for the newest finished week (default: the "
+                        "news_week setting); its news is gathered from the web if there is no file yet")
     parser.add_argument("--brief", help="text file of extra instructions for this run's song; replaces extra_instructions")
     parser.add_argument("--vocal", choices=["auto", "male", "female", "both"], help="the vocal for this run")
-    parser.add_argument("--length", type=int, choices=[30, 45, 60], help="the reel length in seconds for this run")
+    parser.add_argument("--length", type=int, choices=list(LENGTHS), help="the reel length in seconds for this run")
     parser.add_argument("--stop-after", dest="stop_after", choices=[s.NAME for s in STAGES],
                         help="stop once this stage has run, for example 'song' to read the lyrics before audio")
     args = parser.parse_args()
@@ -86,19 +90,21 @@ def main() -> int:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     try:
         settings = steer(load_settings(), args.brief, args.vocal, args.length)
-        wanted = args.date or settings["news_date"]
-        # A day asked for by date is gathered if it has no news file. "latest" never gathers.
+        wanted = args.week or settings["news_week"]
+        if wanted == "last":
+            wanted = last_finished_week(dt.datetime.now(news.EASTERN))
+        # A week asked for by name is gathered if it has no news file. "latest" never gathers.
         if wanted != "latest" and not news.news_path(NEWS_DIR, wanted).exists():
             news.gather(wanted, NEWS_DIR, settings["claude_model"])
-        news_path, date = find_news_file(NEWS_DIR, wanted)
-        day = Day(OUTPUT_DIR, date, news_path)
-        if args.force and day.dir.exists():
-            shutil.rmtree(day.dir)
+        news_path, week = find_news_file(NEWS_DIR, wanted)
+        episode = Episode(OUTPUT_DIR, week, news_path)
+        if args.force and episode.dir.exists():
+            shutil.rmtree(episode.dir)
         elif args.from_stage:
             names = [s.NAME for s in STAGES]
-            day.reset(names[names.index(args.from_stage):])
+            episode.reset(names[names.index(args.from_stage):])
         stages = STAGES[:[s.NAME for s in STAGES].index(args.stop_after) + 1] if args.stop_after else STAGES
-        return run_stages(day, settings, stages)
+        return run_stages(episode, settings, stages)
     except (RunError, SettingsError) as exc:
         log(f"FAILED: {exc}")
         return 1

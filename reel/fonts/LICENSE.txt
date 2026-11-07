@@ -7,3 +7,4 @@ Reenie Beanie · Mochiy Pop One · Dela Gothic One (Latin and Japanese sets)
 Baloo Bhai 2 (Latin and Gujarati sets, weight 800), from Google Fonts
 Anton (weight 400) and Playfair Display (black italic), from Google Fonts
 Instrument Serif (regular and italic), from Google Fonts
+Silkscreen (regular and bold, Latin set), from Google Fonts

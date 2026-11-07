@@ -5,7 +5,7 @@ THE SHAPE. Think of a track that opens with a soft, pretty, almost innocent sung
 1. THE INTRO (plan chunk 1; 4 short bars; between 5 and 7 seconds, never under 3 or over 7).
 - Voice: a cute Japanese-idol-style girl vocal singing in English, in the manner of a kawaii idol sub-unit such as AiScReam: high, bright, sugary, bubbly, innocent, a little breathy, with a playful lilt. Sung, not rapped.
 - Music: the band plays with her from the very first beat. A full, sparkly idol-pop arrangement: bouncy four-on-the-floor kick, claps, bright synths, glittery bells, a rubbery bass. Never a cappella and never a quiet lead-in.
-- Words: short, simple, sweet lines that tease the day's news in an innocent way, like a girl singing happily about something that is about to go wrong (or, on a good day, about to get even better). Say the day once here. Plain, clearly sung words; a listening check has to make them out.
+- Words: short, simple, sweet lines that tease the week's news in an innocent way, like a girl singing happily about something that is about to go wrong (or, in a good week, about to get even better). Say the week once here. Plain, clearly sung words; a listening check has to make them out.
 - Layout: it is still labelled [Verse 1], its first line is a lyric line, and it is sung from 0:00. Keep the style "vocal enters immediately at 0:00". Do NOT use the style "song starts mid-energy as if already playing, full drums and 808 from the very first beat"; write instead a style saying the idol-pop band is playing at full volume from the first beat. Do not put "pop" in this chunk's negative styles; its negatives are rap, male vocals, 808 bass, dark, aggressive, intro, build-up, a cappella, quiet.
 - Its last line is followed by the cue {beat cuts out}, so there is a split second of air before the drop.
 
@@ -20,7 +20,7 @@ THE SHAPE. Think of a track that opens with a soft, pretty, almost innocent sung
 - Beat: hard and full of movement. It must not loop unchanged for more than 4 bars: change something in each rap chunk (drums drop out for a punchline, a half-time breakdown, a switch-up of the hi-hat pattern, an 808 slide run, one 2-bar double-time burst with no key numbers in it). Name the change in that chunk's styles.
 - No repeated hook. After the intro no line is repeated; every bar moves the story forward. A short shouted refrain of two or three words may come back once as a stab, no more.
 - Still write to be understood: plain strongly stressed words, no tongue-twisters. Dense is good; crammed is not.
-- Tell one story of the day with a start, middle and end, with at least two real punchlines or double meanings, and close on the hardest bar.
+- Tell one story of the week with a start, middle and end, with at least two real punchlines or double meanings, and close on the hardest bar.
 
 4. THE SIGN-OFF (the last chunk, 3 to 4 seconds).
 - The beat cuts out and the cute idol voice from the intro comes back alone to say the sign-off sweetly ("That's the tape. Mew-Zookie."), then a hard stop. Styles: the same cute female idol voice, spoken sweetly, no drums, abrupt ending with no fade. This is the callback that makes the reel loop into the sweet intro.
