@@ -13,7 +13,11 @@ reel/snapshots/
 reel/lib/pixelfx/records/
 reel/.hyperframes/
 reel/node_modules/
-instagram/posts/*/reel.mp4
+
+# Mu-Zueki's account history and the daily series' news: kept on disk, not in git
+instagram/posts/
+instagram/profile_picture/
+raw_data/us_finance_news_2*.json
 
 # other people's work, kept locally only: reference videos and the sound effects of a paid kit
 reel/references/*.mp4

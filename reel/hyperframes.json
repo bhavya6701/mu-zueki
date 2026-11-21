@@ -9,21 +9,5 @@
   "media": {
     "autoProxy": true
   },
-  "registryItems": [
-    {
-      "name": "yt-screen-warp",
-      "type": "hyperframes:component",
-      "target": "compositions/components/yt-screen-warp.html"
-    },
-    {
-      "name": "decline-chart",
-      "type": "hyperframes:component",
-      "target": "compositions/components/decline-chart.html"
-    },
-    {
-      "name": "rgb-glitch-text",
-      "type": "hyperframes:component",
-      "target": "compositions/components/rgb-glitch-text.html"
-    }
-  ]
+  "registryItems": []
 }

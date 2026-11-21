@@ -52,13 +52,16 @@ wait until step 7. `config/.env` is ignored by git; never commit it.
 
 ```
 cd reel
-npx hyperframes doctor
-npx hyperframes skills
+npx --yes hyperframes@0.9.12 doctor
+npx --yes hyperframes@0.9.12 skills
 ```
 
 `doctor` should show Node.js, FFmpeg, FFprobe and Chrome as found. Ignore what it calls optional
 (whisper-cpp, Kokoro, MusicGen, Docker). `skills` installs the HyperFrames skills that Claude Code uses
 when it writes a reel. Restart Claude Code afterwards so it loads them.
+
+Optional: LottieFiles' motion-design skill (github.com/LottieFiles/motion-design-skill) for general motion
+advice; the pipeline does not need it.
 
 ## 5. Make it yours
 
@@ -67,9 +70,10 @@ when it writes a reel. Restart Claude Code afterwards so it loads them.
 - `prompts/elevenlabs_format.md`: how a song is laid out for ElevenLabs.
 - `prompts/news_research.md`: what counts as the week's news and which sources are trusted.
 - `config/settings.json`: song length, vocal, mood and credit limits. The file explains each field.
-- `instagram/`: this is the original account's folder. Replace `profile_picture/` and empty `posts/`.
-- `raw_data/` and `reel/references/log.json`: the original account's history. Empty `raw_data/` and
-  reset `log.json` to `[]` to start clean.
+- `instagram/`: the original account's posts and profile picture are not in the repo (they stay on its
+  owner's machine). Put your own picture in `instagram/profile_picture/`; `posts/` fills as you render.
+- `raw_data/` and `reel/references/log.json`: the original account's history. Only its 2026-W44 news file is
+  in the repo (the daily series' files are not); delete it and reset `log.json` to `[]` to start clean.
 
 The reference videos behind the two saved looks are not in the repo (they are other people's work).
 The looks themselves are: `reel/templates/` describes them and `reel/lib/` implements them.

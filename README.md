@@ -31,7 +31,7 @@ pipeline/                the code
   sound.py               the reel's sound effects: cues from the picture, real sounds placed by real-sfx, reviewed by
                          real-sfx and earshot
   openverse.py           real CC0 / CC BY recordings from Openverse, and the series' sound library built from them
-  video.py               mixes the sound effects, renders and checks the reel
+  video.py               cuts the stock footage, renders and checks the reel
   instagram.py           posts the reel
 reel/                    the video project (HyperFrames); see "The reel" below
 instagram/               the account: profile picture, and one folder per post (reel, description, link)
@@ -142,7 +142,7 @@ is in `.claude/skills/run-pipeline/SKILL.md`.
 **Gemini frames:** after generating them in the browser, `python -m pipeline.plates WEEK NAME [NAME ...]`
 takes the newest Gemini downloads, in order, into `reel/media/WEEK/plates/` at 1080x1920.
 
-**Preview while editing:** `cd reel`, then `npx hyperframes preview`.
+**Preview while editing:** `cd reel`, then `npm run dev`.
 
 ```
 reel/
@@ -151,7 +151,7 @@ reel/
                          pixelfx/ (the pixelfx library, MIT: source, tools, docs/CATALOG.md; build.mjs bundles it),
                          slap.js (type and interface elements over stock footage), film.js (a slow night film),
                          windows.js, circuit.js, collage.js, pixel.js, ink.js, stitch.js (other looks)
-  weeks/WEEK/            one week's scenes, run in file-name order, with footage.json, sfx.json, credits.json, plan.md
+  weeks/WEEK/            one week's scenes, run in file-name order, with footage.json, credits.json, sound.json, cues.json, plan.md
   days/DATE/             the daily series' scenes, kept as worked examples
   templates/             one file per look, used by the "default" option
   sound/                 the series' sound design (design.json), library plan (library.json), earshot kit (kit.json),
@@ -160,7 +160,7 @@ reel/
   fonts/                 the typefaces
 ```
 
-Needs Node.js 22 or newer and FFmpeg (`winget install Gyan.FFmpeg`). `npx hyperframes doctor` checks
+Needs Node.js 22 or newer and FFmpeg (`winget install Gyan.FFmpeg`). `npx --yes hyperframes@0.9.12 doctor` checks
 the machine.
 
 ## Posting to Instagram

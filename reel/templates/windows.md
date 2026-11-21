@@ -4,7 +4,7 @@ A paper-coloured desktop: hairline windows, monospace type, meters and a cursor 
 
 - **First used:** 2026-10-08
 - **Reference:** `reel/references/windows.mp4` (the Paper Mono font launch film, https://whatships.com/videos/paper-mono/)
-- **Worked example:** `reel/days/2026-10-08/`
+- **Worked example:** not in the working tree. The scenes are in git history (`git show 986df7e:reel/days/2026-10-08/1-hook.js`, and `2-verse2.js` to `5-outro.js`); the render, song and timeline are kept locally in `output/_archive/2026-10-08_v1/`. `reel/days/2026-10-08/` now holds that day's second version (circuit).
 - **Kit module:** `reel/lib/windows.js` (`R.win`); shots carry `look: "windows"`
 
 ## Look

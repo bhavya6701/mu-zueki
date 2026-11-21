@@ -2,9 +2,8 @@
 
 Uses the week's finished audio.mp3 and timeline.json and the scenes in reel/weeks/WEEK/. Writes
 output/WEEK/reel.mp4. If the week has a reel/weeks/WEEK/footage.json, the stock clips it lists are cut to
-their lyric lines (cropped to the frame, graded, silent) and placed under the scenes. If it has a
-sfx.json, its sound effects are mixed under the song, so the effects stay a separate, editable list and
-are never baked into the only copy of the soundtrack. It never calls ElevenLabs. The scenes are written by
+their lyric lines (cropped to the frame, graded, silent) and placed under the scenes. Sound effects are not
+mixed here: pipeline.sound places them over the rendered reel. It never calls ElevenLabs. The scenes are written by
 Claude from a reference video (see .claude/skills/run-pipeline); this module only prepares, renders and checks.
 """
 from __future__ import annotations
@@ -24,6 +23,11 @@ from .settings import OUTPUT_DIR, ROOT, WEEK_RE, RunError, log
 REEL_DIR = ROOT / "reel"
 SIZE = (1080, 1920)
 FPS = 60
+# The HyperFrames CLI every check and render runs; reel/package.json pins the same one. Unpinned, npx resolves the
+# newest release: with no terminal it silently installs and runs that untested version, and with one it asks
+# first, where the captured output hides the question until the call times out. --yes with an exact version
+# avoids both.
+HYPERFRAMES = "hyperframes@0.9.12"
 # The block of index.html that lists the scenes of the week being rendered.
 SCENES_BLOCK = re.compile(r"(<!-- scenes:start[^>]*-->\n).*?([ \t]*<!-- scenes:end -->)", re.S)
 # The block inside the composition root that holds the week's footage clips.
@@ -170,27 +174,6 @@ def footage_tags(episode: Episode, timeline: dict, reel_dir: Path = REEL_DIR, cu
         for t in tags)
 
 
-def mix_sound(song: Path, cues: list[dict], timeline: dict, target: Path, reel_dir: Path = REEL_DIR) -> None:
-    """The song with the sound effects of sfx.json under it. Each cue is {"file": path from reel/, "at": a
-    footage-style time ("cap:N", "word:N:I", "cut:N" or seconds), "gain": dB (default -6)}."""
-    if not cues:
-        shutil.copyfile(song, target)
-        return
-    args, chains = [_tool("ffmpeg"), "-v", "error", "-y", "-i", str(song)], []
-    for n, cue in enumerate(cues, start=1):
-        source = reel_dir / cue["file"]
-        if not source.exists():
-            raise RunError(f"sfx.json: {cue['file']} was not found under reel/")
-        delay = max(0, round(moment(cue["at"], timeline) * 1000))
-        args += ["-i", str(source)]
-        chains.append(f"[{n}]aresample=44100,volume={cue.get('gain', -6)}dB,adelay={delay}:all=1[c{n}]")
-    graph = ("[0]aresample=44100[s];" + ";".join(chains) + ";[s]" + "".join(f"[c{n}]" for n in range(1, len(cues) + 1))
-             + f"amix=inputs={len(cues) + 1}:normalize=0:duration=first,alimiter=limit=0.95[out]")
-    result = _run(args + ["-filter_complex", graph, "-map", "[out]", "-b:a", "192k", str(target)], timeout=300, cwd=ROOT)
-    if result.returncode != 0:
-        raise RunError("Could not mix the sound effects: " + (result.stderr or result.stdout)[-600:])
-
-
 def prepare(episode: Episode, reel_dir: Path = REEL_DIR) -> None:
     """Point the reel project at this episode: its song, its timings, its length and its scenes."""
     scenes = scenes_for(episode.week, reel_dir)
@@ -202,11 +185,7 @@ def prepare(episode: Episode, reel_dir: Path = REEL_DIR) -> None:
             raise RunError(f"{needed.name} is missing for {episode.week}; run the song pipeline first")
     timeline = episode.read_json(episode.timeline_json)
 
-    cues = reel_dir / "weeks" / episode.week / "sfx.json"
-    if cues.exists():
-        mix_sound(episode.audio_mp3, json.loads(cues.read_text(encoding="utf-8")), timeline, reel_dir / "audio.mp3", reel_dir)
-    else:
-        shutil.copyfile(episode.audio_mp3, reel_dir / "audio.mp3")
+    shutil.copyfile(episode.audio_mp3, reel_dir / "audio.mp3")
     (reel_dir / "data").mkdir(exist_ok=True)
     # A render must not fetch, so the timings are loaded as a script.
     (reel_dir / "data" / "timeline.js").write_text(
@@ -263,13 +242,13 @@ def render(episode: Episode) -> list[str]:
     """Render output/WEEK/reel.mp4. Returns problems found in the result (empty when it is good)."""
     prepare(episode)
     npx = _tool("npx")
-    check = _run([npx, "hyperframes", "check", "."], timeout=600)
+    check = _run([npx, "--yes", HYPERFRAMES, "check", "."], timeout=600)
     if check.returncode != 0:
         raise RunError("The scenes did not pass hyperframes check:\n" + (check.stdout or check.stderr)[-1500:])
 
     reel = episode.dir / "reel.mp4"
     log(f"video: rendering {episode.week} (a few minutes)")
-    result = _run([npx, "hyperframes", "render", ".", "--fps", str(FPS), "--quality", "delivery",
+    result = _run([npx, "--yes", HYPERFRAMES, "render", ".", "--fps", str(FPS), "--quality", "delivery",
                    "--workers", "4", "--output", str(reel)], timeout=3600)
     if result.returncode != 0 or not reel.exists():
         raise RunError("HyperFrames could not render the reel:\n" + (result.stderr or result.stdout)[-1500:])

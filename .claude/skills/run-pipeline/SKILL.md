@@ -232,7 +232,7 @@ listening, `real-sound` for the wider rules of a launch film's sound):
    - Every time comes from the week's timeline: `s.w(line, word)`, `s.cap(line)`. Never hard-code a second.
    - A new look that the kit cannot do gets a new module in `reel/lib/`, added to `reel/index.html`.
 6. `.venv\Scripts\python.exe -c "from pipeline.video import *; prepare(Episode(OUTPUT_DIR, 'WEEK'))"`, then
-   in `reel/`: `npx hyperframes check .` and `npx hyperframes snapshot . --at <times>`. Review in three
+   in `reel/`: `npx --yes hyperframes@0.9.12 check .` and `npx --yes hyperframes@0.9.12 snapshot . --at <times>`. Review in three
    passes before rendering: a contact sheet of every shot (does each read from its frame alone?), frame
    strips of every fast moment (takes, hits, transitions: no pops), and close crops (`--zoom`) of faces,
    hands, props and contacts. Fix what is wrong, then look again.

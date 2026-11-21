@@ -3,8 +3,8 @@
 What goes on the Mu-Zueki Instagram account.
 
 ```
-profile_picture/muzueki.jpg   the account's profile picture
-posts/WEEK/                   one folder per reel
+profile_picture/muzueki.jpg   the account's profile picture (kept locally, not in git)
+posts/WEEK/                   one folder per reel (kept locally, not in git)
   reel.mp4                    the video as posted (a copy of output/WEEK/reel.mp4)
   caption.txt                 the description; edit this file to change it before posting
   post.json                   "draft" until posted, then "posted" with the post id, link and time; "archived" for a

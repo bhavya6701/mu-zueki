@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/readme/montage.gif" width="800" alt="A grid of pixel art effects playing at once: a campfire, a burning skull, a waterfall, a plasma ball, a portal, a tornado and more.">
+  Animated previews: see the <a href="https://github.com/patch-gg/pixelfx">upstream README</a>.
 </p>
 
 # pixelfx.
@@ -97,7 +97,7 @@ node tools/render.mjs fire/torch --gif --opts '{"palette": ["#102","#215","#43a"
 ## acting.
 
 <p align="center">
-  <img src="docs/readme/acts.gif" width="800" alt="A grey dummy fighting a straw target: a three-stroke sword combo, a hammer smash, a ground pound, a holy smite, a frost nova and a run with after-images, each with a wind-up, a freeze on contact and a recovery.">
+  Animated previews: see the <a href="https://github.com/patch-gg/pixelfx">upstream README</a>.
 </p>
 
 An effect on its own looks like a sticker. What sells a hit is the body around it: the wind-up that says something is

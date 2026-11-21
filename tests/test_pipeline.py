@@ -904,6 +904,14 @@ class ReelPrepareTests(unittest.TestCase):
         self.assertTrue((self.reel / "data" / "timeline.js").read_text(encoding="utf-8").startswith("window.TIMELINE = {"))
         self.assertNotIn('id="old"', html)
 
+    def test_an_old_sfx_json_is_ignored_and_the_song_is_copied_as_is(self):
+        scenes = self.reel / "weeks" / "2026-W41"
+        scenes.mkdir(parents=True)
+        (scenes / "1-hook.js").write_text("", encoding="utf-8")
+        (scenes / "sfx.json").write_text(json.dumps([{"file": "sfx/missing.wav", "at": 1}]), encoding="utf-8")
+        video.prepare(self.day, self.reel)
+        self.assertEqual((self.reel / "audio.mp3").read_bytes(), b"song")
+
     def test_footage_is_cut_to_its_lyric_lines_and_placed_under_the_scenes(self):
         timeline = {"duration_seconds": 10.0, "downbeats": [1.0, 3.0, 5.0],
                     "captions": [{"start": 0.0, "words": [{"start": 0.0}, {"start": 0.5}]},
@@ -1230,25 +1238,32 @@ class SoundTests(unittest.TestCase):
         self.assertEqual(d["density"], 8)
 
 
-class SoundMixTests(unittest.TestCase):
-    TIMELINE = {"captions": [{"start": 1.5, "end": 3.0, "words": []}], "downbeats": [], "duration_seconds": 10}
+class ReelProjectFileTests(unittest.TestCase):
+    REEL = Path(__file__).resolve().parent.parent / "reel"
 
-    def test_cues_are_delayed_to_their_moments_and_mixed_under_the_song(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            reel = Path(tmp)
-            (reel / "sfx").mkdir()
-            (reel / "sfx" / "hit.wav").write_bytes(b"x")
-            calls = []
-            with mock.patch.object(video, "_run", lambda args, timeout, cwd=None: calls.append(args) or mock.Mock(returncode=0)), \
-                    mock.patch.object(video, "_tool", lambda name: name):
-                video.mix_sound(reel / "song.mp3", [{"file": "sfx/hit.wav", "at": "cap:1", "gain": -9}, {"file": "sfx/hit.wav", "at": 4}],
-                                self.TIMELINE, reel / "out.mp3", reel)
-            graph = calls[0][calls[0].index("-filter_complex") + 1]
-            self.assertIn("volume=-9dB,adelay=1500:all=1", graph)
-            self.assertIn("volume=-6dB,adelay=4000:all=1", graph)
-            self.assertIn("amix=inputs=3:normalize=0:duration=first", graph)
+    def test_render_runs_the_pinned_cli_for_the_check_and_the_render(self):
+        calls = []
+        results = iter([mock.Mock(returncode=0, stdout="", stderr=""), mock.Mock(returncode=1, stdout="", stderr="boom")])
+        with tempfile.TemporaryDirectory() as tmp, \
+                mock.patch.object(video, "prepare", lambda episode: None), \
+                mock.patch.object(video, "log", lambda message: None), \
+                mock.patch.object(video, "_tool", lambda name: name), \
+                mock.patch.object(video, "_run", lambda args, timeout, cwd=None: calls.append(args) or next(results)):
             with self.assertRaises(settings.RunError):
-                video.mix_sound(reel / "song.mp3", [{"file": "sfx/missing.wav", "at": 1}], self.TIMELINE, reel / "out.mp3", reel)
+                video.render(mock.Mock(dir=Path(tmp), week="2026-W41"))
+        self.assertEqual(calls[0], ["npx", "--yes", "hyperframes@0.9.12", "check", "."])
+        self.assertEqual(calls[1][:5], ["npx", "--yes", "hyperframes@0.9.12", "render", "."])
+
+    def test_package_scripts_use_the_same_version(self):
+        scripts = json.loads((self.REEL / "package.json").read_text(encoding="utf-8"))["scripts"]
+        self.assertEqual(sorted(scripts), ["check", "dev", "publish", "render"])
+        for command in scripts.values():
+            self.assertIn(f"npx --yes {video.HYPERFRAMES} ", command + " ")
+
+    def test_every_registry_item_is_installed(self):
+        config = json.loads((self.REEL / "hyperframes.json").read_text(encoding="utf-8"))
+        missing = [i["target"] for i in config.get("registryItems", []) if not (self.REEL / i["target"]).exists()]
+        self.assertEqual(missing, [])
 
 
 class PixelfxTests(unittest.TestCase):
